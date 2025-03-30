@@ -1,0 +1,481 @@
+@import url('https://fonts.cdnfonts.com/css/aceh');
+*{
+    padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+}
+html{
+    font-family: 'Aceh', sans-serif;
+}
+body{
+    min-height: 100vh;
+    position: relative;
+}
+.strong{
+    font-weight: bold;
+}
+.pd-text{
+    padding-left: 20px;
+}
+.mountain-container{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    padding: 60px 0;
+}
+.karma-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 0 100px 60px 100px;
+    position: absolute;
+    top: 90%;
+}
+.karma-content h1{
+    font-size: 40px;
+    font-weight: 700;
+}
+.karma-content > span{
+    width: 100%;
+    font-weight: 600;
+    font-size: 28px;
+}
+.karma-content p{
+    width: 100%;
+}
+.karma-content ul{
+    width: 100%;
+}
+.karma-content_img{
+    width: 50%;
+    height: 50%;
+    margin: 50px 0;
+}
+.karma-content_img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.karma-content ul li{
+    display: flex;
+    gap: 10px;
+    font-size: 20px;
+}
+.karma-content ul {
+    font-size: 20px;
+}
+#karma-content_en p{
+    font-size: 20px;
+}
+table {
+    border: 1px solid black;
+    border-collapse: collapse;
+    margin-bottom: 50px;   
+}
+th, td {
+    padding: 8px;
+    text-align: center;
+}
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+.bg{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 320px;
+    right: 0;
+    z-index: -1;
+}
+.bg img{
+    width: 100%;
+    height: 100%;
+}
+#header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 60px;
+    padding: 0 40px;
+    position: relative;
+}
+#header .logo{
+    width: 105px;
+    height: 80px;
+    position: relative;
+    animation: moveHeader 1.5s;
+    cursor: pointer;
+}
+#header .logo img{
+    object-fit: cover;
+    width: 100%;
+}
+#header .nav{
+    display: flex;
+    align-items: center;
+    color: #FFFFFF;
+    justify-content: flex-end;
+    font-size: 20px;
+    line-height: 100%;
+    font-weight: 500;
+    position: relative;
+    animation: moveHeader 1.5s;
+    cursor: pointer;
+}
+#header .nav .nav-whitepaper{
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    width: 300px;
+    height: 50px;
+}
+#header .nav .nav-language{
+    width: 80px;
+    height: 50px;
+    color: #000;
+    border-radius: 15px;
+}
+#header .nav .nav-language form{
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+#header .nav .nav-language form #lang-switch{
+    border: none;
+    border-radius: 15px;
+    height: 100%;
+    width: 100%;
+    padding: 0 10px 0 10px;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+#header .mobile-menu{
+    display: none;
+}
+#header .mobile-menu .nav{
+    display: none;
+}
+.mobile-nav{
+    display: none;
+}
+#container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: center;
+    margin-top: 70px;
+    animation: moveContainer 1.5s;
+}
+#container .title{
+    width: 55%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    span{
+        letter-spacing: 5px;
+        font-size: 50px;
+        font-weight: 700;
+        color: #FFFFFF;
+        font-family: 'Aceh', sans-serif;                                  
+    }
+}
+#container .sun{
+    width: 143px;
+    height: 143px;
+    display: flex;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+#container .sun img{
+    width: 100%;
+    height: 100%;
+}
+.mountain{
+    display: flex;
+    width: 100%;
+    max-height: 990px;
+    position: relative;
+    margin-top: 40px;
+}
+.mountain img{
+    width: 100%;
+}
+.mountain .road{
+    position: absolute;
+    top: 4%;
+    left: 50%;
+    transform: translate(-49%, 0);
+}
+.mountain .road span{
+    position: absolute;
+    left: 30%;
+    bottom: 10px;
+    color: #FFFFFF;
+    font-size: 20px;
+    font-weight: 700;
+    filter: drop-shadow(2px 4px 6px rgb(6, 79, 104));
+}
+#road1 {
+    display: flex;
+    opacity: 1;
+    animation: fadeIn 2s forwards ease-in-out;
+    z-index: 10;
+}
+.karma-content{
+    width: 100%;
+    display: flex;
+}
+.karma-content p{
+    color: #000;
+}
+.hidden{
+    display: none;
+}
+@media (max-width: 1440px){
+    .mountain .road{
+        left: 51%;
+        width: 900px;
+    }
+    #container .title{
+        gap: 5rem;
+    }
+}
+@media (max-width: 1028px) {
+    #header .logo {
+        padding-top: 10px;
+    }
+    .mountain .road{
+        left: 51%;
+        width: 650px;
+    }
+    #container .title{
+        width: 65%;
+        span{
+            letter-spacing: 4px;
+            font-size: 36px;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+    }
+    .bg{
+        bottom: 25%;
+    }
+}
+@media (max-width: 990px){
+
+}
+@media (max-width: 768px) {
+    #container .title{
+        width: 70%;
+        span{
+            letter-spacing: 4px;
+            font-size: 32px;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+    }
+    .mountain {
+        max-height: 695px;
+        height: 695px;
+    }
+    .mountain img{
+        display: block;
+        object-fit: cover;
+    }
+    .mountain .road{
+        height: 480px;
+        width: 600px;
+        left: 51%;
+    }
+    .mountain .road span{
+        left: 15%;
+    }
+    #container .title img{
+        height: 25px;
+    }
+    #container .sun{
+        height: 120px;
+        width: 120px;
+    }
+}
+@media (max-width: 450px) {
+    .pd-text{
+        padding-left: 10px;
+    }
+    .mountain-container {
+        padding: 15px 0;
+    }
+    .karma-content{
+        gap: 10px;
+    }
+    .karma-content h1{
+        font-size: 36px;
+    }
+    .karma-content span{
+        font-size: 20px;
+    }
+    .karma-content p{
+        font-size: 14px;
+    }
+    #karma-content_en p{
+        font-size: 18px;
+    }
+    .karma-content ul {
+        font-size: 18px;
+    }
+    #karma-content_en ul li{
+        font-size: 18px;
+    }
+    #header{
+        height: 55px;
+        padding: 0 20px 0 20px;
+    }
+    #header .logo{
+        width: 50px;
+        display: flex;
+        align-items: center;
+        padding-top: 0;
+    }
+    #header .nav .nav-language{
+        width: 100%;
+        height: 35px;
+    }
+    #header .nav .nav-language form #lang-switch{
+        padding: 0;
+        font-size: 12px;
+        width: 100%;
+        opacity: .8;
+    }
+    #header .mobile-menu{
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+    #header .mobile-menu svg{
+        position: absolute;
+        animation: moveHeaderM 1.5s;
+        z-index: 1000;
+    }
+    #header .mobile-menu svg path{
+        fill: #FFFFFF
+    }
+    #container .title{
+        width: 100%;
+        gap: 5rem;
+        span{
+            letter-spacing: 3px;
+            font-size: 28px;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+    }
+    .mobile-nav{
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 20%;
+        width: 100%;
+        background-color: #000;
+        z-index: 100;
+        opacity: 0.7;
+        color: #FFFFFF;
+        gap: 10px;
+        font-size: 28px;
+        font-weight: 500;
+    }
+    .mobile-nav .move{
+        position: absolute;
+        animation: moveMobile 1.5s;
+        transition: all 0.3 ease-in-out;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        top: -10%;
+        height: 100%;
+    }
+    #container .sun{
+        height: 90px;
+        width: 90px;
+    }
+    #container .title img{
+        height: 15px;
+    }
+    .mountain{
+        height: 695px;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+    .mountain img{
+        display: block;
+        object-fit: cover;
+    }
+    .mountain .road{
+        width: 450px;
+        height: 430px;
+    }
+    #road1{
+        width: 100%;
+        height: 100%;
+    }
+    .road1{
+        width: 100%;
+        height: 100%;
+    }
+    #container .sun{
+        transform: translateX(-48%);
+    }
+    .karma-content{
+        top: 90%;
+        padding: 0 18px 20px 18px;
+    }
+    .karma-content_img{
+        width: 100%;
+        margin: 20px 0;
+    }
+    table{
+        margin-bottom: 20px;
+        font-size: 50%;
+    }
+    #container{
+        margin-top: 35px;
+    }
+}
+@keyframes moveHeader {
+    from {top: 1000px;}
+    to {top: 0px;}
+}
+@keyframes moveContainer {
+  from {top: 200px;}
+  to {top: 0px;}
+}
+@keyframes moveMobile {
+    from {top: 1000px;}
+    to {top: -10%;}
+}
+@keyframes moveHeaderM {
+    from {top: 1000px;}
+    to {top: 50%;transform: translateY(-50%)}
+}
+@keyframes fadeIn {
+    from {
+        opacity: 1;
+    }
+    to {
+        z-index: 1;
+    }
+}
