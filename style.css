@@ -221,13 +221,13 @@ tr:nth-child(even) {
     top: 3%;
     z-index: 100;
 }
-.mountain .road span{
+.mountain .road #donation-data{
     position: absolute;
-    left: 40%;
-    bottom: 15px;
     color: #FFFFFF;
     font-size: 20px;
     font-weight: 700;
+    bottom: 2%;
+    left: 24%;
 }
 .road1 {
     display: flex;
@@ -250,7 +250,10 @@ tr:nth-child(even) {
 .line {
     animation: fillIn 0.5s ease forwards;
 }
-
+.my-label {
+    position: absolute;
+    transform: translate(-50%, -50%);
+  }
 @keyframes fillIn {
     to {
         fill: #f5f5f5;
@@ -376,6 +379,12 @@ tr:nth-child(even) {
     }
 }
 @media (max-width: 640px) {
+    .pc{
+        display: none;
+    }
+    .mb{
+        display: flex;
+    }
     .mountain-container{
         padding: 25px 0;
     }
@@ -391,6 +400,7 @@ tr:nth-child(even) {
     }
     .road1{
         overflow: hidden;
+        /* padding-left: 0; */
     }
     .road1 svg{
         width: 100%;
@@ -407,12 +417,7 @@ tr:nth-child(even) {
     }
 }
 @media (max-width: 450px) {
-    .pc{
-        display: none;
-    }
-    .mb{
-        display: block;
-    }
+
     .pd-text{
         padding-left: 10px;
     }
@@ -488,9 +493,6 @@ tr:nth-child(even) {
     }
     .mountain .road .road1{
         padding: 0;
-    }
-    .mountain .road .road1 svg{
-        
     }
     #container .sun{
         height: 90px;
