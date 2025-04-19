@@ -257,6 +257,7 @@ tr:nth-child(even) {
 @keyframes fillIn {
     to {
         fill: #f5f5f5;
+        stroke: #f5f5f5;
     }
 }
 .karma-content{
@@ -476,7 +477,8 @@ tr:nth-child(even) {
         z-index: 1000;
     }
     #header .mobile-menu svg path{
-        fill: #FFFFFF
+        fill: #FFFFFF;
+        stroke: #FFFFFF;
     }
     #container .title{
         width: 100%;
