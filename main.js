@@ -15,18 +15,81 @@
 
     // donation line
     setTimeout(() => {
-        const fakedata = 8.8;
+        // Function to validate data
+        const validateData = (data) => {
+            // Check if data is not a number, is NaN, or is outside 0-100 range
+            if (typeof data !== 'number' || isNaN(data) || data < 0 || data > 100) {
+                console.log('invalid data')
+                return false;
+            }
+            return true;
+        };
+    
+        const fakedata = 110; // Input data
         const isMobile = window.innerWidth < 640;
         const svg = isMobile ? document.getElementById('svg2') : document.getElementById('svg1');
+    
+        // Check if SVG exists
+        if (!svg) {
+            console.error('SVG element not found');
+            return;
+        }
+    
         const paths = svg.querySelectorAll('path');
         const totalPaths = paths.length;
     
-        // Bước 1: Nội suy kích thước và hình dạng
+        // Check if paths exist
+        if (totalPaths === 0) {
+            console.error('No paths found in SVG');
+            return;
+        }
+    
+        // Create <text> element for percentage display
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('font-size', '20');
+        text.setAttribute('font-family', 'arial');
+        text.setAttribute('fill', 'white');
+        text.setAttribute('dominant-baseline', 'middle');
+        svg.appendChild(text);
+    
+        // Validate input data
+        if (!validateData(fakedata)) {
+            // If data is invalid, set text to "0%" and position based on the first path in sorted order
+            const pathData = Array.from(paths).map((path, index) => {
+                const bbox = path.getBBox();
+                return {
+                    index,
+                    bbox,
+                    xCenter: bbox.x + bbox.width / 2
+                };
+            });
+    
+            // Sort paths to match drawing order
+            let sortedPathData = [...pathData];
+            const firstX = pathData[0].xCenter;
+            const lastX = pathData[totalPaths - 1].xCenter;
+            if (lastX < firstX) {
+                sortedPathData.reverse();
+            } else {
+                sortedPathData.sort((a, b) => a.index - b.index);
+            }
+    
+            // Use the first path in sorted order for positioning
+            const firstPathBbox = sortedPathData[0].bbox;
+            const midX = firstPathBbox.x + firstPathBbox.width / 2 - 15;
+            const midY = firstPathBbox.y - 20;
+            text.setAttribute('x', midX);
+            text.setAttribute('y', midY);
+            text.textContent = '0%';
+            return; // Stop all operations
+        }
+    
+        // Map shape and size from paths
         const pathData = Array.from(paths).map((path, index) => {
             const bbox = path.getBBox();
             const length = path.getTotalLength();
             if (isNaN(length) || length <= 0) {
-                console.warn(`Path ${index} có length không hợp lệ: ${length}`);
+                console.warn(`Path ${index} length not found: ${length}`);
             }
             const d = path.getAttribute('d');
             return {
@@ -39,27 +102,25 @@
             };
         });
     
-        // Tính chiều dài tổng
+        // Calculate total length
         const totalLength = pathData.reduce((sum, data) => sum + data.length, 0);
         console.log(`Total length: ${totalLength}`);
         pathData.forEach(data => console.log(`Path ${data.index}: length=${data.length}, xCenter=${data.xCenter}`));
         const targetLength = totalLength * (fakedata / 100);
         console.log(`Target length for ${fakedata}%: ${targetLength}`);
     
-        // Bước 2: Sắp xếp theo index gốc, điều chỉnh nếu ngược
+        // Sort paths by index or reverse based on xCenter
         let sortedPathData = [...pathData];
         const firstX = pathData[0].xCenter;
         const lastX = pathData[totalPaths - 1].xCenter;
         if (lastX < firstX) {
             sortedPathData.reverse();
-            console.log('Đảo ngược thứ tự path vì SVG chạy từ phải qua trái');
         } else {
             sortedPathData.sort((a, b) => a.index - b.index);
-            console.log('Giữ thứ tự index gốc, kiểm tra xCenter');
         }
         sortedPathData.forEach((data, i) => console.log(`Sorted path ${i}: index=${data.index}, xCenter=${data.xCenter}`));
     
-        // Bước 3: Vẽ lại <path> mới
+        // Draw new paths
         const newPaths = [];
         sortedPathData.forEach(data => {
             const newPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -72,33 +133,25 @@
             data.originalPath.setAttribute('stroke', '#747264');
         });
     
-        // Tạo defs cho <clipPath>
+        // Create <defs> for clip paths
         const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
         svg.appendChild(defs);
     
-        // Tạo <text> cho phần trăm
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('font-size', '20');
-        text.setAttribute('font-family', 'Aceh');
-        text.setAttribute('fill', 'white');
-        text.setAttribute('dominant-baseline', 'middle');
-        text.textContent = '';
-        svg.appendChild(text);
-    
-        // Bước 4: Tô màu, đảo ngược hướng trong đoạn 47%-87.4%, và xử lý riêng 87.4%-100%
+        // Set color and animate from 47% to 87.4%
         let currentIndex = 0;
         let currentLength = 0;
         let clipPathId = null;
         let clipPathIdOriginal = null;
-        const startIndex = Math.floor(totalPaths * 0.47); // 47%
-        const midIndex = Math.floor(totalPaths * 0.874); // 87.4%
-        const endIndex = totalPaths - 1; // 100%
+        const startIndex = Math.floor(totalPaths * 0.47); // 47% of paths
+        const midIndex = Math.floor(totalPaths * 0.874); // 87.4% of paths
+        const endIndex = totalPaths - 1; // 100% of paths
         const interval = setInterval(() => {
             if (currentLength < targetLength && currentIndex < totalPaths) {
                 const path = newPaths[currentIndex];
                 const originalPath = sortedPathData[currentIndex].originalPath;
                 const pathLength = sortedPathData[currentIndex].length;
     
+                // Remove old clip paths
                 if (clipPathId) {
                     const oldClipPath = document.getElementById(clipPathId);
                     if (oldClipPath) oldClipPath.remove();
@@ -112,25 +165,28 @@
                     clipPathIdOriginal = null;
                 }
     
+                // Fill path fully if within target length
                 if (currentLength + pathLength <= targetLength) {
                     path.setAttribute('fill', 'white');
                     originalPath.setAttribute('opacity', '0');
                     currentLength += pathLength;
                     currentIndex++;
                 } else {
+                    // Apply clip path for partial fill
                     const remainingLength = targetLength - currentLength;
                     const ratio = remainingLength / pathLength;
                     const bbox = sortedPathData[currentIndex].bbox;
                     const clipWidth = bbox.width * ratio;
     
-                    // Xác định hướng tô: 0%-47% (trái → phải), 47%-87.4% (phải → trái), 87.4%-100% (phải → trái)
+                    // Determine clip direction
                     let isReverse = false;
                     if (currentIndex >= startIndex && currentIndex < midIndex) {
-                        isReverse = true; // 47%-87.4%: tô ngược hướng
+                        isReverse = true; // Reverse clip direction
                     } else if (currentIndex >= midIndex && currentIndex <= endIndex) {
-                        isReverse = false; // 87.4%-100%: tô ngược hướng
+                        isReverse = false; // Normal clip direction
                     }
     
+                    // Clip path for new path
                     clipPathId = `clip-new-${currentIndex}`;
                     const clipPath = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
                     clipPath.setAttribute('id', clipPathId);
@@ -151,6 +207,7 @@
                     path.setAttribute('fill', 'white');
                     path.setAttribute('clip-path', `url(#${clipPathId})`);
     
+                    // Clip path for original path
                     clipPathIdOriginal = `clip-original-${currentIndex}`;
                     const clipPathOriginal = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
                     clipPathOriginal.setAttribute('id', clipPathIdOriginal);
@@ -176,6 +233,7 @@
                     currentIndex++;
                 }
     
+                // Update text position and percentage
                 const lastColoredIndex = currentIndex > 0 ? currentIndex - 1 : 0;
                 const lastColoredBbox = sortedPathData[lastColoredIndex].bbox;
                 const nextBbox = currentIndex < totalPaths ? sortedPathData[currentIndex].bbox : lastColoredBbox;
@@ -200,6 +258,7 @@
                 text.setAttribute('y', midY);
                 text.textContent = `${currentPercent}%`;
             } else {
+                // Final text position and percentage
                 const lastColoredIndex = currentIndex > 0 ? currentIndex - 1 : 0;
                 const lastColoredBbox = sortedPathData[lastColoredIndex].bbox;
                 const nextBbox = currentIndex < totalPaths ? sortedPathData[currentIndex].bbox : lastColoredBbox;
@@ -226,7 +285,7 @@
             }
         }, 50);
     
-        // Responsive: Cập nhật khi thay đổi kích thước màn hình
+        // Handle window resize for responsiveness
         window.addEventListener('resize', () => {
             const newIsMobile = window.innerWidth < 640;
             if (newIsMobile !== isMobile) {
