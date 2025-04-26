@@ -1,11 +1,11 @@
-@import url('https://fonts.cdnfonts.com/css/aceh');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
 *{
     padding: 0;
     box-sizing: border-box;
     margin: 0;
 }
 html{
-    font-family: 'Aceh', sans-serif;
+    font-family: "Roboto", sans-serif;
     scroll-behavior: smooth;
 }
 body{
@@ -17,11 +17,16 @@ body{
 }
 .pd-text{
     padding-left: 20px;
+    font-weight: 400;
 }
 .mb{
     display: none;
 }
-
+.nav-menu {
+    display: none;
+    cursor: pointer;
+    padding: 10px;
+}
 .mountain-container{
     position: relative;
     display: flex;
@@ -30,7 +35,7 @@ body{
     justify-content: center;
     height: 100%;
     width: 100%;
-    padding: 60px 0;
+    padding: 52px 0;
 }
 .karma-content{
     display: flex;
@@ -77,6 +82,7 @@ body{
 }
 #karma-content_en p{
     font-size: 20px;
+    font-weight: 400;
 }
 table {
     border: 1px solid black;
@@ -141,37 +147,70 @@ tr:nth-child(even) {
     gap: 20px;
 }
 #header .nav .nav-faq{
-    background: #fff;
     padding: 15px;
     border-radius: 15px;
-    height: 50px;
+    height: 100%;
 }
 #header .nav .nav-faq a{
     text-decoration: none;
-    color: #000;
+    display: flex;
+    font-weight: 700;
+    font-size: 24px;
+    align-items: center;
+    color: #fff;
     width: 100%;
     height: 100%;
 }
 #header .nav .nav-language{
-    width: 80px;
-    height: 50px;
+    position: relative;
+}
+#header .nav .nav-faq a:hover{
     color: #000;
-    border-radius: 15px;
+    transition: all .3s ease-in-out ;
 }
-#header .nav .nav-language form{
+#header .nav .nav-language #lang-submenu{
     display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: flex-start;
+    padding: 10px;
+    height: 10vh;
     width: 100%;
+    top: 150%;
+    z-index: 1000;
+    position: absolute;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 100;
+    border-radius: 4px;
+}
+#header .nav .nav-language #lang-submenu.hidden{
+    display: none ;
+
+}
+#header .nav .nav-language #lang-submenu .lang{
+    font-size: 20px;
+    width: 100%;
+    cursor: pointer;
+    font-weight: 700;
     height: 100%;
 }
-#header .nav .nav-language form #lang-switch{
-    border: none;
-    border-radius: 15px;
-    height: 100%;
+#header .nav .nav-language #lang-submenu .lang:hover,
+#header .nav .nav-language #lang-submenu .lang.active{
+    color: #000;
+}
+#header .nav .nav-language #lang-toggle{
+    display: flex;
+    align-items: center;
     width: 100%;
-    padding: 0 10px 0 10px;
-    outline: none;
-    font-size: 16px;
-    cursor: pointer;
+    color: #fff;
+    font-weight: 700;
+    height: 100%;
+    font-size: 24px;
+
+}
+#header .nav .nav-language #lang-toggle:hover{
+    color: #000;
+    transition: all .3s ease-in-out ;
 }
 #container{
     width: 100%;
@@ -187,13 +226,12 @@ tr:nth-child(even) {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    span{
-        letter-spacing: 5px;
-        font-size: 50px;
-        font-weight: 700;
-        color: #FFFFFF;
-        font-family: 'Aceh', sans-serif;                                  
-    }
+}
+#container .title span{
+    letter-spacing: 5px;
+    font-size: 50px;
+    font-weight: 700;
+    color: #FFFFFF;                               
 }
 #container .sun{
     width: 143px;
@@ -210,13 +248,13 @@ tr:nth-child(even) {
 .mountain{
     display: flex;
     width: 100%;
-    max-height: 990px;
+    height: 100%;
+    max-height: 100vh;
     position: relative;
-    margin-top: 30px;
+    margin-top: 62px;
 }
 .mountain img{
     width: 100%;
-    filter: drop-shadow(0 0 10px white);
 }
 .mountain .road{
     position: absolute;
@@ -277,9 +315,6 @@ tr:nth-child(even) {
 @media (max-width: 1440px){
     .bg{
         bottom: 25%;
-    }
-    .mountain-container{
-        padding: 50px 0;
     }
     #container .sun{
         width: 133px;
@@ -348,6 +383,9 @@ tr:nth-child(even) {
     }
 }
 @media (max-width: 768px) {
+    .mountain-container{
+        padding: 30px 0 0;
+    }
     .karma-content{
         padding: 0 30px 60px ;
         top: 85%;
@@ -380,19 +418,78 @@ tr:nth-child(even) {
         width: 120px;
     }
     .road1 svg{
-        width: 90%;
+        width: 100%;
     }
 }
 @media (max-width: 640px) {
-    .pc{
-        display: none;
+    .faq-container_content .faq-box .faq-box_content{
+        color: #000;
+        z-index: -10;
     }
-    .mb{
+    #header .nav .nav-language #lang-submenu {
         display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: flex-start;
+        padding: 10px;
+        height: 10vh;
+        background: #D9D9D9 !important;
+
     }
-    .mountain-container{
-        padding: 25px 0;
+    #header {
+        padding: 0px 30px;
+        margin-top: 0 !important;
     }
+    .category-nav {
+        display: none; 
+        position: fixed;
+        top: 0; 
+        object-fit: cover;
+        left: 0;
+        width: 100%;
+        bottom: 0;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9); 
+        flex-direction: column; 
+        align-items: center;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 99;
+        align-items: center;
+        justify-content: center;
+    }
+    .category-nav.visible {
+        display: flex; 
+    }
+    .category-nav div {
+        width: 100%;
+        text-align: center;
+        padding: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .category-nav div:last-child {
+        border-bottom: none;
+    }
+    .category-nav div a {
+        color: #fff;
+        font-size: 18px;
+        text-decoration: none;
+    }
+    .category-nav div.active a {
+        color: #fff;
+        font-weight: bold;
+    }
+    .category-nav div:hover a {
+        color: #ddd;
+    }
+
+    .mountain .pc{
+        display: none !important;
+    }
+    .mountain .mb{
+        display: flex !important;
+    }
+
     #header .nav .nav-language form #lang-switch{
         font-size: 14px;
     }
@@ -405,10 +502,10 @@ tr:nth-child(even) {
     }
     .road1{
         overflow: hidden;
-        /* padding-left: 0; */
     }
     .road1 svg{
-        width: 100%;
+        padding-left: 0;
+        max-width: 100%;
     }
     .karma-content {
         top: 85%;
@@ -420,14 +517,22 @@ tr:nth-child(even) {
         width: 90px;
         height: 90px;
     }
+    table tbody tr th, td {
+        font-size: 13px !important;
+    }
 }
 @media (max-width: 450px) {
-
+    main {
+        padding-top: 20px;
+    }
+    table tbody tr th, td {
+        font-size: 9px !important;
+    }
     .pd-text{
         padding-left: 10px;
     }
     .mountain-container {
-        padding: 15px 0;
+        padding: 20px 0;
     }
     .karma-content{
         gap: 10px;

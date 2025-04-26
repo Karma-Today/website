@@ -1,8 +1,19 @@
+document.getElementById("lang-toggle").addEventListener("click", function() {
+    const submenu = document.getElementById("lang-submenu");
+    submenu.classList.toggle("hidden");
+});
 
-    document.getElementById("lang-switch").addEventListener("change", function () {
-        let lang = this.value;
-        let cnContent = document.getElementById("karma-content_cn");
-        let enContent = document.getElementById("karma-content_en");
+document.querySelectorAll("#lang-submenu .lang").forEach(item => {
+    item.addEventListener("click", function() {
+        const lang = this.getAttribute("data-lang");
+        const cnContent = document.getElementById("karma-content_cn");
+        const enContent = document.getElementById("karma-content_en");
+        
+        // Update active state
+        document.querySelectorAll("#lang-submenu .lang").forEach(el => el.classList.remove("active"));
+        this.classList.add("active");
+        
+        // Switch content
         if (lang === "en") {
             enContent.classList.remove("hidden");
             cnContent.classList.add("hidden");
@@ -10,8 +21,14 @@
             enContent.classList.add("hidden");
             cnContent.classList.remove("hidden");
         }
+        
+        document.getElementById("lang-submenu").classList.add("hidden");
     });
-    document.getElementById("lang-switch").dispatchEvent(new Event("change"));
+});
+
+// Trigger initial state
+document.getElementById("karma-content_cn").classList.add("hidden");
+document.getElementById("karma-content_en").classList.remove("hidden");
     // donation line
     setTimeout(() => {
         // Function to validate data

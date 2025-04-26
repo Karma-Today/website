@@ -39,7 +39,7 @@ const faqData = [
       },
       {
         question: "Once the event is completed?",
-        answer: "Karma Today calculates the number of tokens to be minted based on the donation value (in USD)  and the Karma token minting curve."
+        answer: "Karma Today calculates the number of tokens to be minted based on the donation value (in USD) and the Karma token minting curve."
       },
       {
         question: "Karma declaration for event participation?",
@@ -61,7 +61,6 @@ const faqData = [
         question: "Record the event?",
         answer: "If donate in cash yes, proof complete. <br> If no, Wait for transfer receipt"
       },
-
       {
         question: "Proof complete?",
         answer: "Mint Karma and declare the completion of the event."
@@ -109,36 +108,71 @@ const faqData = [
 ];
 function renderFAQSections() {
     return faqData.map(section => {
-        const itemsHTML = section.items.map(item => `
+        const visibleItems = section.items.slice(0, 5);
+        const hiddenItems = section.items.slice(5);
+        
+        const visibleItemsHTML = visibleItems.map((item, index) => `
             <div class="faq-box_content">
-                <div class="question no-select">
+                <div class="question no-select" role="button" tabindex="0" aria-expanded="false" aria-controls="answer-${section.id}-${index}">
                     ${item.question}
                     <div class="accordion">
                         <div class="show-answer">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 1024 1024">
-                                <path fill="currentColor" d="M104.704 338.752a64 64 0 0 1 90.496 0l316.8 316.8l316.8-316.8a64 64 0 0 1 90.496 90.496L557.248 791.296a64 64 0 0 1-90.496 0L104.704 429.248a64 64 0 0 1 0-90.496" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="27" viewBox="0 0 32 27" fill="none">
+                                <path d="M16 27L0.41154 8.78301e-07L31.5885 3.60387e-06L16 27Z" fill="white"/>
                             </svg>
                         </div>
                     </div>
                 </div>
-                <div class="answer">
+                <div class="answer" id="answer-${section.id}-${index}">
                     ${item.answer}
                 </div>
             </div>
         `).join('');
-
+        
+        const hiddenItemsHTML = hiddenItems.length > 0 ? `
+            <div class="hidden-content" id="hidden-content-${section.id}">
+                ${hiddenItems.map((item, index) => `
+                    <div class="faq-box_content">
+                        <div class="question no-select" role="button" tabindex="0" aria-expanded="false" aria-controls="answer-${section.id}-${index + 5}">
+                            ${item.question}
+                            <div class="accordion">
+                                <div class="show-answer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="27" viewBox="0 0 32 27" fill="none">
+                                        <path d="M16 27L0.41154 8.78301e-07L31.5885 3.60387e-06L16 27Z" fill="white"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="answer" id="answer-${section.id}-${index + 5}">
+                            ${item.answer}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        ` : '';
+        
+        const showMoreButton = hiddenItems.length > 0 ? `
+            <div class="show-more-btn" data-target="hidden-content-${section.id}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="38" height="33" viewBox="0 0 38 33" fill="none">
+                    <path d="M17.2322 31.7678C18.2085 32.7441 19.7915 32.7441 20.7678 31.7678L36.6777 15.8579C37.654 14.8816 37.654 13.2986 36.6777 12.3223C35.7014 11.346 34.1184 11.346 33.1421 12.3223L19 26.4645L4.85786 12.3223C3.88155 11.346 2.29864 11.346 1.32233 12.3223C0.346019 13.2986 0.346019 14.8816 1.32233 15.8579L17.2322 31.7678ZM19 0L16.5 -1.09278e-07L16.5 30L19 30L21.5 30L21.5 1.09278e-07L19 0Z" fill="white"/>
+                </svg>
+            </div>
+        ` : '';
+        
+        const isActive = section.id === 1 ? 'active' : '';
         return `
-            <div class="faq-box box${section.id}">
+            <div class="faq-box box${section.id} ${isActive}">
                 <div class="faq-box_title no-select">
                     <h2>${section.title}</h2>
                 </div>
-                ${itemsHTML}
+                ${visibleItemsHTML}
+                ${hiddenItemsHTML}
+                ${showMoreButton}
             </div>
         `;
     }).join('');
 }
 
-// Add event listeners to make questions clickable
 function setupToggles() {
     const questions = document.querySelectorAll('.question');
     
@@ -146,38 +180,187 @@ function setupToggles() {
         question.addEventListener('click', function() {
             const answerDiv = this.nextElementSibling;
             const arrow = this.querySelector('.show-answer svg');
+            const isExpanded = answerDiv.classList.toggle('active');
             
-            answerDiv.classList.toggle('active');
-            arrow.classList.toggle('rotate');
             this.classList.toggle('active');
+            arrow.classList.toggle('rotate');
+            this.setAttribute('aria-expanded', isExpanded);
+        });
+
+        question.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                this.click();
+            }
+        });
+    });
+    
+    const showMoreButtons = document.querySelectorAll('.show-more-btn');
+    showMoreButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const targetContent = document.getElementById(targetId);
+            
+            targetContent.classList.toggle('visible');
+            this.classList.toggle('expanded');
         });
     });
 }
 
-// Add event listeners for category navigation scrolling
 function setupCategoryNav() {
     const navLinks = document.querySelectorAll('.category-nav a');
+    const categoryItems = document.querySelectorAll('.category-nav div');
     
+    if (!navLinks.length || !categoryItems.length) {
+        console.error('Category navigation links or items not found');
+        return;
+    }
+
     navLinks.forEach(link => {
         link.addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent default anchor behavior
+            event.preventDefault();
             const targetClass = this.getAttribute('data-target');
-            const targetBox = document.querySelector(`.faq-box.${targetClass}`);
+            console.log('Clicked category:', targetClass); // Debug
+
+            document.querySelectorAll('.show-more-btn').forEach(button => {
+                button.classList.remove('expanded');
+            });
+            document.querySelectorAll('.hidden-content').forEach(content => {
+                content.classList.remove('visible');
+            });
+
+            document.querySelectorAll('.faq-box').forEach(box => {
+                box.classList.remove('active');
+            });
             
+            const targetBox = document.querySelector(`.faq-box.${targetClass}`);
             if (targetBox) {
-                targetBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                targetBox.classList.add('active');
+                const headerHeight = document.querySelector('#header').offsetHeight || 0;
+                window.scrollTo({
+                    top: targetBox.getBoundingClientRect().top + window.pageYOffset - headerHeight,
+                    behavior: 'smooth'
+                });
+            } else {
+                console.error(`Target box not found: .faq-box.${targetClass}`);
+            }
+            
+            categoryItems.forEach(item => item.classList.remove('active'));
+            this.parentElement.classList.add('active');
+            
+            const categoryNav = document.getElementById('category-nav');
+            if (categoryNav) {
+                categoryNav.classList.remove('visible');
             }
         });
     });
 }
 
-// Execute when DOM is ready
+function setupMenuToggle() {
+    const navMenu = document.getElementById('nav-menu');
+    const navFaq = document.getElementById('nav-faq');
+    const categoryNav = document.getElementById('category-nav');
+    const langSubmenu = document.getElementById('lang-submenu'); // thêm dòng này
+
+    if (!categoryNav) {
+        console.error('Category navigation not found');
+        return;
+    }
+
+    if (navMenu) {
+        navMenu.addEventListener('click', function() {
+            // Đóng lang-submenu nếu đang mở
+            if (langSubmenu && !langSubmenu.classList.contains('hidden')) {
+                langSubmenu.classList.add('hidden');
+            }
+
+            categoryNav.classList.toggle('visible');
+            const isExpanded = categoryNav.classList.contains('visible');
+            this.setAttribute('aria-expanded', isExpanded);
+        });
+
+        navMenu.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                this.click();
+            }
+        });
+    }
+
+    if (navFaq) {
+        navFaq.addEventListener('click', function(event) {
+            event.preventDefault();
+            if (langSubmenu && !langSubmenu.classList.contains('hidden')) {
+                langSubmenu.classList.add('hidden');
+            }
+            categoryNav.classList.toggle('visible');
+        });
+    }
+
+    document.addEventListener('click', function(event) {
+        if (navMenu && !navMenu.contains(event.target) && 
+            navFaq && !navFaq.contains(event.target) && 
+            !categoryNav.contains(event.target)) {
+            categoryNav.classList.remove('visible');
+            if (navMenu) {
+                navMenu.setAttribute('aria-expanded', 'false');
+            }
+        }
+    });
+}
+
+function setupLanguageToggle() {
+    const langToggle = document.getElementById('lang-toggle');
+    const langSubmenu = document.getElementById('lang-submenu');
+    const categoryNav = document.getElementById('category-nav'); // thêm dòng này
+
+    if (!langToggle || !langSubmenu) {
+        console.error('Language toggle or submenu not found');
+        return;
+    }
+
+    langToggle.addEventListener('click', function() {
+        // Đóng category-nav nếu đang mở
+        if (categoryNav && categoryNav.classList.contains('visible')) {
+            categoryNav.classList.remove('visible');
+        }
+
+        langSubmenu.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function(event) {
+        if (!langToggle.contains(event.target) && !langSubmenu.contains(event.target)) {
+            langSubmenu.classList.add('hidden');
+        }
+    });
+
+    const langItems = document.querySelectorAll('.lang');
+    console.log('Found language items:', langItems.length); // Debug
+    langItems.forEach(lang => {
+        lang.addEventListener('click', function() {
+            console.log('Clicked language:', this.getAttribute('data-lang')); // Debug
+            langItems.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            langSubmenu.classList.add('hidden');
+        });
+
+        lang.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                this.click();
+            }
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.faq-container_content');
     if (container) {
         container.innerHTML = renderFAQSections();
         setupToggles();
         setupCategoryNav();
+        setupMenuToggle();
+        setupLanguageToggle();
     } else {
         console.error('FAQ container not found');
     }
