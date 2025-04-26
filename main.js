@@ -12,7 +12,6 @@
         }
     });
     document.getElementById("lang-switch").dispatchEvent(new Event("change"));
-
     // donation line
     setTimeout(() => {
         // Function to validate data
@@ -25,7 +24,7 @@
             return true;
         };
     
-        const fakedata = 110; // Input data
+        const fakedata = 10; // Input data
         const isMobile = window.innerWidth < 640;
         const svg = isMobile ? document.getElementById('svg2') : document.getElementById('svg1');
     
@@ -104,10 +103,7 @@
     
         // Calculate total length
         const totalLength = pathData.reduce((sum, data) => sum + data.length, 0);
-        console.log(`Total length: ${totalLength}`);
-        pathData.forEach(data => console.log(`Path ${data.index}: length=${data.length}, xCenter=${data.xCenter}`));
         const targetLength = totalLength * (fakedata / 100);
-        console.log(`Target length for ${fakedata}%: ${targetLength}`);
     
         // Sort paths by index or reverse based on xCenter
         let sortedPathData = [...pathData];
@@ -118,7 +114,6 @@
         } else {
             sortedPathData.sort((a, b) => a.index - b.index);
         }
-        sortedPathData.forEach((data, i) => console.log(`Sorted path ${i}: index=${data.index}, xCenter=${data.xCenter}`));
     
         // Draw new paths
         const newPaths = [];
@@ -293,3 +288,4 @@
             }
         });
     }, 500);
+

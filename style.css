@@ -21,6 +21,7 @@ body{
 .mb{
     display: none;
 }
+
 .mountain-container{
     position: relative;
     display: flex;
@@ -117,6 +118,11 @@ tr:nth-child(even) {
     animation: moveHeader 1.5s;
     cursor: pointer;
 }
+#header .logo a{
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
 #header .logo img{
     object-fit: cover;
     width: 100%;
@@ -132,12 +138,19 @@ tr:nth-child(even) {
     position: relative;
     animation: moveHeader 1.5s;
     cursor: pointer;
+    gap: 20px;
 }
-#header .nav .nav-whitepaper{
-    background-color: #FFFFFF;
+#header .nav .nav-faq{
+    background: #fff;
+    padding: 15px;
     border-radius: 15px;
-    width: 300px;
     height: 50px;
+}
+#header .nav .nav-faq a{
+    text-decoration: none;
+    color: #000;
+    width: 100%;
+    height: 100%;
 }
 #header .nav .nav-language{
     width: 80px;
@@ -159,15 +172,6 @@ tr:nth-child(even) {
     outline: none;
     font-size: 16px;
     cursor: pointer;
-}
-#header .mobile-menu{
-    display: none;
-}
-#header .mobile-menu .nav{
-    display: none;
-}
-.mobile-nav{
-    display: none;
 }
 #container{
     width: 100%;
@@ -466,20 +470,6 @@ tr:nth-child(even) {
         width: 100%;
         opacity: .8;
     }
-    #header .mobile-menu{
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-    }
-    #header .mobile-menu svg{
-        position: absolute;
-        animation: moveHeaderM 1.5s;
-        z-index: 1000;
-    }
-    #header .mobile-menu svg path{
-        fill: #FFFFFF;
-        stroke: #FFFFFF;
-    }
     #container .title{
         width: 100%;
         gap: 5rem;
@@ -538,10 +528,6 @@ tr:nth-child(even) {
   from {top: 200px;}
   to {top: 0px;}
 }
-@keyframes moveMobile {
-    from {top: 1000px;}
-    to {top: -10%;}
-}
 @keyframes moveHeaderM {
     from {top: 1000px;}
     to {top: 50%;transform: translateY(-50%)}
@@ -552,10 +538,5 @@ tr:nth-child(even) {
     }
     to {
         z-index: 1;
-    }
-}
-@keyframes bonce {
-    from {
-        top: 0
     }
 }

@@ -1,0 +1,12 @@
+{
+    "rewrites": [
+        {
+            "source": "/faq",
+            "destination": "/faq/faq.html"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
+}
