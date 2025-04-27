@@ -63,9 +63,9 @@ body{
     width: 100%;
 }
 .karma-content_img{
-    width: 50%;
+    width: 60%;
     height: 50%;
-    margin: 50px 0;
+    margin: 50px auto;
 }
 .karma-content_img img{
     width: 100%;
@@ -368,6 +368,27 @@ tr:nth-child(even) {
     }
 }
 @media (max-width: 990px){
+    .karma-content h1{
+        font-size: 36px;
+    }
+    .karma-content ul li {
+        font-size: 16px !important;
+    }
+    .karma-content{
+        gap: 15px;
+    }
+    .karma-content p {
+        font-size: 16px !important;
+    }
+    .karma-content .strong {
+        font-size: 16px !important;
+    }
+    .karma-content span {
+        font-size: 22px !important;
+    }
+    .karma-content_img{
+        width: 80%;
+    }
     .nav .nav-faq a,
     .nav-language #lang-toggle{
         font-size: 20px !important;
@@ -392,14 +413,9 @@ tr:nth-child(even) {
         top: 80%;
     }
 }
-@media (max-width: 900px){
+@media (max-width: 868px){
     .karma-content{
         top: 72%;
-    }
-}
-@media (max-width: 820px){
-    .karma-content{
-        top: 70%;
     }
 }
 @media (max-width: 768px) {
@@ -488,8 +504,26 @@ tr:nth-child(even) {
         padding-left: 0;
         max-width: 100%;
     }
+    .karma-content{
+        gap: 12px !important;
+    }
+    .karma-content ul li {
+        font-size: 14px !important;
+    }
+    .karma-content p {
+        font-size: 14px !important;
+    }
+    .karma-content .strong {
+        font-size: 14px !important;
+    }
+    .karma-content span {
+        font-size: 18px !important;
+    }
+    .karma-content_img{
+        width: 100%;
+    }
     .karma-content {
-        top: 85%;
+        top: 90%;
     }
     #container .title span{
         font-size: 24px;
@@ -531,23 +565,17 @@ tr:nth-child(even) {
     .karma-content h1{
         font-size: 30px;
     }
-    .karma-content span{
-        font-size: 16px;
+    .karma-content ul li {
+        font-size: 13px !important;
     }
-    .karma-content p .strong{
-        font-size: 14px;
+    .karma-content p {
+        font-size: 13px !important;
     }
-    .karma-content p{
-        font-size: 13px;
+    .karma-content .strong {
+        font-size: 13px !important;
     }
-    #karma-content_en p{
-        font-size: 13px;
-    }
-    .karma-content ul {
-        font-size: 13px;
-    }
-    #karma-content_en ul li{
-        font-size: 13px;
+    .karma-content span {
+        font-size: 16px !important;
     }
     #header{
         height: 55px;
