@@ -1,112 +1,112 @@
 const faqData = [
-  {
-    title: "Event Sourcing & Preparation",
-    id: 1,
-    items: [
-      {
-        question: "For Event Sourcing & Preparation?",
-        answer: "Karma Today identifies donation events from around the world, and the community can also submit events."
-      },
-      {
-        question: "Once an event is in the candidate list?",
-        answer: "Karma Today will conduct research on the proof method to verify the completeness of the event (in future)."
-      },
-      {
-        question: "Is a Fraud?",
-        answer: "If is a fraud, reject <br> Else then will grant authorization."
-      },
-      {
-        question: "On chain donation?",
-        answer: "If yes, Recipient wallet declaration & donator wallet declaration with proof method transaction hash."
-      },
-      {
-        question: "Confirm payment method?",
-        answer: "Organizer will verify."
-      },
-      {
-        question: "What tools are recommended for implementing event sourcing?",
-        answer: "If no, proof method: karma agent on spot <br> If yes, proof method: provided by organizer."
-      },
-    ]
-  },
-  {
-    title: "Witness & Minting",
-    id: 2,
-    items: [
-      {
-        question: "After receiving authorization and confirming the donation verification method?",
-        answer: "Karma Today is ready to witness the donation event."
-      },
-      {
-        question: "Once the event is completed?",
-        answer: "Karma Today calculates the number of tokens to be minted based on the donation value (in USD) and the Karma token minting curve."
-      },
-      {
-        question: "Karma declaration for event participation?",
-        answer: "When event start."
-      },
-      {
-        question: "Proof method? ",
-        answer: "Karma agent on spot. <br> Provided by organizer. <br> Transaction hash"
-      },
-      {
-        question: "Proof method Karma agent on spot & Provided by organizer?",
-        answer: "Record the event and donation."
-      },
-      {
-        question: "Proof method transaction?",
-        answer: "Hash record the transaction and proof complete."
-      },
-      {
-        question: "Record the event?",
-        answer: "If donate in cash yes, proof complete. <br> If no, Wait for transfer receipt"
-      },
-      {
-        question: "Proof complete?",
-        answer: "Mint Karma and declare the completion of the event."
-      },
-    ]
-  },
-  {
-    title: "Allocation",
-    id: 3,
-    items: [
-      {
-        question: "According to the white paper, the token allocation will be?",
-        answer: "30% to the Donor <br> 0% to the Beneficiary <br> 5% to the Organizer (if none, this portion is split between the Donor and Beneficiary) <br> 25% to the Team <br> 5% to Ecosystem Development <br> 15% to the Charity Fund <br> 10% to Liquidity"
-      },
-      {
-        question: "A separate agreement?",
-        answer: "Karma Today will sign a separate agreement for each event, specifying the token release schedule based on the donation amount."
-      },
-      {
-        question: "For smaller donations?",
-        answer: "For smaller donations tokens may be released immediately."
-      },
-      {
-        question: "While larger donations ?",
-        answer: "Larger donations will follow a cliff and linear vesting schedule."
-      },
-      {
-        question: "Karma Token?",
-        answer: "Wait for All Parties to Provide Their Addresses "
-      },
-      {
-        question: "Address Provided?",
-        answer: "Compile the Agreement into Smart Contract Storage after Immediately Relate Portion"
-      },
-      {
-        question: "Address Not Provided?",
-        answer: "Voluntarily Donate to Charity Fund after Release in Each Cycle or Wait for 30 days, if still not provided, automatically donate to charity fund."
-      },
-      {
-        question: "Tokens allocated to the Charity Fund and Liquidity?",
-        answer: "Tokens allocated to the Charity Fund and Liquidity will be released immediately, as they do not directly impact the token price."
-      }
-    ]
-  }
-];
-function renderFAQSections() {
+    {
+      title: "Event Sourcing & Preparation",
+      id: 1,
+      items: [
+        {
+          question: "For Event Sourcing & Preparation?",
+          answer: "Karma Today identifies donation events from around the world, and the community can also submit events."
+        },
+        {
+          question: "Once an event is in the candidate list?",
+          answer: "Karma Today will conduct research on the proof method to verify the completeness of the event (in future)."
+        },
+        {
+          question: "Is a Fraud?",
+          answer: "If is a fraud, reject <br> Else then will grant authorization."
+        },
+        {
+          question: "On chain donation?",
+          answer: "If yes, Recipient wallet declaration & donator wallet declaration with proof method transaction hash."
+        },
+        {
+          question: "Confirm payment method?",
+          answer: "Organizer will verify."
+        },
+        {
+          question: "What tools are recommended for implementing event sourcing?",
+          answer: "If no, proof method: karma agent on spot <br> If yes, proof method: provided by organizer."
+        },
+      ]
+    },
+    {
+      title: "Witness & Minting",
+      id: 2,
+      items: [
+        {
+          question: "After receiving authorization and confirming the donation verification method?",
+          answer: "Karma Today is ready to witness the donation event."
+        },
+        {
+          question: "Once the event is completed?",
+          answer: "Karma Today calculates the number of tokens to be minted based on the donation value (in USD) and the Karma token minting curve."
+        },
+        {
+          question: "Karma declaration for event participation?",
+          answer: "When event start."
+        },
+        {
+          question: "Proof method? ",
+          answer: "Karma agent on spot. <br> Provided by organizer. <br> Transaction hash"
+        },
+        {
+          question: "Proof method Karma agent on spot & Provided by organizer?",
+          answer: "Record the event and donation."
+        },
+        {
+          question: "Proof method transaction?",
+          answer: "Hash record the transaction and proof complete."
+        },
+        {
+          question: "Record the event?",
+          answer: "If donate in cash yes, proof complete. <br> If no, Wait for transfer receipt"
+        },
+        {
+          question: "Proof complete?",
+          answer: "Mint Karma and declare the completion of the event."
+        },
+      ]
+    },
+    {
+      title: "Allocation",
+      id: 3,
+      items: [
+        {
+          question: "According to the white paper, the token allocation will be?",
+          answer: "30% to the Donor <br> 0% to the Beneficiary <br> 5% to the Organizer (if none, this portion is split between the Donor and Beneficiary) <br> 25% to the Team <br> 5% to Ecosystem Development <br> 15% to the Charity Fund <br> 10% to Liquidity"
+        },
+        {
+          question: "A separate agreement?",
+          answer: "Karma Today will sign a separate agreement for each event, specifying the token release schedule based on the donation amount."
+        },
+        {
+          question: "For smaller donations?",
+          answer: "For smaller donations tokens may be released immediately."
+        },
+        {
+          question: "While larger donations ?",
+          answer: "Larger donations will follow a cliff and linear vesting schedule."
+        },
+        {
+          question: "Karma Token?",
+          answer: "Wait for All Parties to Provide Their Addresses "
+        },
+        {
+          question: "Address Provided?",
+          answer: "Compile the Agreement into Smart Contract Storage after Immediately Relate Portion"
+        },
+        {
+          question: "Address Not Provided?",
+          answer: "Voluntarily Donate to Charity Fund after Release in Each Cycle or Wait for 30 days, if still not provided, automatically donate to charity fund."
+        },
+        {
+          question: "Tokens allocated to the Charity Fund and Liquidity?",
+          answer: "Tokens allocated to the Charity Fund and Liquidity will be released immediately, as they do not directly impact the token price."
+        }
+      ]
+    }
+  ];
+  function renderFAQSections() {
     return faqData.map(section => {
         const visibleItems = section.items.slice(0, 5);
         const hiddenItems = section.items.slice(5);
@@ -128,7 +128,6 @@ function renderFAQSections() {
                 </div>
             </div>
         `).join('');
-        
         const hiddenItemsHTML = hiddenItems.length > 0 ? `
             <div class="hidden-content" id="hidden-content-${section.id}">
                 ${hiddenItems.map((item, index) => `
@@ -150,7 +149,6 @@ function renderFAQSections() {
                 `).join('')}
             </div>
         ` : '';
-        
         const showMoreButton = hiddenItems.length > 0 ? `
             <div class="show-more-btn" data-target="hidden-content-${section.id}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="38" height="33" viewBox="0 0 38 33" fill="none">
@@ -158,7 +156,6 @@ function renderFAQSections() {
                 </svg>
             </div>
         ` : '';
-        
         const isActive = section.id === 1 ? 'active' : '';
         return `
             <div class="faq-box box${section.id} ${isActive}">
@@ -172,7 +169,6 @@ function renderFAQSections() {
         `;
     }).join('');
 }
-
 function setupToggles() {
     const questions = document.querySelectorAll('.question');
     
@@ -180,11 +176,86 @@ function setupToggles() {
         question.addEventListener('click', function() {
             const answerDiv = this.nextElementSibling;
             const arrow = this.querySelector('.show-answer svg');
-            const isExpanded = answerDiv.classList.toggle('active');
+            const isActive = answerDiv.classList.contains('active');
+            
+            const allAnswers = document.querySelectorAll('.answer.active');
+            allAnswers.forEach(answer => {
+                if (answer !== answerDiv) {
+                    answer.classList.remove('active');
+                    answer.style.display = 'none';
+                    answer.style.height = '';
+                    answer.style.visibility = 'hidden';
+                    
+                    const parentQuestion = answer.previousElementSibling;
+                    if (parentQuestion && parentQuestion.querySelector('.show-answer svg')) {
+                        gsap.to(parentQuestion.querySelector('.show-answer svg'), {
+                            rotation: 0,
+                            duration: 0.4,
+                            ease: "power2.out"
+                        });
+                        parentQuestion.classList.remove('active');
+                        parentQuestion.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+            
+            if (isActive) {
+                gsap.to(answerDiv, {
+                    height: 0,
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    duration: 0.4,
+                    ease: "power2.out",
+                    onComplete: function() {
+                        answerDiv.classList.remove('active');
+                        answerDiv.style.display = 'none';
+                        answerDiv.style.height = '';
+                        answerDiv.style.paddingTop = '';
+                        answerDiv.style.paddingBottom = '';
+                        answerDiv.style.visibility = 'hidden';
+                    }
+                });
+            } else {
+                answerDiv.classList.add('active');
+                answerDiv.style.display = 'block';
+                answerDiv.style.visibility = 'visible';
+                answerDiv.style.height = 'auto';
+                
+                const height = answerDiv.offsetHeight;
+                
+                answerDiv.style.height = '0';
+                answerDiv.style.paddingTop = '0';
+                answerDiv.style.paddingBottom = '0';
+                
+                gsap.to(answerDiv, {
+                    height: height,
+                    paddingTop: 15,
+                    paddingBottom: 15,
+                    duration: 0.4,
+                    ease: "power2.out",
+                    onComplete: function() {
+                        answerDiv.style.height = 'auto';
+                        
+                        const parentHiddenContent = answerDiv.closest('.hidden-content');
+                        if (parentHiddenContent && parentHiddenContent.classList.contains('visible')) {
+                            parentHiddenContent.style.height = 'auto';
+                            
+                            setTimeout(() => {
+                                parentHiddenContent.style.height = 'auto';
+                            }, 50);
+                        }
+                    }
+                });
+            }
+            
+            gsap.to(arrow, {
+                rotation: isActive ? 0 : 180,
+                duration: 0.3,
+                ease: "power2.out"
+            });
             
             this.classList.toggle('active');
-            arrow.classList.toggle('rotate');
-            this.setAttribute('aria-expanded', isExpanded);
+            this.setAttribute('aria-expanded', !isActive);
         });
 
         question.addEventListener('keydown', function(event) {
@@ -200,11 +271,98 @@ function setupToggles() {
         button.addEventListener('click', function() {
             const targetId = this.getAttribute('data-target');
             const targetContent = document.getElementById(targetId);
+            const isExpanded = this.classList.contains('expanded');
             
-            targetContent.classList.toggle('visible');
+            if (isExpanded) {
+                gsap.to(targetContent, {
+                    height: 0,
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: "power2.out",
+                    onComplete: function() {
+                        targetContent.classList.remove('visible');
+                        targetContent.style.height = "0";
+                        targetContent.style.overflow = "hidden";
+                    }
+                });
+                
+                gsap.to(this.querySelector('svg'), {
+                    rotation: 0,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            } else {
+                targetContent.classList.add('visible');
+                
+                gsap.set(targetContent, {
+                    opacity: 1,
+                    height: "auto",
+                    overflow: "visible"
+                });
+        
+                const height = targetContent.scrollHeight;
+                
+                gsap.fromTo(targetContent, 
+                    { height: 0, overflow: "hidden" },
+                    { 
+                        height: height,
+                        duration: 0.5,
+                        ease: "power2.out",
+                        onComplete: function() {
+                            targetContent.style.height = "auto";
+                            targetContent.style.overflow = "visible"; 
+                        }
+                    }
+                );
+                
+                gsap.to(this.querySelector('svg'), {
+                    rotation: 180,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            }
             this.classList.toggle('expanded');
         });
     });
+}
+
+function reInitShowMoreButtons() {
+    const showMoreButtons = document.querySelectorAll('.show-more-btn');
+    
+    showMoreButtons.forEach(button => {
+        const targetId = button.getAttribute('data-target');
+        const targetContent = document.getElementById(targetId);
+        
+        const isContentVisible = targetContent && 
+                               targetContent.classList.contains('visible') && 
+                               targetContent.offsetHeight > 0;
+        
+        if (isContentVisible) {
+            button.classList.add('expanded');
+            gsap.set(button.querySelector('svg'), {
+                rotation: 180
+            });
+        } else {
+            button.classList.remove('expanded');
+            gsap.set(button.querySelector('svg'), {
+                rotation: 0
+            });
+        }
+    });
+}
+
+function switchBox(boxId) {
+    const allBoxes = document.querySelectorAll('.faq-box');
+    allBoxes.forEach(box => {
+        box.classList.remove('active');
+    });
+    
+    const selectedBox = document.querySelector(`.box${boxId}`);
+    if (selectedBox) {
+        selectedBox.classList.add('active');
+    }
+    
+    reInitShowMoreButtons();
 }
 
 function setupCategoryNav() {
@@ -221,13 +379,30 @@ function setupCategoryNav() {
             event.preventDefault();
             const targetClass = this.getAttribute('data-target');
 
+            // Reset all show more buttons and hidden content
             document.querySelectorAll('.show-more-btn').forEach(button => {
                 button.classList.remove('expanded');
+                gsap.to(button.querySelector('svg'), {
+                    rotation: 0,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
             });
             document.querySelectorAll('.hidden-content').forEach(content => {
                 content.classList.remove('visible');
+                gsap.to(content, {
+                    height: 0,
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: "power2.out",
+                    onComplete: function() {
+                        content.style.height = "0";
+                        content.style.overflow = "hidden";
+                    }
+                });
             });
 
+            // Reset all FAQ boxes
             document.querySelectorAll('.faq-box').forEach(box => {
                 box.classList.remove('active');
             });
@@ -251,6 +426,9 @@ function setupCategoryNav() {
             if (categoryNav) {
                 categoryNav.classList.remove('visible');
             }
+            
+            // Ensure show more buttons are reinitialized
+            reInitShowMoreButtons();
         });
     });
 }
@@ -259,7 +437,7 @@ function setupMenuToggle() {
     const navMenu = document.getElementById('nav-menu');
     const navFaq = document.getElementById('nav-faq');
     const categoryNav = document.getElementById('category-nav');
-    const langSubmenu = document.getElementById('lang-submenu'); // thêm dòng này
+    const langSubmenu = document.getElementById('lang-submenu'); 
 
     if (!categoryNav) {
         console.error('Category navigation not found');
@@ -268,7 +446,6 @@ function setupMenuToggle() {
 
     if (navMenu) {
         navMenu.addEventListener('click', function() {
-            // Đóng lang-submenu nếu đang mở
             if (langSubmenu && !langSubmenu.classList.contains('hidden')) {
                 langSubmenu.classList.add('hidden');
             }
@@ -311,7 +488,7 @@ function setupMenuToggle() {
 function setupLanguageToggle() {
     const langToggle = document.getElementById('lang-toggle');
     const langSubmenu = document.getElementById('lang-submenu');
-    const categoryNav = document.getElementById('category-nav'); // thêm dòng này
+    const categoryNav = document.getElementById('category-nav');
 
     if (!langToggle || !langSubmenu) {
         console.error('Language toggle or submenu not found');
@@ -319,7 +496,6 @@ function setupLanguageToggle() {
     }
 
     langToggle.addEventListener('click', function() {
-        // Đóng category-nav nếu đang mở
         if (categoryNav && categoryNav.classList.contains('visible')) {
             categoryNav.classList.remove('visible');
         }
@@ -359,7 +535,6 @@ function setupCloseButton() {
             categoryNav.classList.remove('visible');
         });
         
-        // Add keyboard accessibility
         closeButton.setAttribute('tabindex', '0');
         closeButton.setAttribute('role', 'button');
         closeButton.setAttribute('aria-label', 'Close navigation menu');
@@ -373,7 +548,6 @@ function setupCloseButton() {
     }
 }
 
-// Add this function call to your DOMContentLoaded event
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.faq-container_content');
     if (container) {
@@ -382,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setupCategoryNav();
         setupMenuToggle();
         setupLanguageToggle();
-        setupCloseButton(); // Add this new function call
+        setupCloseButton();
     } else {
         console.error('FAQ container not found');
     }
