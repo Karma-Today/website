@@ -335,10 +335,22 @@ tr:nth-child(even) {
     }
 }
 @media (max-width: 1200px) {
+    main{
+        padding-top: 42px;
+    }
+    .nav .nav-faq a,
+    .nav-language #lang-toggle{
+        font-size: 22px !important;
+    }
+    .nav-language #lang-submenu .lang{
+        font-size: 20px !important;
+    } 
     .karma-content{
         padding: 0 60px 60px ;
     }
     #header .logo {
+        width: 90px;
+        height: 75px;
         padding-top: 10px;
     }
     #container .title{
@@ -355,6 +367,13 @@ tr:nth-child(even) {
     }
 }
 @media (max-width: 990px){
+    .nav .nav-faq a,
+    .nav-language #lang-toggle{
+        font-size: 20px !important;
+    }
+    .nav-language #lang-submenu .lang{
+        font-size: 18px !important;
+    } 
     #header {
         padding: 0 40px;
     }
@@ -422,10 +441,14 @@ tr:nth-child(even) {
     }
 }
 @media (max-width: 640px) {
-    .faq-container_content .faq-box .faq-box_content{
-        color: #000;
-        z-index: -10;
+    .nav .nav-faq a,
+    .nav-language #lang-toggle{
+        font-size: 18px !important;
     }
+    .nav-language #lang-submenu .lang{
+        font-size: 16px !important;
+    } 
+
     #header .nav .nav-language #lang-submenu {
         display: flex;
         flex-direction: column;
@@ -440,49 +463,6 @@ tr:nth-child(even) {
         padding: 0px 30px;
         margin-top: 0 !important;
     }
-    .category-nav {
-        display: none; 
-        position: fixed;
-        top: 0; 
-        object-fit: cover;
-        left: 0;
-        width: 100%;
-        bottom: 0;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9); 
-        flex-direction: column; 
-        align-items: center;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        z-index: 99;
-        align-items: center;
-        justify-content: center;
-    }
-    .category-nav.visible {
-        display: flex; 
-    }
-    .category-nav div {
-        width: 100%;
-        text-align: center;
-        padding: 15px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    .category-nav div:last-child {
-        border-bottom: none;
-    }
-    .category-nav div a {
-        color: #fff;
-        font-size: 18px;
-        text-decoration: none;
-    }
-    .category-nav div.active a {
-        color: #fff;
-        font-weight: bold;
-    }
-    .category-nav div:hover a {
-        color: #ddd;
-    }
-
     .mountain .pc{
         display: none !important;
     }
@@ -522,6 +502,16 @@ tr:nth-child(even) {
     }
 }
 @media (max-width: 450px) {
+    .nav .nav-faq a,
+    .nav-language #lang-toggle{
+        font-size: 16px !important;
+    }
+    .nav-language #lang-submenu .lang{
+        font-size: 14px !important;
+    } 
+    .karma-content {
+        top: 88%;
+    }
     main {
         padding-top: 20px;
     }
@@ -538,22 +528,25 @@ tr:nth-child(even) {
         gap: 10px;
     }
     .karma-content h1{
-        font-size: 36px;
+        font-size: 30px;
     }
     .karma-content span{
-        font-size: 20px;
+        font-size: 16px;
     }
-    .karma-content p{
+    .karma-content p .strong{
         font-size: 14px;
     }
+    .karma-content p{
+        font-size: 13px;
+    }
     #karma-content_en p{
-        font-size: 18px;
+        font-size: 13px;
     }
     .karma-content ul {
-        font-size: 18px;
+        font-size: 13px;
     }
     #karma-content_en ul li{
-        font-size: 18px;
+        font-size: 13px;
     }
     #header{
         height: 55px;
@@ -578,12 +571,12 @@ tr:nth-child(even) {
     #container .title{
         width: 100%;
         gap: 5rem;
-        span{
-            letter-spacing: 3px;
-            font-size: 28px;
-            font-weight: 700;
-            color: #FFFFFF;
-        }
+    }
+    #container .title span{
+        letter-spacing: 3px;
+        font-size: 28px;
+        font-weight: 700;
+        color: #FFFFFF;
     }
     .mountain .road{
         top: 3.5%;

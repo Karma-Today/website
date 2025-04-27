@@ -220,7 +220,6 @@ function setupCategoryNav() {
         link.addEventListener('click', function(event) {
             event.preventDefault();
             const targetClass = this.getAttribute('data-target');
-            console.log('Clicked category:', targetClass); // Debug
 
             document.querySelectorAll('.show-more-btn').forEach(button => {
                 button.classList.remove('expanded');
@@ -335,10 +334,8 @@ function setupLanguageToggle() {
     });
 
     const langItems = document.querySelectorAll('.lang');
-    console.log('Found language items:', langItems.length); // Debug
     langItems.forEach(lang => {
         lang.addEventListener('click', function() {
-            console.log('Clicked language:', this.getAttribute('data-lang')); // Debug
             langItems.forEach(l => l.classList.remove('active'));
             this.classList.add('active');
             langSubmenu.classList.add('hidden');
@@ -353,6 +350,30 @@ function setupLanguageToggle() {
     });
 }
 
+function setupCloseButton() {
+    const closeButton = document.querySelector('.close-btn_nav');
+    const categoryNav = document.getElementById('category-nav');
+    
+    if (closeButton && categoryNav) {
+        closeButton.addEventListener('click', function() {
+            categoryNav.classList.remove('visible');
+        });
+        
+        // Add keyboard accessibility
+        closeButton.setAttribute('tabindex', '0');
+        closeButton.setAttribute('role', 'button');
+        closeButton.setAttribute('aria-label', 'Close navigation menu');
+        
+        closeButton.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                categoryNav.classList.remove('visible');
+            }
+        });
+    }
+}
+
+// Add this function call to your DOMContentLoaded event
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.faq-container_content');
     if (container) {
@@ -361,6 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setupCategoryNav();
         setupMenuToggle();
         setupLanguageToggle();
+        setupCloseButton(); // Add this new function call
     } else {
         console.error('FAQ container not found');
     }
