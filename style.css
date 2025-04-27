@@ -253,7 +253,7 @@ tr:nth-child(even) {
     height: 100%;
     max-height: 100vh;
     position: relative;
-    margin-top: 62px;
+    margin-top: 30px;
 }
 .mountain img{
     width: 100%;
@@ -315,6 +315,7 @@ tr:nth-child(even) {
     display: none;
 }
 @media (max-width: 1440px){
+
     .bg{
         bottom: 25%;
     }
@@ -325,6 +326,7 @@ tr:nth-child(even) {
     .mountain{
         margin-top: 20px;
         overflow: hidden;
+        max-height: 90vh;
     }
     #container .title{
         gap: 5rem;
@@ -356,19 +358,31 @@ tr:nth-child(even) {
         padding-top: 10px;
     }
     #container .title{
-        width: 65%;
-        span{
-            letter-spacing: 4px;
-            font-size: 36px;
-            font-weight: 700;
-            color: #FFFFFF;
-        }
+        width: 60%;
+    }
+    #container .title span{
+        letter-spacing: 4px;
+        font-size: 32px;
+        font-weight: 700;
+        color: #FFFFFF;
+    }
+    #container .sun{
+        width: 115px;
+        height: 115px;
+
     }
     .bg{
         bottom: 25%;
     }
+    .mountain{
+        max-height: 80vh;
+    }
+    .mountain-container{
+        padding: 32px 0;
+    }
 }
 @media (max-width: 990px){
+
     .karma-content h1{
         font-size: 36px;
     }
@@ -412,6 +426,22 @@ tr:nth-child(even) {
     }
     .karma-content{
         top: 80%;
+    }
+    #container .title{
+        width: 55%;
+    }
+    #container .title span{
+        letter-spacing: 4px;
+        font-size: 28px;
+        font-weight: 700;
+        color: #FFFFFF;
+    }
+    #container .sun{
+        width: 100px;
+        height: 100px;
+    }
+    .mountain{
+        max-height: 55vh;
     }
 }
 @media (max-width: 868px){
@@ -459,6 +489,10 @@ tr:nth-child(even) {
     }
 }
 @media (max-width: 640px) {
+    svg text{
+        font-size: 24px;
+        font-weight: bold;
+    }
     .nav .nav-faq a,
     .nav-language #lang-toggle{
         font-size: 18px !important;

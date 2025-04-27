@@ -62,7 +62,7 @@ document.getElementById("karma-content_en").classList.remove("hidden");
     
         // Create <text> element for percentage display
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('font-size', '20');
+        text.setAttribute('font-size', '22');
         text.setAttribute('font-family', 'arial');
         text.setAttribute('fill', 'white');
         text.setAttribute('dominant-baseline', 'middle');
