@@ -196,7 +196,7 @@ main{
 
 }
 #container .faq-container h1 {
-    font-size: 70px;
+    font-size: 60px;
     font-weight: bold;
     width: 100%;
     color: #fff;
@@ -320,6 +320,12 @@ footer {
     .category-nav .allocation {
         font-size: 22px;
     }
+    #container .faq-container h1 {
+        font-size: 50px;
+    }
+    .faq-container_content .faq-box .faq-box_title h2{
+        font-size: 32px !important;
+    }
 }
 
 @media (max-width: 1200px) {
@@ -342,7 +348,10 @@ footer {
         max-width: 65%;
     }
     #container .faq-container h1 {
-        font-size: 50px;
+        font-size: 44px;
+    }
+    .faq-container_content .faq-box .faq-box_title h2{
+        font-size: 30px !important;
     }
     .faq-box .faq-box_content .question {
         font-size: 20px;
@@ -397,7 +406,10 @@ footer {
         gap: 0;
     }
     #container .faq-container h1 {
-        font-size: 45px;
+        font-size: 40px;
+    }
+    .faq-container_content .faq-box .faq-box_title h2{
+        font-size: 28px !important;
     }
 }
 
@@ -426,10 +438,13 @@ footer {
     }
     #container .faq-container {
         max-width: 90%;
-        gap: 10px;
     }
     #container .faq-container h1 {
-        font-size: 40px;
+        font-size: 36px ;
+        margin-bottom: 0;
+    }
+    .faq-container_content .faq-box .faq-box_title h2{
+        font-size: 26px;
     }
     .faq-box .faq-box_content .question {
         font-size: 18px;
@@ -464,9 +479,7 @@ footer {
     .bg-tit{
         margin: 0;
     }
-    .faq-container_content .faq-box .faq-box_title h2{
-        padding-bottom: 20px;
-    }
+
     #header{
         justify-content: unset;
     }
@@ -499,9 +512,13 @@ footer {
         max-width: 95%;
         gap: 0;
     }
-    
+    .faq-container_content .faq-box .faq-box_title h2{
+        padding-bottom: 20px;
+        font-size: 22px !important;
+    }
     #container .faq-container h1 {
-        font-size: 35px;
+        margin-bottom: 0;
+        font-size: 28px;
     }
     .faq-box .faq-box_content .question {
         font-size: 16px;
@@ -581,6 +598,7 @@ footer {
 }
 
 @media (max-width: 450px) {
+    
     .faq-box .faq-box_content .question {
         padding: 12px 35px 12px 20px;
     }
@@ -607,8 +625,11 @@ footer {
         margin-bottom: 0;
     }
     #container .faq-container h1 {
-        font-size: 30px;
+        font-size: 23px !important;
         margin-bottom: 0;
+    }
+    .faq-container_content .faq-box .faq-box_title h2{
+        font-size: 18px !important;
     }
     .faq-box .faq-box_content .question {
         font-size: 14px;
