@@ -69,9 +69,10 @@ main{
     top: 100%;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     z-index: 100;
-    border-radius: 4px;
     width: 250px;
+    border-radius: 4px;
     height: 100vh;
+    background: #D9D9D9 !important;
 }
 .category-nav .close-btn_nav{
     position: absolute;
@@ -243,7 +244,7 @@ main{
     font-weight: 600;
     cursor: pointer;
     position: relative;
-    padding: 15px 15px 15px 30px;
+    padding: 15px 50px 15px 30px;
 
 }
 .faq-box .faq-box_content .answer {
@@ -303,9 +304,6 @@ footer {
         padding: 0 50px;
         position: relative;
     }
-    .category-nav {
-        padding-left: 20px;
-    }
     #container .faq-container h1 {
         font-size: 60px;
         color: #fff;
@@ -334,7 +332,7 @@ footer {
         margin: 12vh 0;
     }
     #container .faq-container {
-        max-width: 60%;
+        max-width: 65%;
     }
     #container .faq-container h1 {
         font-size: 50px;
@@ -347,6 +345,9 @@ footer {
     }
     .faq-container_content .faq-box .faq-box_title {
         font-size: 18px;
+    }
+    .faq-box .faq-box_content .c{
+        padding: 15px 35px 15px 30px;
     }
 }
 
@@ -471,6 +472,7 @@ footer {
     }
     .category-nav {
         gap: 10px;
+        background: rgba(0,0,0,0.9) !important;
     }
     .category-nav .sourcing,
     .category-nav .witness,
@@ -556,10 +558,18 @@ footer {
     .category-nav div:hover a {
         color: #ddd;
     }
-
+    .faq-box .faq-box_content .question {
+        padding: 12px 40px 12px 20px;
+    }
+    .faq-box .faq-box_content .answer{
+        padding: 12px 20px;
+    }
 }
 
 @media (max-width: 450px) {
+    .faq-box .faq-box_content .question {
+        padding: 12px 35px 12px 20px;
+    }
     .faq-box .faq-box_content .accordion .show-answer svg {
         width: 18px;
         height: 18px;
@@ -569,10 +579,6 @@ footer {
     }
     .show-more-btn svg{
         width: 30px;
-    }
-    .faq-box .faq-box_content .question,
-    .faq-box .faq-box_content .answer {
-        padding: 12px 35px 12px 20px;
     }
     header{
         margin-top: 20px;
