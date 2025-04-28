@@ -84,6 +84,9 @@ body{
     font-size: 20px;
     font-weight: 400;
 }
+#karma-content_cn ul li {
+    font-size: 16px;
+}
 table {
     border: 1px solid black;
     border-collapse: collapse;
@@ -491,7 +494,7 @@ tr:nth-child(even) {
 }
 @media (max-width: 640px) {
     svg text{
-        font-size: 24px;
+        font-size: 21px;
         font-weight: bold;
     }
     .nav .nav-faq a,
@@ -639,8 +642,6 @@ tr:nth-child(even) {
     }
     #container .title span{
         letter-spacing: 3px;
-        font-size: 28px;
-        font-weight: 700;
         color: #FFFFFF;
     }
     .mountain .road{
