@@ -397,6 +397,9 @@ tr:nth-child(even) {
     .karma-content ul li {
         font-size: 16px !important;
     }
+    .karma-content ul {
+        font-size: 16px !important;
+    }
     .karma-content{
         gap: 15px;
     }
@@ -547,6 +550,9 @@ tr:nth-child(even) {
         gap: 12px !important;
     }
     .karma-content ul li {
+        font-size: 14px !important;
+    }
+    .karma-content ul {
         font-size: 14px !important;
     }
     .karma-content p {
