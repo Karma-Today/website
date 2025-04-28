@@ -607,6 +607,9 @@ tr:nth-child(even) {
     .karma-content ul li {
         font-size: 13px !important;
     }
+    .karma-content ul {
+        font-size: 13px !important;
+    }
     .karma-content p {
         font-size: 13px !important;
     }
