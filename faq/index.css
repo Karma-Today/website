@@ -615,7 +615,7 @@ main{
         margin-top: 10px;
     }
     .diagram-display {
-        justify-content: center;
+        justify-content: space-evenly;
     }
     .question-display {
         font-size: 16px;
