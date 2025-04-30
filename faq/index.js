@@ -514,13 +514,14 @@ function setupCategoryNav() {
             event.preventDefault();
             const targetClass = this.getAttribute('data-target');
 
-            // Close fullscreen diagram if open
+            console.log(`Nav clicked: targetClass=${targetClass}`); // Debug
+
             const fullscreenDiv = document.querySelector('.fullscreen-diagram');
             if (fullscreenDiv) {
+                console.log('Closing fullscreen diagram');
                 closeDiagramFullscreen();
             }
 
-            // Reset all show more buttons and hidden content
             document.querySelectorAll('.show-more-btn').forEach(button => {
                 button.classList.remove('expanded');
                 gsap.to(button.querySelector('svg'), {
@@ -543,19 +544,24 @@ function setupCategoryNav() {
                 });
             });
 
-            // Reset all FAQ boxes
             document.querySelectorAll('.faq-box').forEach(box => {
                 box.classList.remove('active');
             });
-            
             const targetBox = document.querySelector(`.faq-box.${targetClass}`);
             if (targetBox) {
+                console.log(`Activating box: .faq-box.${targetClass}`);
                 targetBox.classList.add('active');
-                const headerHeight = document.querySelector('#header').offsetHeight || 0;
-                window.scrollTo({
-                    top: targetBox.getBoundingClientRect().top + window.pageYOffset - headerHeight,
-                    behavior: 'smooth'
-                });
+                
+                if (window.innerWidth > 641) {
+                    const headerHeight = document.querySelector('#header').offsetHeight || 0;
+                    console.log(`Scrolling to box, headerHeight=${headerHeight}`);
+                    window.scrollTo({
+                        top: targetBox.getBoundingClientRect().top + window.pageYOffset - headerHeight,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    console.log('Mobile detected, skipping scroll');
+                }
             } else {
                 console.error(`Target box not found: .faq-box.${targetClass}`);
             }
@@ -565,10 +571,11 @@ function setupCategoryNav() {
             
             const categoryNav = document.getElementById('category-nav');
             if (categoryNav) {
+                console.log('Closing category nav');
                 categoryNav.classList.remove('visible');
             }
             
-            // Ensure show more buttons are reinitialized
+            console.log('Reinitializing show more buttons');
             reInitShowMoreButtons();
         });
     });
