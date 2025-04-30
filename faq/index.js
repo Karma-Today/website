@@ -378,7 +378,7 @@ function setupDiagramButtons() {
                 // Apply fixed positioning styles
                 const fullscreenContent = fullscreenDiv.querySelector('.fullscreen-content');
                 fullscreenContent.style.position = 'fixed';
-                fullscreenContent.style.top = headerHeight + 'px'; // Bắt đầu từ dưới header
+                fullscreenContent.style.top = headerHeight + 'px';
                 fullscreenContent.style.bottom = '32px';
                 fullscreenContent.style.left = '0';
                 fullscreenContent.style.right = '0';
