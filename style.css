@@ -607,6 +607,9 @@ tr:nth-child(even) {
     }
 }
 @media (max-width: 450px) {
+    #header .nav {
+        gap: 10px !important;
+    }
     .nav .nav-faq a,
     .nav-language #lang-toggle{
         font-size: 15px !important;
