@@ -4,28 +4,18 @@ const faqData = [
       id: 1,
       items: [
         {
-          question: "For Event Sourcing & Preparation?",
-          answer: "Karma Today identifies donation events from around the world, and the community can also submit events."
+          question: "What is Karma?",
+          answer: "Karma is a non-financial digital token whose only purpose is to acknowledge charitable acts. It is never marketed as an investment or used for speculationd-think of it as a permanent, blockchain-based “thank-you note.”"
         },
         {
-          question: "Once an event is in the candidate list?",
-          answer: "Karma Today will conduct research on the proof method to verify the completeness of the event (in future)."
+          question: "Why base minting on donations?",
+          answer: "Real-world donations are transparent, measurable, and verifiable. Tying every token to a documented act of giving anchors the project in genuine goodwill and removes any “pay-to-mint” dynamic."
         },
         {
-          question: "Is a Fraud?",
-          answer: "If is a fraud, reject <br> Else then will grant authorization."
-        },
-        {
-          question: "On chain donation?",
-          answer: "If yes, Recipient wallet declaration & donator wallet declaration with proof method transaction hash."
-        },
-        {
-          question: "Confirm payment method?",
-          answer: "Organizer will verify."
-        },
-        {
-          question: "What tools are recommended for implementing event sourcing?",
-          answer: "If no, proof method: karma agent on spot <br> If yes, proof method: provided by organizer."
+          question: "How are donation events sourced?",
+          answer: "Karma.Today identifies donation events worldwide, and community members can also nominate events. Once an event is added to the candidate list, Karma.Today researches the appropriate proof methods to fully verify it.",
+          button: 'Click to see',
+          diagram: "diag1.png"
         },
       ]
     },
@@ -34,37 +24,19 @@ const faqData = [
       id: 2,
       items: [
         {
-          question: "After receiving authorization and confirming the donation verification method?",
-          answer: "Karma Today is ready to witness the donation event."
+            question: "How is Karma minted?",
+            answer: "1. A donor sends money (on-chain or off-chain) directly to the beneficiary.<br> 2. The Karma team or an approved oracle verifies the amount in USD. <br> 3. Karma tokens are minted as proof of the donation and distributed to the donor, beneficiary, organizer, and ecosystem wallets. At no point does the Karma protocol touch the donated funds.",
+            button: 'Click to see',
+            diagram: "diag2.png"
         },
         {
-          question: "Once the event is completed?",
-          answer: "Karma Today calculates the number of tokens to be minted based on the donation value (in USD) and the Karma token minting curve."
-        },
-        {
-          question: "Karma declaration for event participation?",
-          answer: "When event start."
-        },
-        {
-          question: "Proof method? ",
-          answer: "Karma agent on spot. <br> Provided by organizer. <br> Transaction hash"
-        },
-        {
-          question: "Proof method Karma agent on spot & Provided by organizer?",
-          answer: "Record the event and donation."
-        },
-        {
-          question: "Proof method transaction?",
-          answer: "Hash record the transaction and proof complete."
-        },
-        {
-          question: "Record the event?",
-          answer: "If donate in cash yes, proof complete. <br> If no, Wait for transfer receipt"
-        },
-        {
-          question: "Proof complete?",
-          answer: "Mint Karma and declare the completion of the event."
-        },
+            question: "Total supply and mint curve?",
+            answer: "Supply is permanently capped at 1 billion tokens. Minting happens in 11 batches; each new batch doubles the USD cost per Karma (from $0.08 in Batch 1 up to $81.92 in Batch 11). Early donors therefore receive more tokens per dollar, while later inflation is kept in check."
+          },
+          {
+            question: "How are large donations handled?",
+            answer: "If one donation exceeds the remaining space in the current batch, the overflow is priced in the next batch. Every token thus reflects the correct batch rate, and no donor jumps the queue."
+          },
       ]
     },
     {
@@ -72,37 +44,44 @@ const faqData = [
       id: 3,
       items: [
         {
-          question: "According to the white paper, the token allocation will be?",
-          answer: "30% to the Donor <br> 0% to the Beneficiary <br> 5% to the Organizer (if none, this portion is split between the Donor and Beneficiary) <br> 25% to the Team <br> 5% to Ecosystem Development <br> 15% to the Charity Fund <br> 10% to Liquidity"
+            question: "How are newly minted tokens split?",
+            answer: " &#9679; 30 % to donors-rewarding the people who gave. <br> &#9679; 10 % to beneficiariesd-letting recipients hold a transparent record of support. <br> &#9679; 5 % to organizersd-covering the work of platforms or charities that coordinated the drive. <br> &#9679; 25 % to the core teamd-funding development, audits, operations, and outreach. <br> &#9679; 5 % to ecosystem developersd-grants and bounties for builders expanding Karma tooling. <br> &#9679; 15 % to the Charity Fundd-a community-governed treasury for future good-cause projects. <br> &#9679; 10 % to liquidity managementd-used later to create healthy on-chain markets.",
+            button: 'Click to see',
+            diagram: "diag3.png"
         },
         {
-          question: "A separate agreement?",
-          answer: "Karma Today will sign a separate agreement for each event, specifying the token release schedule based on the donation amount."
+          question: "Why isn't Karma a security?",
+          answer: "You can't buy tokens directly; they appear only after a donation. There is no pre-mine, no dividend, and no expectation of profitd-only recognition and governance privileges."
         },
         {
-          question: "For smaller donations?",
-          answer: "For smaller donations tokens may be released immediately."
+          question: "What is the Charity Fund?",
+          answer: "A dedicated on-chain treasury that holds only Karma. Any other asset it receives is instantly swapped for Karma to keep accounting simple. Each week, guardians propose a single grant; the community decides whether to approve it."
         },
         {
-          question: "While larger donations ?",
-          answer: "Larger donations will follow a cliff and linear vesting schedule."
+          question: "How does NFT governance work?",
+          answer: "Charity Guardian NFTs act as voting badges. One NFT equals one irrevocable vote. A proposal passes only if it wins the tally and more than one-third of all NFTs participate, preventing low-turnout capture."
         },
         {
-          question: "Karma Token?",
-          answer: "Wait for All Parties to Provide Their Addresses "
+          question: "Are voters rewarded?",
+          answer: "Casting a vote counts as a good deed. Guardians may receive surprise Karma airdrops or reputation boosts, but because timing and size are unpredictable, there's no incentive to farm the system."
         },
         {
-          question: "Address Provided?",
-          answer: "Compile the Agreement into Smart Contract Storage after Immediately Relate Portion"
+          question: "What is the reputation system?",
+          answer: "A forthcoming on-chain score that tracks lifetime Karma earned, governance participation, and verified volunteer workd-providing a non-financial “social credit” signal for individuals and organizations"
         },
         {
-          question: "Address Not Provided?",
-          answer: "Voluntarily Donate to Charity Fund after Release in Each Cycle or Wait for 30 days, if still not provided, automatically donate to charity fund."
+          question: "What is the Karma Wallet?",
+          answer: "A self-custody app that lets users store Karma, chat with other participants, convert crypto to fiat after KYC, and spend via virtual or physical debit cardsd-all while displaying donation proofs and reputation updates."
         },
         {
-          question: "Tokens allocated to the Charity Fund and Liquidity?",
-          answer: "Tokens allocated to the Charity Fund and Liquidity will be released immediately, as they do not directly impact the token price."
-        }
+            question: "How can I get involved?",
+            answer: "&#9679; Developers can apply for grants from the ecosystem pool to build tools, analytics, or integrations. <br> &#9679; Non-profits can request Charity Fund grants by submitting proposals for the weekly vote. <br> &#9679; Volunteers can earn Karma by auditing smart contracts, moderating communities, or helping with events"
+        },
+        {
+            question: "How do I track progress?",
+            answer: "Every mint, fund movement, and governance vote is recorded on-chain for anyone to audit. The team also publishes concise public summaries after each verified donation event, so supporters can follow impact in real time."
+        },
+        
       ]
     }
   ];
@@ -117,17 +96,24 @@ const faqData = [
                     ${item.question}
                     <div class="accordion">
                         <div class="show-answer">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="27" viewBox="0 0 32 27" fill="none">
-                                <path d="M16 27L0.41154 8.78301e-07L31.5885 3.60387e-06L16 27Z" fill="white"/>
+                            <svg width="27" height="32" viewBox="0 0 27 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0 16L27 0.411537L27 31.5885L0 16Z" fill="white"/>
                             </svg>
                         </div>
                     </div>
                 </div>
-                <div class="answer" id="answer-${section.id}-${index}">
-                    ${item.answer}
+                <div class="answer" id="answer-${section.id}-${index}" data-has-diagram="${item.diagram ? 'true' : 'false'}" data-diagram-path="${item.diagram || ''}">
+                    ${item.diagram ? 
+                      `<div class="answer-text">${item.answer}</div>
+                       <div class="diagram-container" style="display: none;">
+                         <img src="../image/faq/${item.diagram}" alt="${item.question} diagram" class="diagram-image">
+                       </div>
+                       <button class="diagram-button">${item.button}</button>` 
+                      : item.answer}
                 </div>
             </div>
         `).join('');
+        
         const hiddenItemsHTML = hiddenItems.length > 0 ? `
             <div class="hidden-content" id="hidden-content-${section.id}">
                 ${hiddenItems.map((item, index) => `
@@ -142,13 +128,20 @@ const faqData = [
                                 </div>
                             </div>
                         </div>
-                        <div class="answer" id="answer-${section.id}-${index + 5}">
-                            ${item.answer}
+                        <div class="answer" id="answer-${section.id}-${index + 5}" data-has-diagram="${item.diagram ? 'true' : 'false'}" data-diagram-path="${item.diagram || ''}">
+                            ${item.diagram ? 
+                              `<div class="answer-text">${item.answer}</div>
+                               <div class="diagram-container" style="display: none;">
+                                 <img src="../image/faq/${item.diagram}" alt="${item.question} diagram" class="diagram-image">
+                               </div>
+                               <button class="diagram-button">${item.button}</button>` 
+                              : item.answer}
                         </div>
                     </div>
                 `).join('')}
             </div>
         ` : '';
+        
         const showMoreButton = hiddenItems.length > 0 ? `
             <div class="show-more-btn" data-target="hidden-content-${section.id}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="38" height="33" viewBox="0 0 38 33" fill="none">
@@ -156,6 +149,7 @@ const faqData = [
                 </svg>
             </div>
         ` : '';
+        
         const isActive = section.id === 1 ? 'active' : '';
         return `
             <div class="faq-box box${section.id} ${isActive}">
@@ -169,6 +163,7 @@ const faqData = [
         `;
     }).join('');
 }
+
 function setupToggles() {
     const questions = document.querySelectorAll('.question');
     
@@ -177,6 +172,12 @@ function setupToggles() {
             const answerDiv = this.nextElementSibling;
             const arrow = this.querySelector('.show-answer svg');
             const isActive = answerDiv.classList.contains('active');
+            
+            // If there's an expanded fullscreen diagram, close it first
+            const expandedDiagram = document.querySelector('.fullscreen-diagram');
+            if (expandedDiagram) {
+                closeDiagramFullscreen();
+            }
             
             const allAnswers = document.querySelectorAll('.answer.active');
             allAnswers.forEach(answer => {
@@ -249,8 +250,8 @@ function setupToggles() {
             }
             
             gsap.to(arrow, {
-                rotation: isActive ? 0 : 180,
-                duration: 0.3,
+                rotation: isActive ? 0 : -90,
+                duration: 0.1,
                 ease: "power2.out"
             });
             
@@ -324,6 +325,140 @@ function setupToggles() {
             this.classList.toggle('expanded');
         });
     });
+
+    // Set up diagram button listeners
+    setupDiagramButtons();
+}
+
+function setupDiagramButtons() {
+    const diagramButtons = document.querySelectorAll('.diagram-button');
+    
+    diagramButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const answerDiv = this.closest('.answer');
+            const questionDiv = answerDiv.previousElementSibling;
+            const diagramContainer = answerDiv.querySelector('.diagram-container');
+            
+            // Hide the FAQ container content
+            const faqContainer = document.querySelector('#container');
+            if (faqContainer) {
+                faqContainer.style.display = 'none'; // Ẩn #container
+            }
+            
+            // Store original position and state
+            const originalContainer = document.querySelector('.faq-container_content');
+            const originalPosition = originalContainer ? originalContainer.getBoundingClientRect() : null;
+            
+            // Get header height
+            const header = document.querySelector('#header');
+            const headerHeight = header ? header.offsetHeight : 80;
+            
+            // Create fullscreen overlay if it doesn't exist
+            if (!document.querySelector('.fullscreen-diagram')) {
+                const fullscreenDiv = document.createElement('div');
+                fullscreenDiv.className = 'fullscreen-diagram';
+                fullscreenDiv.innerHTML = `
+                    <div class="fullscreen-content">
+                        <div class="question-display">${questionDiv.textContent.trim()}</div>
+                        <div class="diagram-display">
+                            <img src="${diagramContainer.querySelector('img').src}" alt="Diagram" class="fullscreen-image">
+                            <button class="close-fullscreen-btn">Close</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(fullscreenDiv);
+                
+                // Set up close button
+                const closeButton = fullscreenDiv.querySelector('.close-fullscreen-btn');
+                closeButton.addEventListener('click', closeDiagramFullscreen);
+                
+                // Get the original width of the FAQ container to maintain it
+                const originalWidth = originalContainer ? originalContainer.offsetWidth : 'auto';
+                
+                // Apply fixed positioning styles
+                const fullscreenContent = fullscreenDiv.querySelector('.fullscreen-content');
+                fullscreenContent.style.position = 'fixed';
+                fullscreenContent.style.top = headerHeight + 'px'; // Bắt đầu từ dưới header
+                fullscreenContent.style.bottom = '32px';
+                fullscreenContent.style.left = '0';
+                fullscreenContent.style.right = '0';
+                fullscreenContent.style.margin = '0 auto';
+                fullscreenContent.style.maxWidth = '60%';
+                fullscreenContent.style.zIndex = '999999';
+                fullscreenContent.style.backgroundColor = 'rgba(58, 58, 58, 0.10)';
+                
+                // Update fullscreen-diagram styles
+                fullscreenDiv.style.top = headerHeight + 'px';
+                fullscreenDiv.style.height = `calc(100% - ${headerHeight}px)`;
+                
+                // Animation sequence
+                gsap.fromTo(fullscreenDiv, 
+                    { opacity: 0 },
+                    { opacity: 1, duration: .5, ease: "power2.out" }
+                );
+                
+                gsap.fromTo(fullscreenContent, 
+                    { y: 50, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }
+                );
+                
+                // Delay the image display for the slide-in effect
+                const diagramImage = fullscreenDiv.querySelector('.fullscreen-image');
+                gsap.fromTo(diagramImage, 
+                    { y: -300, opacity: 0, scale: 1 },
+                    { y: 0, opacity: 1, scale: 1, duration: 1.5, ease: "power2.out", delay: 0.3 }
+                );
+                
+                // Disable scrolling on the body
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    });
+}
+
+function closeDiagramFullscreen() {
+    const fullscreenDiv = document.querySelector('.fullscreen-diagram');
+    if (fullscreenDiv) {
+        // First animate the content sliding out
+        const fullscreenContent = fullscreenDiv.querySelector('.fullscreen-content');
+        const diagramImage = fullscreenDiv.querySelector('.fullscreen-image');
+        
+        // First animate the image fading out
+        gsap.to(diagramImage, {
+            y: 30,
+            opacity: 0,
+            scale: 0.95,
+            duration: 0.3,
+            ease: "power2.out"
+        });
+        
+        // Then animate the content sliding down
+        gsap.to(fullscreenContent, {
+            y: 50,
+            opacity: 0,
+            duration: 0.4,
+            ease: "power2.out",
+            delay: 0.1
+        });
+        
+        // Finally fade out the overlay and remove it
+        gsap.to(fullscreenDiv, {
+            opacity: 0,
+            duration: 0.2,
+            ease: "power2.out",
+            delay: 0.1,
+            onComplete: function() {
+                fullscreenDiv.remove();
+                // Re-enable scrolling
+                document.body.style.overflow = '';
+                // Show the FAQ container content again
+                const faqContainer = document.querySelector('#container');
+                if (faqContainer) {
+                    faqContainer.style.display = ''; 
+                }
+            }
+        });
+    }
 }
 
 function reInitShowMoreButtons() {
@@ -378,6 +513,12 @@ function setupCategoryNav() {
         link.addEventListener('click', function(event) {
             event.preventDefault();
             const targetClass = this.getAttribute('data-target');
+
+            // Close fullscreen diagram if open
+            const fullscreenDiv = document.querySelector('.fullscreen-diagram');
+            if (fullscreenDiv) {
+                closeDiagramFullscreen();
+            }
 
             // Reset all show more buttons and hidden content
             document.querySelectorAll('.show-more-btn').forEach(button => {
@@ -547,7 +688,6 @@ function setupCloseButton() {
         });
     }
 }
-
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.faq-container_content');
     if (container) {
