@@ -836,7 +836,7 @@ main{
     }
     .fullscreen-content {
         max-width: 95% !important;
-        inset:  100px 0 0 0 !important;
+        inset: 80px 0 0 0 !important;
         height: 84vh;
     }
     .diagram-display {
