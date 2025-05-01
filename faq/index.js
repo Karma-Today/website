@@ -117,7 +117,7 @@ function renderFAQSections() {
     return faqData.map(section => {
         // Xác định giới hạn hiển thị dựa trên kích thước màn hình
         const isPC = window.innerWidth > 640;
-        const visibleLimit = isPC ? 5 : 7; // PC hiển thị 5, mobile hiển thị 7
+        const visibleLimit = isPC ? 5 : 8; // PC hiển thị 5, mobile hiển thị 7
         const visibleItems = section.items.slice(0, visibleLimit);
         const hiddenItems = section.items.slice(visibleLimit);
         
@@ -127,8 +127,8 @@ function renderFAQSections() {
                     ${item.question}
                     <div class="accordion">
                         <div class="show-answer">
-                            <svg width="27" height="32" viewBox="0 0 27 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M0 16L27 0.411537L27 31.5885L0 16Z" fill="white"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <path fill="#fff" d="m4.431 12.822l13 9A1 1 0 0 0 19 21V3a1 1 0 0 0-1.569-.823l-13 9a1.003 1.003 0 0 0 0 1.645" />
                             </svg>
                         </div>
                     </div>

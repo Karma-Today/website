@@ -166,12 +166,13 @@ main{
     visibility: visible;
     opacity: 1;
 }
+
 .category-nav .sourcing,
 .category-nav .witness,
 .category-nav .allocation {
     font-size: 24px;
     font-weight: 600;
-    border-bottom: 1px solid;
+    border-bottom: 0 !important; 
     padding-bottom: 10px;
     cursor: pointer;
 }
@@ -631,11 +632,12 @@ main{
     .category-nav .witness,
     .category-nav .allocation {
         font-size: 20px;
-        border-bottom: none;
+        border-bottom: none !important;
         padding: 10px 15px;
         border-radius: 10px;
         text-align: center;
     }
+
     #container-f {
         flex-direction: column;
         align-items: center;
@@ -708,15 +710,26 @@ main{
 }
 
 @media (max-width: 640px) {
-    .category-nav .sourcing a,
-    .category-nav .witness a,
-    .category-nav .allocation a {
-        text-align: center !important; 
-    }
-    .category-nav .sourcing a,
-    .category-nav .witness a,
-    .category-nav .allocation a {
+    main #header .nav .category-nav .sourcing,
+    main #header .nav .category-nav .witness,
+    main #header .nav .category-nav .allocation{
         display: flex;
+        justify-content: center;
+    }
+    main #header .nav .category-nav .sourcing a,
+    main #header .nav .category-nav .witness a,
+    main #header .nav .category-nav .allocation a {
+        text-align: center !important; 
+        display: flex;
+        justify-content: center !important;
+    }
+    main #header .nav .category-nav .sourcing.active a,
+    main #header .nav .category-nav .witness.active a, 
+    main #header .nav .category-nav .allocation.active a{
+        border-bottom: 1px solid #fff !important;
+        max-width: 100% !important;
+        width: unset !important;
+        text-align: center !important;
         justify-content: center !important;
     }
     #header .nav .nav-faq svg{

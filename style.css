@@ -193,7 +193,6 @@ tr:nth-child(even) {
 }
 #header .nav .nav-language #lang-submenu.hidden{
     display: none ;
-
 }
 #header .nav .nav-language #lang-submenu .lang{
     font-size: 20px;
