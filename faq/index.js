@@ -115,9 +115,8 @@ const faqData = [
 
 function renderFAQSections() {
     return faqData.map(section => {
-        // Xác định giới hạn hiển thị dựa trên kích thước màn hình
         const isPC = window.innerWidth > 640;
-        const visibleLimit = isPC ? 5 : 8; // PC hiển thị 5, mobile hiển thị 7
+        const visibleLimit = isPC ? 5 : 8; 
         const visibleItems = section.items.slice(0, visibleLimit);
         const hiddenItems = section.items.slice(visibleLimit);
         
@@ -385,6 +384,14 @@ function setupDiagramButtons() {
             const header = document.querySelector('#header');
             const headerHeight = header ? header.offsetHeight : 80;
             
+            // Add overlay to prevent seeing content behind the diagram
+            const overlay = document.createElement('div');
+            overlay.className = 'fullscreen-overlay';
+            document.body.appendChild(overlay);
+            
+            // Add class to body to control z-index
+            document.body.classList.add('fullscreen-active');
+            
             // Create fullscreen overlay if it doesn't exist
             if (!document.querySelector('.fullscreen-diagram')) {
                 const fullscreenDiv = document.createElement('div');
@@ -416,12 +423,13 @@ function setupDiagramButtons() {
                 fullscreenContent.style.right = '0';
                 fullscreenContent.style.margin = '0 auto';
                 fullscreenContent.style.maxWidth = '60%';
-                fullscreenContent.style.zIndex = '999999';
+                fullscreenContent.style.zIndex = '10005';
                 fullscreenContent.style.backgroundColor = 'rgba(58, 58, 58, 0.10)';
                 
                 // Update fullscreen-diagram styles
                 fullscreenDiv.style.top = headerHeight + 'px';
                 fullscreenDiv.style.height = `calc(100% - ${headerHeight}px)`;
+                fullscreenDiv.style.zIndex = '10004';
                 
                 // Animation sequence
                 gsap.fromTo(fullscreenDiv, 
@@ -450,6 +458,8 @@ function setupDiagramButtons() {
 
 function closeDiagramFullscreen() {
     const fullscreenDiv = document.querySelector('.fullscreen-diagram');
+    const overlay = document.querySelector('.fullscreen-overlay');
+    
     if (fullscreenDiv) {
         // First animate the content sliding out
         const fullscreenContent = fullscreenDiv.querySelector('.fullscreen-content');
@@ -481,8 +491,18 @@ function closeDiagramFullscreen() {
             delay: 0.1,
             onComplete: function() {
                 fullscreenDiv.remove();
+                
+                // Remove overlay
+                if (overlay) {
+                    overlay.remove();
+                }
+                
+                // Remove class from body
+                document.body.classList.remove('fullscreen-active');
+                
                 // Re-enable scrolling
                 document.body.style.overflow = '';
+                
                 // Show the FAQ container content again
                 const faqContainer = document.querySelector('#container-f');
                 if (faqContainer) {
@@ -492,7 +512,6 @@ function closeDiagramFullscreen() {
         });
     }
 }
-
 function reInitShowMoreButtons() {
     const showMoreButtons = document.querySelectorAll('.show-more-btn');
     
@@ -698,7 +717,6 @@ function setupLanguageToggle() {
         });
     });
 
-    // Không cần xử lý click ngoài để ẩn lang-submenu, vì đã xử lý trong setupMenuToggle
 }
 
 function setupCloseButton() {
