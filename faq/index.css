@@ -29,12 +29,13 @@ main{
     align-items: center;
     width: 100%;
     padding-top: 0 !important;
-    z-index: 10000 !important;
+    z-index: 100000 !important;
     overflow: hidden;
 }
 #header {
     position: fixed !important;
     margin-top: 52px;
+    z-index: 99999;
 }
 #header .logo a{
     cursor: pointer;
@@ -334,7 +335,7 @@ main{
 
 .fullscreen-content {
     width: 100%;
-    height: calc(100% - 104px); /* 52px offset from top and bottom */
+    height: calc(100% - 104px); 
     max-width: 60%;
     margin: 0 auto;
     border-radius: 8px;
@@ -437,6 +438,9 @@ main{
     justify-content: start !important;
     display: flex;
 }
+#header .nav .category-nav .nav-language #lang-toggle:hover{
+    color: #000 !important;
+}
 #header .nav .category-nav .nav-language #lang-submenu{
     display: flex;
     flex-direction: column;
@@ -489,7 +493,7 @@ main{
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: transparent;
     z-index: 10000; 
 }
 
@@ -781,6 +785,9 @@ main{
 }
 
 @media (max-width: 640px) {
+    .fullscreen-overlay {
+        background-color: rgba(0, 0, 0, 0.9);
+    }
     main #header .nav .category-nav{
         height: 100vh !important;
     }
@@ -792,6 +799,7 @@ main{
     }
      main{
         min-height: 100vh !important;
+        z-index: 10000;
      }
     main #header .nav .category-nav .sourcing,
     main #header .nav .category-nav .witness,
@@ -832,6 +840,9 @@ main{
     #header .nav .category-nav .nav-language #lang-toggle{
         justify-content: center !important;
         padding-left: 10px !important;
+    }
+    #header .nav .category-nav .nav-language #lang-toggle:hover{
+        color: #ccc !important;
     }
     #header .nav .category-nav .nav-language{
         padding: 0 !important;
