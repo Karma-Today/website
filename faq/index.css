@@ -25,16 +25,14 @@ main{
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* height: 100%;
-    min-height: 100vh; */
     width: 100%;
-
-    padding-top: 52px;
+    padding-top: 0 !important;
     z-index: 100000;
     overflow: hidden;
 }
 #header {
     position: fixed !important;
+    margin-top: 52px;
 }
 #header .logo a{
     cursor: pointer;
@@ -51,8 +49,8 @@ main{
     align-items: center;
     justify-content: center;
 }
-#container {
-    margin: 78px 0 0 !important;
+#container-f {
+    margin: 130px 0 0 !important;
     display: flex;
     width: 100%;
     position: relative;
@@ -114,8 +112,11 @@ main{
     color: #f5f5f5;
 }
 .nav-faq {
+    display: flex;
+    gap: 5px;
     position: relative;
     cursor: pointer;
+    padding: 0 !important;
 }
 .nav-faq:hover a{
     color: #000;
@@ -180,18 +181,28 @@ main{
     text-decoration: none;
     width: 100%;
     height: 100%;
+    display: flex !important;
+    justify-content: flex-start !important; 
 }
-#container .faq-container {
+.category-nav .sourcing:hover a,
+.category-nav .witness:hover a,
+.category-nav .allocation:hover a,
+.category-nav .sourcing:active a,
+.category-nav .witness:active a,
+.category-nav .allocation:active a{
+    justify-content: flex-start !important; 
+}
+#container-f .faq-container {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     width: 100%;
-    max-width: 60%;
+    max-width: 65%;
     transition: all 0.5s linear;
-
 }
-#container .faq-container h1 {
+
+#container-f .faq-container h1 {
     font-family: "Poppins", sans-serif;
     font-size: 60px;
     font-style: normal;
@@ -201,7 +212,7 @@ main{
     color: #fff;
     text-align: center;
 }
-#container .faq-container .faq-container_content {
+#container-f .faq-container .faq-container_content {
     width: 100%;
 }
 .faq-container_content .faq-box {
@@ -268,7 +279,7 @@ main{
     visibility: visible;
     display: flex !important;
     flex-direction: column;
-    align-items: center;
+    align-items: start;
 }
 .faq-box .faq-box_content .accordion {
     position: absolute;
@@ -331,6 +342,12 @@ main{
     overflow: auto;
     display: flex;
     flex-direction: column;
+}
+.diagram-btn{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .question-display {
@@ -402,38 +419,114 @@ main{
 .diagram-button:hover {
     background: rgba(255, 255, 255, 0.3);
 }
+#header .nav .category-nav .nav-language{
+    position: relative !important;
+    align-items: center;
+    width: 100%;
+    justify-content: center !important;
+    display: flex;
+}
+#header .nav .category-nav .nav-language #lang-toggle{
+    align-items: center;
+    width: 100%;
+    padding: 0 !important;
+    justify-content: start !important;
+    display: flex;
+}
+#header .nav .category-nav .nav-language #lang-submenu{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: flex-start;
+    padding: 10px;
+    gap: 0px !important;
+    height: fit-content;
+    width: 60% !important;
+    top: 130% !important;
+    left: -10px;
+    z-index: 1000;
+    position: absolute;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 100;
+    border-radius: 4px;
+    background: #D9D9D9 !important;
+}
+#header .nav .category-nav .nav-language #lang-submenu.hidden{
+    display: none ;
 
+}
+#header .nav .category-nav  .nav-language #lang-submenu .lang{
+    font-size: 20px;
+    width: 100%;
+    cursor: pointer;
+    font-weight: 700;
+    height: 100%;
+}
+#header .nav .category-nav .nav-language #lang-submenu .lang:hover,
+#header .nav .category-nav .nav-language #lang-submenu .lang.active{
+    color: #000;
+}
+#header .nav .category-nav .nav-language #lang-toggle{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    color: #fff;
+    font-weight: 700;
+    height: 100%;
+    font-size: 24px;
+}
+#header .nav .category-nav .nav-language #lang-toggle:hover{
+    color: #fff;
+    transition: all .3s ease-in-out ;
+}
 /*respon*/
 @media (min-width: 1920px) {
-    #container .faq-container h1{
+    #container-f .faq-container h1{
         font-size: 64px;
+    }
+    #header .nav .nav-faq svg{
+        width: 48px !important;
+        height: 48px !important;
+    }
+}
+@media (min-width: 1440px) {
+    #header .nav .nav-faq svg{
+        width: 40px !important;
+        height: 40px !important;
     }
 }
 @media (max-width: 1440px) {
-    #container{
-        margin: 68px 0 0 !important;
+    #header .nav .nav-faq svg{
+        width: 40px;
+        height: 40px;
     }
     .category-nav .sourcing,
     .category-nav .witness,
-    .category-nav .allocation {
-        font-size: 22px;
+    .category-nav .allocation,
+    .nav-language #lang-toggle
+    {
+        font-size: 22px !important;
     }
-    #container .faq-container h1 {
+    #container-f .faq-container h1 {
         font-size: 54px;
     }
     .faq-container_content .faq-box .faq-box_title h2{
         font-size: 32px !important;
     }
-    #container .faq-container {
+    #container-f .faq-container {
         max-width: 65%;
     }
 }
 @media (min-width: 1200px){
-    #container .faq-container h1{
+    #container-f .faq-container h1{
         font-size: 48px;
     }
 }
 @media (max-width: 1200px) {
+    #header .nav .nav-faq svg{
+        width: 35px;
+        height: 35px;
+    }
     .fullscreen-content {
         max-width: 70% !important;
         inset:  100px 0 0 0 !important;
@@ -457,10 +550,7 @@ main{
     .category-nav {
         gap: 25px;
     }
-    #container {
-        margin: 50px 0 0 !important;
-    }
-    #container .faq-container h1 {
+    #container-f .faq-container h1 {
         font-size: 44px;
     }
     .faq-container_content .faq-box .faq-box_title h2{
@@ -478,14 +568,32 @@ main{
     .faq-box .faq-box_content .c{
         padding: 15px 35px 15px 30px;
     }
+    #header{
+        margin-top: 30px !important;
+    }
 }
 @media (min-width: 990px){
-    #container .faq-container h1{
+    #container-f .faq-container h1{
         font-size: 36px;
     }
 
 }
 @media (max-width: 990px) {
+    .fullscreen-content{
+        max-width: 85% !important;
+    }
+    #header{
+        margin-top: 25px !important;
+    }
+    .category-nav .sourcing a,
+.category-nav .witness a,
+.category-nav .allocation a {
+    text-align: start !important; 
+}
+    #header .nav .nav-faq svg{
+        width: 30px;
+        height: 30px;
+    }
     .question-display {
         font-size: 16px;
         padding: 12px 20px;
@@ -496,7 +604,7 @@ main{
     .close-fullscreen-btn{
         font-size: 14px;
     }
-    #container .faq-container h1{
+    #container-f .faq-container h1{
         font-size: 36px;
     }
     .faq-box .faq-box_content .accordion .show-answer svg {
@@ -506,9 +614,7 @@ main{
     .fullscreen-diagram{
         padding: 15px 20px;
     }
-    main{
-        padding-top: 30px;
-    }
+
     header {
         padding: 0 40px;
         height: auto;
@@ -530,12 +636,11 @@ main{
         border-radius: 10px;
         text-align: center;
     }
-    #container {
-        margin: 65px 0 0 !important;
+    #container-f {
         flex-direction: column;
         align-items: center;
     }
-    #container .faq-container {
+    #container-f .faq-container {
         max-width: 85%;
         gap: 0;
     }
@@ -546,7 +651,6 @@ main{
 }
 
 @media (max-width: 768px) {
-
     .diagram-display {
         gap: 15px;
         padding: 20px;
@@ -554,9 +658,6 @@ main{
     }
     .fullscreen-image {
         max-height: 95%;
-    }
-    main{
-        padding-top: 26px !important;
     }
     header {
         padding: 0 20px;
@@ -568,19 +669,16 @@ main{
     .category-nav {
         gap: 15px;
     }
-    #container{
-        margin: 65px 0 0 !important;
-    }
     .category-nav .sourcing,
     .category-nav .witness,
     .category-nav .allocation {
         font-size: 18px;
         padding: 8px 12px;
     }
-    #container .faq-container {
+    #container-f .faq-container {
         max-width: 90%;
     }
-    #container .faq-container h1 {
+    #container-f .faq-container h1 {
         font-size: 28px ;
         margin-bottom: 0;
     }
@@ -605,11 +703,46 @@ main{
         height: 32px;
     }
     .fullscreen-content {
-        max-width: 80% !important;
+        max-width: 90% !important;
     }
 }
 
 @media (max-width: 640px) {
+    .category-nav .sourcing a,
+    .category-nav .witness a,
+    .category-nav .allocation a {
+        text-align: center !important; 
+    }
+    .category-nav .sourcing a,
+    .category-nav .witness a,
+    .category-nav .allocation a {
+        display: flex;
+        justify-content: center !important;
+    }
+    #header .nav .nav-faq svg{
+        width: 28px;
+        height: 28px;
+    }
+    #header .nav .category-nav .nav-language #lang-submenu .lang:hover,
+    #header .nav .category-nav .nav-language #lang-submenu .lang.active{
+        color: #ccc;
+        padding: 0 15px !important;
+}
+    #header .nav .category-nav .nav-language #lang-submenu{
+        background: unset !important;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    #header .nav .category-nav .nav-language #lang-toggle{
+        justify-content: center !important;
+        padding-left: 10px !important;
+    }
+    #header .nav .category-nav .nav-language{
+        padding: 0 !important;
+    }
+    #container-f{
+        margin: 35px 0 0 !important;
+    }
     .diagram-button{
         padding: 4px 10px;
         margin-top: 10px;
@@ -638,10 +771,7 @@ main{
         width: 14px;
         height: 14px;
     }
-    .faq-box .faq-box_content .answer.active{
-        padding-top: 10px !important;
-        padding-bottom: 10px !important;
-    }
+
     .category-nav .close-btn_nav {
         display: block; 
     }
@@ -657,24 +787,13 @@ main{
     }
 
     #header{
+        margin-top: 20px !important;
         justify-content: unset;
         position: relative !important;
     }
     #header .nav {
         gap: 0 !important;
     }    
-    header {
-        padding: 0 15px;
-        margin-top: 5px;
-    }
-    header .logo {
-        max-width: 70px;
-        max-height: 50px;
-        margin-top: 15px;
-    }
-    header .d-flex {
-        gap: 10px;
-    }
     .category-nav {
         gap: 10px;
         background: rgba(0,0,0,0.9) !important;
@@ -685,7 +804,7 @@ main{
         font-size: 16px;
         padding: 6px 10px;
     }
-    #container .faq-container {
+    #container-f .faq-container {
         max-width: 95%;
         gap: 0;
     }
@@ -693,7 +812,7 @@ main{
         padding-bottom: 20px;
         font-size: 22px !important;
     }
-    #container .faq-container h1 {
+    #container-f .faq-container h1 {
         margin-bottom: 0;
         font-size: 28px;
     }
@@ -775,6 +894,10 @@ main{
 }
 
 @media (max-width: 450px) {
+    #header .nav .nav-faq svg{
+        width: 24px;
+        height: 24px;
+    }
     #header {
         height: 50px !important;
         padding: 0 20px 0 20px !important;
@@ -791,10 +914,7 @@ main{
     .show-more-btn svg{
         width: 30px;
     }
-    main{
-        padding-top: 20px !important;
-    }
-    #container{
+    #container-f{
         margin-top: 10px !important;
     }
     .category-nav .sourcing,
@@ -802,10 +922,10 @@ main{
     .category-nav .allocation {
         font-size: 14px;
     }
-    #container .faq-container h2 {
+    #container-f .faq-container h2 {
         margin-bottom: 0;
     }
-    #container .faq-container h1 {
+    #container-f .faq-container h1 {
         font-size: 23px !important;
         margin-bottom: 0;
     }

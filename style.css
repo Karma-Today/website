@@ -3,14 +3,15 @@
     padding: 0;
     box-sizing: border-box;
     margin: 0;
+    font-family: "Poppins", sans-serif;
 }
 html{
-    font-family: "Poppins", sans-serif;
     scroll-behavior: smooth;
 }
 body{
     min-height: 100vh;
     position: relative;
+    font-family: "Poppins", sans-serif;
 }
 .strong{
     font-weight: bold;
@@ -521,6 +522,9 @@ tr:nth-child(even) {
     }
 }
 @media (max-width: 640px) {
+    .mountain-container{
+        padding: 0 !important;
+    }
     svg text{
         font-size: 21px;
         font-weight: bold;
@@ -545,7 +549,7 @@ tr:nth-child(even) {
     }
     #header {
         padding: 0px 30px;
-        margin-top: 0 !important;
+        margin-top: 30px !important;
     }
     .mountain .pc{
         display: none !important;
@@ -656,6 +660,7 @@ tr:nth-child(even) {
     #header{
         height: 50px;
         padding: 0 20px 0 20px;
+        margin-top: 20px !important;
     }
     #header .logo{
         width: 40px;
