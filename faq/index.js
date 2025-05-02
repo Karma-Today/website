@@ -376,9 +376,13 @@ function setupDiagramButtons() {
                 faqContainer.style.display = 'none';
             }
             
-            // Store original position and state
-            const originalContainer = document.querySelector('.faq-container_content');
-            const originalPosition = originalContainer ? originalContainer.getBoundingClientRect() : null;
+            // Kiểm tra nếu là mobile (dưới 640px) thì ẩn main
+            if (window.innerWidth <= 640) {
+                const mainElement = document.querySelector('main');
+                if (mainElement) {
+                    mainElement.style.display = 'none';
+                }
+            }
             
             // Get header height
             const header = document.querySelector('#header');
@@ -389,7 +393,7 @@ function setupDiagramButtons() {
             overlay.className = 'fullscreen-overlay';
             document.body.appendChild(overlay);
             
-            // Add class to body to control z-index
+            // Add class to body
             document.body.classList.add('fullscreen-active');
             
             // Create fullscreen overlay if it doesn't exist
@@ -411,9 +415,6 @@ function setupDiagramButtons() {
                 const closeButton = fullscreenDiv.querySelector('.close-fullscreen-btn');
                 closeButton.addEventListener('click', closeDiagramFullscreen);
                 
-                // Get the original width of the FAQ container to maintain it
-                const originalWidth = originalContainer ? originalContainer.offsetWidth : 'auto';
-                
                 // Apply fixed positioning styles
                 const fullscreenContent = fullscreenDiv.querySelector('.fullscreen-content');
                 fullscreenContent.style.position = 'fixed';
@@ -422,13 +423,17 @@ function setupDiagramButtons() {
                 fullscreenContent.style.left = '0';
                 fullscreenContent.style.right = '0';
                 fullscreenContent.style.margin = '0 auto';
-                fullscreenContent.style.maxWidth = '60%';
+                fullscreenContent.style.maxWidth = window.innerWidth <= 640 ? '95%' : '60%';
                 fullscreenContent.style.zIndex = '10005';
-                fullscreenContent.style.backgroundColor = 'rgba(58, 58, 58, 0.10)';
-                
+                fullscreenContent.style.backgroundColor = '';
+                fullscreenContent.style.borderRadius = '8px';
+                fullscreenContent.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.4)';
                 // Update fullscreen-diagram styles
-                fullscreenDiv.style.top = headerHeight + 'px';
-                fullscreenDiv.style.height = `calc(100% - ${headerHeight}px)`;
+                fullscreenDiv.style.position = 'fixed';
+                fullscreenDiv.style.top = '0';
+                fullscreenDiv.style.left = '0';
+                fullscreenDiv.style.width = '100%';
+                fullscreenDiv.style.height = '100%';
                 fullscreenDiv.style.zIndex = '10004';
                 
                 // Animation sequence
@@ -496,7 +501,6 @@ function closeDiagramFullscreen() {
                 if (overlay) {
                     overlay.remove();
                 }
-                
                 // Remove class from body
                 document.body.classList.remove('fullscreen-active');
                 
@@ -508,10 +512,17 @@ function closeDiagramFullscreen() {
                 if (faqContainer) {
                     faqContainer.style.display = ''; 
                 }
+                if (window.innerWidth <= 640) {
+                    const mainElement = document.querySelector('main');
+                    if (mainElement) {
+                        mainElement.style.display = '';
+                    }
+                }
             }
         });
     }
 }
+
 function reInitShowMoreButtons() {
     const showMoreButtons = document.querySelectorAll('.show-more-btn');
     
