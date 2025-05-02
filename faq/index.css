@@ -19,9 +19,6 @@ body {
     background-position: center;
     background-attachment: fixed
 } 
-body.fullscreen-active .category-nav{
-    z-index: 900 !important;
-}
 main{
     position: relative;
     display: flex;
@@ -33,9 +30,10 @@ main{
     overflow: hidden;
 }
 #header {
-    position: fixed !important;
+    position: relative ;
     margin-top: 52px;
     z-index: 99999;
+    height: unset !important;
 }
 #header .logo a{
     cursor: pointer;
@@ -53,68 +51,14 @@ main{
     justify-content: center;
 }
 #container-f {
-    margin: 130px 0 0 !important;
+    margin: 10px 0 0 !important;
     display: flex;
     width: 100%;
     position: relative;
     gap: 50px;
     justify-content: center;
 }
-.category-nav {
-    display: none;
-    position: absolute;
-    top: 100%;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    z-index: 100;
-    width: 250px;
-    border-radius: 4px;
-    height: fit-content;
-    gap: 10px;
-    padding: 10px;
-    background: #D9D9D9 !important;
-    z-index: 1000;
-}
-.category-nav .close-btn_nav{
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    cursor: pointer;
-    padding: 10px;
-    z-index: 100;
-    display: none;
-}
 
-.category-nav .close-btn_nav svg{
-    position: absolute;
-    right: 0;
-    width: 25px;
-    height: 25px;
-    z-index: 99;
-}
-
-.category-nav.visible {
-    display: block;
-}
-
-.category-nav div {
-    padding: 10px 15px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.category-nav div:hover a{
-    color: #000;
-}
-
-.category-nav div.active a {
-    font-weight: bold;
-    color: #000;
-}
-
-.category-nav div a {
-    font-weight: bold;
-    color: #f5f5f5;
-}
 .nav-faq {
     display: flex;
     gap: 5px;
@@ -133,12 +77,15 @@ main{
 .faq-box.active {
     display: flex;
 }
-
+.is-fixed{
+    position: fixed !important;
+    display: none !important;
+}
 .show-more-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 40px;
+    margin-top: 30px;
     padding: 10px;
     border-radius: 4px;
     cursor: pointer;
@@ -171,32 +118,6 @@ main{
     opacity: 1;
 }
 
-.category-nav .sourcing,
-.category-nav .witness,
-.category-nav .allocation {
-    font-size: 24px;
-    font-weight: 600;
-    border-bottom: 0 !important; 
-    padding-bottom: 10px;
-    cursor: pointer;
-}
-.category-nav .sourcing a,
-.category-nav .witness a,
-.category-nav .allocation a {
-    text-decoration: none;
-    width: 100%;
-    height: 100%;
-    display: flex !important;
-    justify-content: flex-start !important; 
-}
-.category-nav .sourcing:hover a,
-.category-nav .witness:hover a,
-.category-nav .allocation:hover a,
-.category-nav .sourcing:active a,
-.category-nav .witness:active a,
-.category-nav .allocation:active a{
-    justify-content: flex-start !important; 
-}
 #container-f .faq-container {
     display: flex;
     align-items: center;
@@ -209,7 +130,7 @@ main{
 
 #container-f .faq-container h1 {
     font-family: "Poppins", sans-serif;
-    font-size: 60px;
+    font-size: 60px !important;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
@@ -237,6 +158,7 @@ main{
 /* Ensure no parent elements block clicks */
 .faq-container, .faq-container_content, .faq-box {
     pointer-events: auto;
+    padding-bottom: 50px;
 }
 .faq-container_content .faq-box .faq-box_title {
     font-size: 20px;
@@ -245,8 +167,8 @@ main{
 .faq-container_content .faq-box .faq-box_title h2 {
     width: 100%;
     text-align: center;
+    font-size: 30px !important;
     color: #fff;
-    padding-bottom: 35px;
 }
 .faq-container_content .faq-box .faq-box_content {
     width: 100%;
@@ -424,33 +346,32 @@ main{
 .diagram-button:hover {
     background: rgba(255, 255, 255, 0.3);
 }
-#header .nav .category-nav .nav-language{
+#header .nav .nav-language{
     position: relative !important;
     align-items: center;
     width: 100%;
     justify-content: center !important;
     display: flex;
 }
-#header .nav .category-nav .nav-language #lang-toggle{
+#header .nav .nav-language #lang-toggle{
     align-items: center;
     width: 100%;
     padding: 0 !important;
     justify-content: start !important;
     display: flex;
 }
-#header .nav .category-nav .nav-language #lang-toggle:hover{
+#header .nav .nav-language #lang-toggle:hover{
     color: #000 !important;
 }
-#header .nav .category-nav .nav-language #lang-submenu{
+#header .nav .nav-language #lang-submenu{
     display: flex;
     flex-direction: column;
     align-items: start;
     justify-content: flex-start;
     padding: 10px;
-    gap: 0px !important;
-    height: fit-content;
-    width: 60% !important;
-    top: 130% !important;
+    height: fit-content !important;
+    gap: 10px !important;
+    width: 100% !important;
     left: -10px;
     z-index: 1000;
     position: absolute;
@@ -459,22 +380,22 @@ main{
     border-radius: 4px;
     background: #D9D9D9 !important;
 }
-#header .nav .category-nav .nav-language #lang-submenu.hidden{
+#header .nav .nav-language #lang-submenu.hidden{
     display: none ;
 
 }
-#header .nav .category-nav  .nav-language #lang-submenu .lang{
+#header .nav  .nav-language #lang-submenu .lang{
     font-size: 20px;
     width: 100%;
     cursor: pointer;
     font-weight: 700;
     height: 100%;
 }
-#header .nav .category-nav .nav-language #lang-submenu .lang:hover,
-#header .nav .category-nav .nav-language #lang-submenu .lang.active{
+#header .nav .nav-language #lang-submenu .lang:hover,
+#header .nav .nav-language #lang-submenu .lang.active{
     color: #000;
 }
-#header .nav .category-nav .nav-language #lang-toggle{
+#header .nav .nav-language #lang-toggle{
     display: flex;
     align-items: center;
     width: 100%;
@@ -483,7 +404,7 @@ main{
     height: 100%;
     font-size: 24px;
 }
-#header .nav .category-nav .nav-language #lang-toggle:hover{
+#header .nav .nav-language #lang-toggle:hover{
     color: #fff;
     transition: all .3s ease-in-out ;
 }
@@ -558,11 +479,14 @@ main{
 /*respon*/
 @media (min-width: 1920px) {
     #container-f .faq-container h1{
-        font-size: 64px;
+        font-size: 64px !important;
     }
     #header .nav .nav-faq svg{
         width: 48px !important;
         height: 48px !important;
+    }
+    .faq-container_content .faq-box .faq-box_title h2{
+        font-size: 32px !important;
     }
 }
 @media (min-width: 1440px) {
@@ -576,26 +500,23 @@ main{
         width: 40px;
         height: 40px;
     }
-    .category-nav .sourcing,
-    .category-nav .witness,
-    .category-nav .allocation,
     .nav-language #lang-toggle
     {
         font-size: 22px !important;
     }
     #container-f .faq-container h1 {
-        font-size: 54px;
-    }
-    .faq-container_content .faq-box .faq-box_title h2{
-        font-size: 32px !important;
+        font-size: 54px !important;
     }
     #container-f .faq-container {
         max-width: 65%;
     }
+    .faq-container_content .faq-box .faq-box_title h2{
+        font-size: 28px !important;
+    }
 }
 @media (min-width: 1200px){
     #container-f .faq-container h1{
-        font-size: 48px;
+        font-size: 48px !important;
     }
 }
 @media (max-width: 1200px) {
@@ -623,14 +544,11 @@ main{
         max-height: 70px;
         margin-top: 25px;
     }
-    .category-nav {
-        gap: 25px;
-    }
     #container-f .faq-container h1 {
-        font-size: 44px;
+        font-size: 44px !important;
     }
     .faq-container_content .faq-box .faq-box_title h2{
-        font-size: 30px !important;
+        font-size: 26px !important;
     }
     .faq-box .faq-box_content .question {
         font-size: 20px;
@@ -650,7 +568,7 @@ main{
 }
 @media (min-width: 990px){
     #container-f .faq-container h1{
-        font-size: 36px;
+        font-size: 36px !important;
     }
 
 }
@@ -661,11 +579,6 @@ main{
     #header{
         margin-top: 25px !important;
     }
-    .category-nav .sourcing a,
-.category-nav .witness a,
-.category-nav .allocation a {
-    text-align: start !important; 
-}
     #header .nav .nav-faq svg{
         width: 30px;
         height: 30px;
@@ -681,7 +594,7 @@ main{
         font-size: 14px;
     }
     #container-f .faq-container h1{
-        font-size: 36px;
+        font-size: 36px !important;
     }
     .faq-box .faq-box_content .accordion .show-answer svg {
         width: 18px;
@@ -703,16 +616,6 @@ main{
         justify-content: end;
         width: 100%;
     }
-    .category-nav .sourcing,
-    .category-nav .witness,
-    .category-nav .allocation {
-        font-size: 20px;
-        border-bottom: none !important;
-        padding: 10px 15px;
-        border-radius: 10px;
-        text-align: center;
-    }
-
     #container-f {
         flex-direction: column;
         align-items: center;
@@ -722,7 +625,7 @@ main{
         gap: 0;
     }
     .faq-container_content .faq-box .faq-box_title h2{
-        font-size: 28px !important;
+        font-size: 25px !important;
     }
 
 }
@@ -743,24 +646,15 @@ main{
         max-width: 80px;
         max-height: 60px;
     }
-    .category-nav {
-        gap: 15px;
-    }
-    .category-nav .sourcing,
-    .category-nav .witness,
-    .category-nav .allocation {
-        font-size: 18px;
-        padding: 8px 12px;
-    }
     #container-f .faq-container {
         max-width: 90%;
     }
     #container-f .faq-container h1 {
-        font-size: 28px ;
+        font-size: 28px !important;
         margin-bottom: 0;
     }
     .faq-container_content .faq-box .faq-box_title h2{
-        font-size: 22px;
+        font-size: 22px !important;
     }
     .faq-box .faq-box_content .question {
         font-size: 18px;
@@ -785,51 +679,32 @@ main{
 }
 
 @media (max-width: 640px) {
-
-    main #header .nav .category-nav .sourcing,
-    main #header .nav .category-nav .witness,
-    main #header .nav .category-nav .allocation{
-        display: flex;
-        justify-content: center;
+    .is-fixed{
+        position: relative !important;
     }
-    main #header .nav .category-nav .sourcing a,
-    main #header .nav .category-nav .witness a,
-    main #header .nav .category-nav .allocation a {
-        text-align: center !important; 
-        display: flex;
-        justify-content: center !important;
-    }
-    main #header .nav .category-nav .sourcing.active a,
-    main #header .nav .category-nav .witness.active a, 
-    main #header .nav .category-nav .allocation.active a{
-        border-bottom: 1px solid #fff !important;
-        max-width: 100% !important;
-        width: unset !important;
-        text-align: center !important;
-        justify-content: center !important;
+    #header .nav .nav-faq{
+        padding-bottom: 30px;
     }
     #header .nav .nav-faq svg{
         width: 28px;
         height: 28px;
     }
-    #header .nav .category-nav .nav-language #lang-submenu .lang:hover,
-    #header .nav .category-nav .nav-language #lang-submenu .lang.active{
-        color: #ccc;
-        padding: 0 15px !important;
+    #header .nav .nav-language #lang-submenu .lang:hover,
+    #header .nav .nav-language #lang-submenu .lang.active{
+        text-decoration: underline;
+        text-align: center;
+        color: #000;
 }
-    #header .nav .category-nav .nav-language #lang-submenu{
+    #header .nav .nav-language #lang-submenu{
         background: unset !important;
+        text-align: center;
         left: 50%;
         transform: translateX(-50%);
     }
-    #header .nav .category-nav .nav-language #lang-toggle{
+    #header .nav .nav-language #lang-toggle{
         justify-content: center !important;
-        padding-left: 10px !important;
     }
-    #header .nav .category-nav .nav-language #lang-toggle:hover{
-        color: #ccc !important;
-    }
-    #header .nav .category-nav .nav-language{
+    #header .nav .nav-language{
         padding: 0 !important;
     }
     #container-f{
@@ -849,7 +724,7 @@ main{
     }
     .fullscreen-content {
         max-width: 90% !important;
-        inset:  35px 0 0 0 !important;
+        inset:  35px 0 !important;
         height: 80vh;
         z-index: 99997 !important;
     }
@@ -866,12 +741,6 @@ main{
         height: 14px;
     }
 
-    .category-nav .close-btn_nav {
-        display: block; 
-    }
-    .category-nav .close-btn_nav:hover svg path {
-        fill: #ccc; 
-    }
     .faq-container_content .faq-box .faq-box_content{
         color: #000;
         z-index: 10;
@@ -888,16 +757,6 @@ main{
     #header .nav {
         gap: 0 !important;
     }    
-    .category-nav {
-        gap: 10px;
-        background: rgba(0,0,0,0.9) !important;
-    }
-    .category-nav .sourcing,
-    .category-nav .witness,
-    .category-nav .allocation {
-        font-size: 16px;
-        padding: 6px 10px;
-    }
     #container-f .faq-container {
         max-width: 95%;
         gap: 0;
@@ -908,7 +767,7 @@ main{
     }
     #container-f .faq-container h1 {
         margin-bottom: 0;
-        font-size: 28px;
+        font-size: 26px !important;
     }
     .faq-box .faq-box_content .question {
         font-size: 16px;
@@ -935,46 +794,6 @@ main{
     h1,h2{
         color: #000;
     }
-    .category-nav {
-        display: none; 
-        position: fixed;
-        top: 0; 
-        object-fit: cover;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.9); 
-        flex-direction: column; 
-        align-items: center;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        z-index: 99;
-        align-items: center;
-        justify-content: center;
-    }
-    .category-nav.visible {
-        display: flex; 
-    }
-    .category-nav div {
-        width: 100%;
-        text-align: center;
-        padding: 15px;
-    }
-    .category-nav div:last-child {
-        border-bottom: none;
-    }
-    .category-nav div a {
-        color: #fff;
-        font-size: 18px;
-        text-decoration: none;
-    }
-    .category-nav div.active a {
-        color: #fff;
-        font-weight: bold;
-    }
-    .category-nav div:hover a {
-        color: #ddd;
-    }
     .faq-box .faq-box_content .question {
         padding: 12px 40px 12px 20px;
     }
@@ -984,10 +803,6 @@ main{
     .show-more-btn svg{
         width: 32px;
     }
-    body.fullscreen-active .category-nav {
-        z-index: 900 !important;
-    }
-    
     body.fullscreen-active main {
         z-index: 900 !important; 
     }
@@ -1011,15 +826,12 @@ main{
         z-index: 10000 !important;
         background-color: rgba(0, 0, 0, 0.1);
     }
-
-    main #header .nav .category-nav{
-        height: 100vh !important;
-    }
     .fullscreen-content{
         position: unset  !important;
     }
     .fullscreen-diagram{
         z-index: 10001;
+        padding: 35px 0 15px !important;
     }
      main{
         min-height: 100vh !important;
@@ -1029,7 +841,10 @@ main{
 }
 
 @media (max-width: 450px) {
-    #header .nav .category-nav .nav-language #lang-submenu{
+    .fullscreen-content {
+        inset:  35px 0 0 !important;
+    }
+    #header .nav .nav-language #lang-submenu{
         gap: 8px !important;
     }
     #header .nav .nav-faq svg{
@@ -1055,11 +870,6 @@ main{
     #container-f{
         margin-top: 10px !important;
     }
-    .category-nav .sourcing,
-    .category-nav .witness,
-    .category-nav .allocation {
-        font-size: 14px;
-    }
     #container-f .faq-container h2 {
         margin-bottom: 0;
     }
@@ -1084,7 +894,6 @@ main{
         flex-direction: column;
         align-items: flex-start;
     }
-    
     .fullscreen-header .question-text {
         font-size: 14px;
         margin-top: 8px;
@@ -1097,9 +906,13 @@ main{
     }
     .fullscreen-content {
         max-width: 95% !important;
-        height: 85vh;
+        height: 90vh;
     }
     .diagram-display {
         padding: 10px 15px;
     }
+    .fullscreen-diagram{
+        padding: 45px 0 15px !important;
+    }
+
 }

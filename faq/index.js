@@ -16,22 +16,18 @@ const faqData = [
           answer: "Real-world donations are transparent, measurable, and verifiable. Tying every token to a documented act of giving anchors the project in genuine goodwill and removes any “pay-to-mint” dynamic."
         },
         {
-          question: "How are donation events sourced?",
+          question: "How areFerrari donation events sourced?",
           answer: "Karma.Today identifies donation events worldwide, and community members can also nominate events. Once an event is added to the candidate list, Karma.Today researches the appropriate proof methods to fully verify it.",
           button: 'Click to see',
           diagram: "diag1.png"
         },
-        {
-            question: "Once an event is in the candidate list?",
-            answer: "Karma Today will conduct research on the proof method to verify the completeness of the event (in future)."
-          },
-          {
-            question: "On chain donation?",
-            answer: "If yes, Recipient wallet declaration & donator wallet declaration with proof method transaction hash."
-          },
           {
             question: "What tools are recommended for implementing event sourcing?",
             answer: "If no, proof method: karma agent on spot <br> If yes, proof method: provided by organizer."
+          },
+          {
+            question: "How does NFT governance work?",
+            answer: "Charity Guardian NFTs act as voting badges. One NFT equals one irrevocable vote. A proposal passes only if it wins the tally and more than one-third of all NFTs participate, preventing low-turnout capture."
           },
       ]
     },
@@ -58,17 +54,13 @@ const faqData = [
             answer: "Karma Today calculates the number of tokens to be minted based on the donation value (in USD) and the Karma token minting curve."
           },
           {
-            question: "Proof method Karma agent on spot & Provided by organizer?",
-            answer: "Record the event and donation."
-          },
-          {
-            question: "Proof method transaction?",
-            answer: "Hash record the transaction and proof complete."
-          },
-          {
             question: "Record the event?",
             answer: "If donate in cash yes, proof complete. <br> If no, Wait for transfer receipt"
           },
+          {
+            question: "How do I track progress?",
+            answer: "Every mint, fund movement, and governance vote is recorded on-chain for anyone to audit. The team also publishes concise public summaries after each verified donation event, so supporters can follow impact in real time."
+        },
       ]
     },
     {
@@ -90,10 +82,6 @@ const faqData = [
           answer: "A dedicated on-chain treasury that holds only Karma. Any other asset it receives is instantly swapped for Karma to keep accounting simple. Each week, guardians propose a single grant; the community decides whether to approve it."
         },
         {
-          question: "How does NFT governance work?",
-          answer: "Charity Guardian NFTs act as voting badges. One NFT equals one irrevocable vote. A proposal passes only if it wins the tally and more than one-third of all NFTs participate, preventing low-turnout capture."
-        },
-        {
           question: "Are voters rewarded?",
           answer: "Casting a vote counts as a good deed. Guardians may receive surprise Karma airdrops or reputation boosts, but because timing and size are unpredictable, there's no incentive to farm the system."
         },
@@ -105,22 +93,16 @@ const faqData = [
             question: "How can I get involved?",
             answer: "● Developers can apply for grants from the ecosystem pool to build tools, analytics, or integrations. <br> ● Non-profits can request Charity Fund grants by submitting proposals for the weekly vote. <br> ● Volunteers can earn Karma by auditing smart contracts, moderating communities, or helping with events"
         },
-        {
-            question: "How do I track progress?",
-            answer: "Every mint, fund movement, and governance vote is recorded on-chain for anyone to audit. The team also publishes concise public summaries after each verified donation event, so supporters can follow impact in real time."
-        },
+
       ]
     }
 ];
 
 function renderFAQSections() {
-    return faqData.map(section => {
-        const isPC = window.innerWidth > 640;
-        const visibleLimit = isPC ? 5 : 8; 
-        const visibleItems = section.items.slice(0, visibleLimit);
-        const hiddenItems = section.items.slice(visibleLimit);
-        
-        const visibleItemsHTML = visibleItems.map((item, index) => `
+    // Only show box1 initially, others will be revealed with "Show More"
+    const html = faqData.map((section, sectionIndex) => {
+        // Show all items per box as specified (6-7 items)
+        const itemsHTML = section.items.map((item, index) => `
             <div class="faq-box_content">
                 <div class="question no-select" role="button" tabindex="0" aria-expanded="false" aria-controls="answer-${section.id}-${index}">
                     ${item.question}
@@ -145,54 +127,50 @@ function renderFAQSections() {
             </div>
         `).join('');
         
-        const hiddenItemsHTML = hiddenItems.length > 0 ? `
-            <div class="hidden-content" id="hidden-content-${section.id}">
-                ${hiddenItems.map((item, index) => `
-                    <div class="faq-box_content">
-                        <div class="question no-select" role="button" tabindex="0" aria-expanded="false" aria-controls="answer-${section.id}-${index + visibleLimit}">
-                            ${item.question}
-                            <div class="accordion">
-                                <div class="show-answer">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="27" viewBox="0 0 32 27" fill="none">
-                                        <path d="M16 27L0.41154 8.78301e-07L31.5885 3.60387e-06L16 27Z" fill="white"/>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="answer" id="answer-${section.id}-${index + visibleLimit}" data-has-diagram="${item.diagram ? 'true' : 'false'}" data-diagram-path="${item.diagram || ''}">
-                            ${item.diagram ? 
-                              `<div class="answer-text">${item.answer}</div>
-                               <div class="diagram-container" style="display: none;">
-                                 <img src="../image/faq/${item.diagram}" alt="${item.question} diagram" class="diagram-image">
-                               </div>
-                               <button class="diagram-button">${item.button}</button>` 
-                              : item.answer}
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        ` : '';
-        
-        const showMoreButton = hiddenItems.length > 0 ? `
-            <div class="show-more-btn" data-target="hidden-content-${section.id}">
+        // Add Show More button after Box 1 to show Box 2
+        const showMoreButton = sectionIndex === 0 ? `
+            <div class="show-more-btn" id="toggle-box2-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="38" height="33" viewBox="0 0 38 33" fill="none">
                     <path d="M17.2322 31.7678C18.2085 32.7441 19.7915 32.7441 20.7678 31.7678L36.6777 15.8579C37.654 14.8816 37.654 13.2986 36.6777 12.3223C35.7014 11.346 34.1184 11.346 33.1421 12.3223L19 26.4645L4.85786 12.3223C3.88155 11.346 2.29864 11.346 1.32233 12.3223C0.346019 13.2986 0.346019 14.8816 1.32233 15.8579L17.2322 31.7678ZM19 0L16.5 -1.09278e-07L16.5 30L19 30L21.5 30L21.5 1.09278e-07L19 0Z" fill="white"/>
                 </svg>
             </div>
         ` : '';
+
+        // Add Show More button after Box 2 to show Box 3
+        const showBox3Button = sectionIndex === 1 ? `
+            <div class="show-more-btn" id="toggle-box3-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="38" height="33" viewBox="0 0 38 33" fill="none">
+                    <path d="M17.2322 31.7678C18.2085 32.7441 19.7915 32.7441 20.7678 31.7678L36.6777 15.8579C37.654 14.8816 37.654 13.2986 36.6777 12.3223C35.7014 11.346 34.1184 11.346 33.1421 12.3223L19 26.4645L4.85786 12.3223C3.88155 11.346 2.29864 11.346 1.32233 12.3223C0.346019 13.2986 0.346019 14.8816 1.32233 15.8579L17.2322 31.7678ZM19 0L16.5 -1.09278e-07L16.5 30L19 30L21.5 30L21.5 1.09278e-07L19 0Z" fill="white"/>
+                </svg>
+            </div>
+        ` : '';
+
+        // Add Hide All button after Box 3
+        const hideAllButton = sectionIndex === 2 ? `
+            <div class="show-more-btn" id="hide-boxes-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="38" height="33" viewBox="0 0 38 33" fill="none" style="transform: rotate(180deg);">
+                    <path d="M17.2322 31.7678C18.2085 32.7441 19.7915 32.7441 20.7678 31.7678L36.6777 15.8579C37.654 14.8816 37.654 13.2986 36.6777 12.3223C35.7014 11.346 34.1184 11.346 33.1421 12.3223L19 26.4645L4.85786 12.3223C3.88155 11.346 2.29864 11.346 1.32233 12.3223C0.346019 13.2986 0.346019 14.8816 1.32233 15.8579L17.2322 31.7678ZM19 0L16.5 -1.09278e-07L16.5 30L19 30L21.5 30L21.5 1.09278e-07L19 0Z" fill="white"/>
+                </svg>
+            </div>
+        ` : '';
         
-        const isActive = section.id === 1 ? 'active' : '';
+        // Only first box is visible initially
+        const displayStyle = section.id === 1 ? 'flex' : 'none';
+        
         return `
-            <div class="faq-box box${section.id} ${isActive}">
+            <div class="faq-box box${section.id}" style="display: ${displayStyle}">
                 <div class="faq-box_title no-select">
                     <h2>${section.title}</h2>
                 </div>
-                ${visibleItemsHTML}
-                ${hiddenItemsHTML}
+                ${itemsHTML}
                 ${showMoreButton}
+                ${showBox3Button}
+                ${hideAllButton}
             </div>
         `;
     }).join('');
+    
+    return html;
 }
 
 function setupToggles() {
@@ -210,6 +188,7 @@ function setupToggles() {
                 closeDiagramFullscreen();
             }
             
+            // Close any open answers
             const allAnswers = document.querySelectorAll('.answer.active');
             allAnswers.forEach(answer => {
                 if (answer !== answerDiv) {
@@ -232,6 +211,7 @@ function setupToggles() {
             });
             
             if (isActive) {
+                // Close the answer if it's active
                 gsap.to(answerDiv, {
                     height: 0,
                     paddingTop: 0,
@@ -248,8 +228,9 @@ function setupToggles() {
                     }
                 });
             } else {
+                // Open the answer if it's not active
                 answerDiv.classList.add('active');
-                answerDiv.style.display = 'block';
+                answerDiv.style.display = 'flex';
                 answerDiv.style.visibility = 'visible';
                 answerDiv.style.height = 'auto';
                 
@@ -267,19 +248,11 @@ function setupToggles() {
                     ease: "power2.out",
                     onComplete: function() {
                         answerDiv.style.height = 'auto';
-                        
-                        const parentHiddenContent = answerDiv.closest('.hidden-content');
-                        if (parentHiddenContent && parentHiddenContent.classList.contains('visible')) {
-                            parentHiddenContent.style.height = 'auto';
-                            
-                            setTimeout(() => {
-                                parentHiddenContent.style.height = 'auto';
-                            }, 50);
-                        }
                     }
                 });
             }
             
+            // Rotate the arrow
             gsap.to(arrow, {
                 rotation: isActive ? 0 : -90,
                 duration: 0.1,
@@ -290,6 +263,7 @@ function setupToggles() {
             this.setAttribute('aria-expanded', !isActive);
         });
 
+        // Enable keyboard navigation
         question.addEventListener('keydown', function(event) {
             if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault();
@@ -298,67 +272,161 @@ function setupToggles() {
         });
     });
     
-    const showMoreButtons = document.querySelectorAll('.show-more-btn');
-    showMoreButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const targetId = this.getAttribute('data-target');
-            const targetContent = document.getElementById(targetId);
-            const isExpanded = this.classList.contains('expanded');
-            
-            if (isExpanded) {
-                gsap.to(targetContent, {
-                    height: 0,
-                    opacity: 0,
-                    duration: 0.5,
-                    ease: "power2.out",
-                    onComplete: function() {
-                        targetContent.classList.remove('visible');
-                        targetContent.style.height = "0";
-                        targetContent.style.overflow = "hidden";
-                    }
-                });
-                
-                gsap.to(this.querySelector('svg'), {
-                    rotation: 0,
-                    duration: 0.3,
-                    ease: "power2.out"
-                });
-            } else {
-                targetContent.classList.add('visible');
-                
-                gsap.set(targetContent, {
-                    opacity: 1,
-                    height: "auto",
-                    overflow: "visible"
-                });
-        
-                const height = targetContent.scrollHeight;
-                
-                gsap.fromTo(targetContent, 
-                    { height: 0, overflow: "hidden" },
-                    { 
-                        height: height,
-                        duration: 0.5,
-                        ease: "power2.out",
-                        onComplete: function() {
-                            targetContent.style.height = "auto";
-                            targetContent.style.overflow = "visible"; 
-                        }
-                    }
-                );
-                
-                gsap.to(this.querySelector('svg'), {
-                    rotation: 180,
-                    duration: 0.3,
-                    ease: "power2.out"
-                });
-            }
-            this.classList.toggle('expanded');
-        });
-    });
+    // Set up the buttons for toggling boxes
+    setupBoxToggleButtons();
 
     // Set up diagram button listeners
     setupDiagramButtons();
+}
+
+function setupBoxToggleButtons() {
+    // Track visibility states
+    let box2Visible = false;
+    let box3Visible = false;
+
+    // Get header height for offset calculation
+    const header = document.querySelector('#header');
+    const headerHeight = header ? header.offsetHeight : 80; // Default to 80px if no header
+
+    // 1. Toggle button for Box 2 (in Box 1)
+    const toggleBox2Btn = document.getElementById('toggle-box2-btn');
+    if (toggleBox2Btn) {
+        toggleBox2Btn.addEventListener('click', function() {
+            const box2 = document.querySelector('.box2');
+            const toggleBox3Btn = document.getElementById('toggle-box3-btn');
+
+            if (box2 && !box2Visible) {
+                box2.style.display = 'flex';
+                
+                gsap.fromTo(box2, 
+                    { opacity: 0, y: 20 },
+                    { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
+                );
+                
+                // Ensure toggle-box3-btn is visible when box2 is shown
+                if (toggleBox3Btn) {
+                    toggleBox3Btn.style.display = 'flex';
+                    toggleBox3Btn.style.opacity = '1';
+                    toggleBox3Btn.style.height = 'auto';
+                }
+                
+                // Scroll to box2 with larger offset
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: box2.offsetTop - headerHeight - 20,
+                        behavior: 'smooth'
+                    });
+                }, 100);
+                
+                // Hide this button after showing box2
+                gsap.to(this, {
+                    opacity: 0,
+                    height: 0,
+                    duration: 0.3,
+                    ease: "power2.out",
+                    onComplete: () => {
+                        this.style.display = 'none';
+                        box2Visible = true;
+                    }
+                });
+            }
+        });
+    }
+    
+    // 2. Toggle button for Box 3 (in Box 2)
+    const toggleBox3Btn = document.getElementById('toggle-box3-btn');
+    if (toggleBox3Btn) {
+        toggleBox3Btn.addEventListener('click', function() {
+            const box3 = document.querySelector('.box3');
+            
+            if (box3 && !box3Visible) {
+                box3.style.display = 'flex';
+                
+                gsap.fromTo(box3, 
+                    { opacity: 0, y: 20 },
+                    { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
+                );
+                
+                // Scroll to box3 with larger offset
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: box3.offsetTop - headerHeight - 20,
+                        behavior: 'smooth'
+                    });
+                }, 100);
+                
+                // Hide this button after showing box3
+                gsap.to(this, {
+                    opacity: 0,
+                    height: 0,
+                    duration: 0.3,
+                    ease: "power2.out",
+                    onComplete: () => {
+                        this.style.display = 'none';
+                        box3Visible = true;
+                    }
+                });
+            }
+        });
+    }
+    
+    // 3. Hide All button (in Box 3)
+    const hideBoxesBtn = document.getElementById('hide-boxes-btn');
+    if (hideBoxesBtn) {
+        hideBoxesBtn.addEventListener('click', function() {
+            const box2 = document.querySelector('.box2');
+            const box3 = document.querySelector('.box3');
+            const toggleBox2Btn = document.getElementById('toggle-box2-btn');
+            const toggleBox3Btn = document.getElementById('toggle-box3-btn');
+            
+            // Hide box2 and box3 simultaneously
+            if (box2 && box3 && (box2Visible || box3Visible)) {
+                gsap.to([box2, box3], {
+                    opacity: 0,
+                    y: 20,
+                    duration: 0.6,
+                    ease: "sine.out",
+                    onComplete: function() {
+                        if (box2) {
+                            box2.style.display = 'none';
+                            box2Visible = false;
+                        }
+                        if (box3) {
+                            box3.style.display = 'none';
+                            box3Visible = false;
+                        }
+                        
+                        // Show the toggle-box2-btn again
+                        if (toggleBox2Btn) {
+                            toggleBox2Btn.style.display = 'flex';
+                            toggleBox2Btn.style.opacity = '0';
+                            toggleBox2Btn.style.height = 'auto';
+                            gsap.to(toggleBox2Btn, {
+                                opacity: 1,
+                                duration: 0.3,
+                                ease: "power2.out"
+                            });
+                        }
+                        
+                        // Reset toggle-box3-btn to be visible when box2 is shown again
+                        if (toggleBox3Btn) {
+                            toggleBox3Btn.style.display = 'flex';
+                            toggleBox3Btn.style.opacity = '1';
+                            toggleBox3Btn.style.height = 'auto';
+                        }
+                    }
+                });
+            }
+            
+            // Scroll back to top of box1 after animation completes
+            setTimeout(() => {
+                window.scrollTo({
+                    top: document.querySelector('.box1').offsetTop - headerHeight - 100,
+                    behavior: 'smooth'
+                });
+            }, 600);
+        });
+    }
 }
 
 function setupDiagramButtons() {
@@ -376,12 +444,10 @@ function setupDiagramButtons() {
                 faqContainer.style.display = 'none';
             }
             
-            // Kiểm tra nếu là mobile (dưới 640px) thì ẩn main
-            if (window.innerWidth <= 640) {
-                const mainElement = document.querySelector('main');
-                if (mainElement) {
-                    mainElement.style.display = 'none';
-                }
+            // Apply is-fixed class to main for all viewports
+            const mainElement = document.querySelector('#header');
+            if (mainElement) {
+                mainElement.classList.add('is-fixed');
             }
             
             // Get header height
@@ -425,9 +491,9 @@ function setupDiagramButtons() {
                 fullscreenContent.style.margin = '0 auto';
                 fullscreenContent.style.maxWidth = window.innerWidth <= 640 ? '95%' : '60%';
                 fullscreenContent.style.zIndex = '10005';
-                fullscreenContent.style.backgroundColor = '';
                 fullscreenContent.style.borderRadius = '8px';
                 fullscreenContent.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.4)';
+                
                 // Update fullscreen-diagram styles
                 fullscreenDiv.style.position = 'fixed';
                 fullscreenDiv.style.top = '0';
@@ -501,8 +567,15 @@ function closeDiagramFullscreen() {
                 if (overlay) {
                     overlay.remove();
                 }
+                
                 // Remove class from body
                 document.body.classList.remove('fullscreen-active');
+                
+                // Remove is-fixed class from main
+                const mainElement = document.querySelector('#header');
+                if (mainElement) {
+                    mainElement.classList.remove('is-fixed');
+                }
                 
                 // Re-enable scrolling
                 document.body.style.overflow = '';
@@ -512,190 +585,9 @@ function closeDiagramFullscreen() {
                 if (faqContainer) {
                     faqContainer.style.display = ''; 
                 }
-                if (window.innerWidth <= 640) {
-                    const mainElement = document.querySelector('main');
-                    if (mainElement) {
-                        mainElement.style.display = '';
-                    }
-                }
             }
         });
     }
-}
-
-function reInitShowMoreButtons() {
-    const showMoreButtons = document.querySelectorAll('.show-more-btn');
-    
-    showMoreButtons.forEach(button => {
-        const targetId = button.getAttribute('data-target');
-        const targetContent = document.getElementById(targetId);
-        
-        const isContentVisible = targetContent && 
-                               targetContent.classList.contains('visible') && 
-                               targetContent.offsetHeight > 0;
-        
-        if (isContentVisible) {
-            button.classList.add('expanded');
-            gsap.set(button.querySelector('svg'), {
-                rotation: 180
-            });
-        } else {
-            button.classList.remove('expanded');
-            gsap.set(button.querySelector('svg'), {
-                rotation: 0
-            });
-        }
-    });
-}
-
-function switchBox(boxId) {
-    const allBoxes = document.querySelectorAll('.faq-box');
-    allBoxes.forEach(box => {
-        box.classList.remove('active');
-    });
-    
-    const selectedBox = document.querySelector(`.box${boxId}`);
-    if (selectedBox) {
-        selectedBox.classList.add('active');
-    }
-    
-    reInitShowMoreButtons();
-}
-
-function setupCategoryNav() {
-    const navLinks = document.querySelectorAll('.category-nav a');
-    const categoryItems = document.querySelectorAll('.category-nav > div:not(.nav-language)');
-    
-    if (!navLinks.length || !categoryItems.length) {
-        console.error('Category navigation links or items not found');
-        return;
-    }
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(event) {
-            event.preventDefault();
-            const targetClass = this.getAttribute('data-target');
-
-            console.log(`Nav clicked: targetClass=${targetClass}`);
-
-            const fullscreenDiv = document.querySelector('.fullscreen-diagram');
-            if (fullscreenDiv) {
-                console.log('Closing fullscreen diagram');
-                closeDiagramFullscreen();
-            }
-
-            document.querySelectorAll('.show-more-btn').forEach(button => {
-                button.classList.remove('expanded');
-                gsap.to(button.querySelector('svg'), {
-                    rotation: 0,
-                    duration: 0.3,
-                    ease: "power2.out"
-                });
-            });
-            document.querySelectorAll('.hidden-content').forEach(content => {
-                content.classList.remove('visible');
-                gsap.to(content, {
-                    height: 0,
-                    opacity: 0,
-                    duration: 0.5,
-                    ease: "power2.out",
-                    onComplete: function() {
-                        content.style.height = "0";
-                        content.style.overflow = "hidden";
-                    }
-                });
-            });
-
-            document.querySelectorAll('.faq-box').forEach(box => {
-                box.classList.remove('active');
-            });
-            const targetBox = document.querySelector(`.faq-box.${targetClass}`);
-            if (targetBox) {
-                console.log(`Activating box: .faq-box.${targetClass}`);
-                targetBox.classList.add('active');
-                
-                if (window.innerWidth > 641) {
-                    const headerHeight = document.querySelector('#header').offsetHeight || 0;
-                    console.log(`Scrolling to box, headerHeight=${headerHeight}`);
-                    window.scrollTo({
-                        top: targetBox.getBoundingClientRect().top + window.pageYOffset - headerHeight,
-                        behavior: 'smooth'
-                    });
-                } else {
-                    console.log('Mobile detected, skipping scroll');
-                }
-            } else {
-                console.error(`Target box not found: .faq-box.${targetClass}`);
-            }
-            
-            categoryItems.forEach(item => item.classList.remove('active'));
-            this.parentElement.classList.add('active');
-            
-            const categoryNav = document.getElementById('category-nav');
-            if (categoryNav) {
-                console.log('Closing category nav');
-                categoryNav.classList.remove('visible');
-            }
-            
-            console.log('Reinitializing show more buttons');
-            reInitShowMoreButtons();
-        });
-    });
-}
-
-function setupMenuToggle() {
-    const navMenu = document.getElementById('nav-menu');
-    const navFaq = document.getElementById('nav-faq');
-    const categoryNav = document.getElementById('category-nav');
-    const langSubmenu = document.getElementById('lang-submenu'); 
-
-    if (!categoryNav) {
-        console.error('Category navigation not found');
-        return;
-    }
-
-    if (navMenu) {
-        navMenu.addEventListener('click', function() {
-            if (langSubmenu && !langSubmenu.classList.contains('hidden')) {
-                langSubmenu.classList.add('hidden');
-            }
-
-            categoryNav.classList.toggle('visible');
-            const isExpanded = categoryNav.classList.contains('visible');
-            this.setAttribute('aria-expanded', isExpanded);
-        });
-
-        navMenu.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                this.click();
-            }
-        });
-    }
-
-    if (navFaq) {
-        navFaq.addEventListener('click', function(event) {
-            event.preventDefault();
-            if (langSubmenu && !langSubmenu.classList.contains('hidden')) {
-                langSubmenu.classList.add('hidden');
-            }
-            categoryNav.classList.toggle('visible');
-        });
-    }
-
-    document.addEventListener('click', function(event) {
-        if (navMenu && !navMenu.contains(event.target) && 
-            navFaq && !navFaq.contains(event.target) && 
-            !categoryNav.contains(event.target)) {
-            categoryNav.classList.remove('visible');
-            if (langSubmenu && !langSubmenu.classList.contains('hidden')) {
-                langSubmenu.classList.add('hidden');
-            }
-            if (navMenu) {
-                navMenu.setAttribute('aria-expanded', 'false');
-            }
-        }
-    });
 }
 
 function setupLanguageToggle() {
@@ -708,7 +600,7 @@ function setupLanguageToggle() {
     }
 
     langToggle.addEventListener('click', function(event) {
-        event.stopPropagation(); // Ngăn sự kiện click lan tỏa làm ẩn category-nav
+        event.stopPropagation();
         langSubmenu.classList.toggle('hidden');
     });
 
@@ -717,7 +609,7 @@ function setupLanguageToggle() {
         lang.addEventListener('click', function() {
             langItems.forEach(l => l.classList.remove('active'));
             this.classList.add('active');
-            langSubmenu.classList.add('hidden'); // Ẩn submenu khi chọn ngôn ngữ
+            langSubmenu.classList.add('hidden');
         });
 
         lang.addEventListener('keydown', function(event) {
@@ -727,47 +619,15 @@ function setupLanguageToggle() {
             }
         });
     });
-
 }
 
-function setupCloseButton() {
-    const closeButton = document.querySelector('.close-btn_nav');
-    const categoryNav = document.getElementById('category-nav');
-    const langSubmenu = document.getElementById('lang-submenu');
-    
-    if (closeButton && categoryNav) {
-        closeButton.addEventListener('click', function() {
-            categoryNav.classList.remove('visible');
-            if (langSubmenu && !langSubmenu.classList.contains('hidden')) {
-                langSubmenu.classList.add('hidden');
-            }
-        });
-        
-        closeButton.setAttribute('tabindex', '0');
-        closeButton.setAttribute('role', 'button');
-        closeButton.setAttribute('aria-label', 'Close navigation menu');
-        
-        closeButton.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                categoryNav.classList.remove('visible');
-                if (langSubmenu && !langSubmenu.classList.contains('hidden')) {
-                    langSubmenu.classList.add('hidden');
-                }
-            }
-        });
-    }
-}
-
+// Initialize everything
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.querySelector('.faq-container_content');
     if (container) {
         container.innerHTML = renderFAQSections();
         setupToggles();
-        setupCategoryNav();
-        setupMenuToggle();
         setupLanguageToggle();
-        setupCloseButton();
     } else {
         console.error('FAQ container not found');
     }
