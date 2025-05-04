@@ -373,7 +373,7 @@ tr:nth-child(even) {
     #header .logo {
         width: 70px;
     }
-    main{
+    #main{
         padding-top: 42px;
     }
     .nav-language #lang-submenu .lang{
@@ -409,7 +409,7 @@ tr:nth-child(even) {
     }
 }
 @media (max-width: 990px){
-    main{
+    #main{
         padding-top: 32px;
     }
     .karma-content h1{
@@ -629,7 +629,7 @@ tr:nth-child(even) {
     .karma-content {
         top: 88%;
     }
-    main {
+    #main {
         padding-top: 20px;
     }
     table tbody tr th, td {

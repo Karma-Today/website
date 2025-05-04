@@ -1,8 +1,8 @@
 {
     "rewrites": [
         {
-            "source": "/faq",
-            "destination": "/faq/faq.html"
+            "source": "/(.*)",
+            "destination": "/faq.html"
         },
         {
             "source": "/(.*)",

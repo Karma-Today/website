@@ -17,14 +17,15 @@ body {
     background-repeat: no-repeat;
     background-size: auto;
     background-position: center;
-    background-attachment: fixed
+    background-attachment: fixed;
 } 
-main{
+#main{
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
+    height: 100%;
     padding-top: 0 !important;
     z-index: 100000 !important;
     overflow: hidden;
@@ -803,7 +804,7 @@ main{
     .show-more-btn svg{
         width: 32px;
     }
-    body.fullscreen-active main {
+    body.fullscreen-active #main {
         z-index: 900 !important; 
     }
     
@@ -833,7 +834,7 @@ main{
         z-index: 10001;
         padding: 35px 0 15px !important;
     }
-     main{
+     #main{
         min-height: 100vh !important;
         z-index: 10000;
      }
