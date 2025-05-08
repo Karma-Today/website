@@ -7,6 +7,7 @@ import mountainMb from '../../../public/images/mb/mountain.png';
 import bg from '../../../public/images/background.png';
 import './home.css';
 import { Link } from 'react-router-dom';
+import { getCurrentProcess, queryMintEvents } from '../../contract/karma-token';
 
 import HomeContentEng from './homeContentEng/homeContentEng'; 
 import HomeContentCn from './homeContentCn/homeContentCn'; 
@@ -285,6 +286,20 @@ function Home() {
         };
     
         window.addEventListener('resize', handleResize);
+  
+        const fetchContractData = async () => {
+            try {
+                const process = await getCurrentProcess();
+                console.log('Current Process:', process);
+
+                const mintEvents = await queryMintEvents();
+                console.log('Mint Events:', mintEvents);
+            } catch (error) {
+                console.error('Error fetching contract data:', error);
+            }
+        };
+
+        fetchContractData();
   
         return () => {
             if (timerRef.current) clearTimeout(timerRef.current);
