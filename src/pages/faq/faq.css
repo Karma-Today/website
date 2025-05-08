@@ -26,7 +26,7 @@ body {
     overflow: hidden;
     background-image: url('../../../public/images/faq/bg.png');
     background-repeat: no-repeat;
-    background-size: auto;
+    background-size: cover;
     background-position: center;
     background-attachment: fixed;
 }
