@@ -31,6 +31,67 @@ body{
     cursor: pointer;
     padding: 10px;
 }
+#container {
+  position: relative;
+}
+
+/* Style for the overlay box */
+.text-box {
+  position: absolute;
+  background-color: unset !important;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 18px !important;
+    font-family: "Poppins", sans-serif !important;
+  text-align: center;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  z-index: 10000; /* Ensure it appears above SVG */
+}
+
+/* Styles for transaction-popup */
+.transaction-popup {
+  position: absolute;
+  background: white !important;
+  color: #000 !important;
+  padding: 12px;
+  border-radius: 6px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  font-size: 14px !important;
+  line-height: 1.5;
+  z-index: 9999;
+  max-width: 300px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  transition: opacity 0.2s ease;
+  pointer-events: auto;
+  min-width: 180px;
+}
+
+.transaction-popup div {
+  margin-bottom: 6px;
+}
+
+.transaction-popup div:last-child {
+  margin-bottom: 0;
+}
+
+.transaction-popup strong {
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.transaction-popup a {
+  color: #66ccff;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.transaction-popup a:hover {
+  color: #99ddff;
+  text-decoration: none;
+}
 .mountain-container{
     position: relative;
     display: flex;
@@ -433,6 +494,12 @@ tr:nth-child(even) {
     }
 }
 @media (max-width: 990px){
+    .transaction-popup {
+        font-size: 12px !important;
+    }
+    .text-box {
+        font-size: 14px !important;
+        }
     #main{
         padding-top: 32px;
     }
