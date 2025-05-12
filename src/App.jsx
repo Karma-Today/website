@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/home/home.jsx';
 import Faq from './pages/faq/faq.jsx';
-import SEO from './components/Seo/Seo.jsx';
+import SEO from './components/SEO/SEO.jsx';
 function App() {
   return (
     <Router>

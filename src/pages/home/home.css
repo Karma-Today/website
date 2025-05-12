@@ -494,6 +494,10 @@ tr:nth-child(even) {
     }
 }
 @media (max-width: 990px){
+    .pin-point{
+        width: 8px !important;
+        height: 8px !important;
+    }
     .transaction-popup {
         font-size: 12px !important;
     }
