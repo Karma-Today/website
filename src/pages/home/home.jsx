@@ -8,6 +8,7 @@ import bg from '../../../public/images/background.png';
 import './home.css';
 import { Link } from 'react-router-dom';
 import { getCurrentProcess, queryMintEvents } from '../../contract/karma-token';
+import { LINKS } from '../../data/links';
 
 import HomeContentEng from './homeContentEng/homeContentEng';
 import HomeContentCn from './homeContentCn/homeContentCn';
@@ -569,12 +570,15 @@ function Home() {
         const formattedEvents = events.map((event) => {
           const date = new Date(Number(event.timestamp) * 1000);
           const formattedDate = date.toLocaleDateString();
+          // Assign link based on event.seq
+          const linkKey = event.seq === 1 ? 'event1' : 'default';
           return {
             ...event,
             formattedTimestamp: formattedDate,
             formattedMintAmount: `${Number(event.mintedAmount || event.mintAmount)}`,
             formattedDonationUSD: `${event.donationUSD}`,
-            Link: `https://example.com/tx/${event.seq}`,
+            Link: LINKS[linkKey].url,
+            linkDisplayText: LINKS[linkKey].displayText,
           };
         });
 
@@ -585,16 +589,21 @@ function Home() {
         console.error('Error fetching contract data:', error);
         setProcessData(0);
 
-        const sampleEvents = Array.from({ length: 10 }, (_, i) => ({
-          timestamp: Date.now() - i * 86400000,
-          formattedTimestamp: new Date(Date.now() - i * 86400000).toLocaleDateString(),
-          seq: i + 1,
-          mintedAmount: (Math.random() * 100).toFixed(2),
-          donationUSD: (Math.random() * 1000).toFixed(2),
-          formattedMintAmount: (Math.random() * 100).toFixed(2),
-          formattedDonationUSD: `${(Math.random() * 1000).toFixed(2)}USD`,
-          Link: `https://example.com/tx/${i + 1}`,
-        }));
+        const sampleEvents = Array.from({ length: 10 }, (_, i) => {
+          const seq = i + 1;
+          const linkKey = seq === 1 ? 'event1' : 'default';
+          return {
+            timestamp: Date.now() - i * 86400000,
+            formattedTimestamp: new Date(Date.now() - i * 86400000).toLocaleDateString(),
+            seq,
+            mintedAmount: (Math.random() * 100).toFixed(2),
+            donationUSD: (Math.random() * 1000).toFixed(2),
+            formattedMintAmount: (Math.random() * 100).toFixed(2),
+            formattedDonationUSD: `${(Math.random() * 1000).toFixed(2)}USD`,
+            Link: LINKS[linkKey].url,
+            linkDisplayText: LINKS[linkKey].displayText,
+          };
+        });
         setMintEvents(sampleEvents);
       }
     };
@@ -631,7 +640,7 @@ function Home() {
           position: 'absolute',
           backgroundColor: '#fff',
           color: '#000',
-          padding: '12px',
+          padding: '6px',
           borderRadius: '6px',
           boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
           fontSize: '14px',
@@ -658,8 +667,14 @@ function Home() {
           <strong>DonationUSD:</strong> {pinpointPopup.data.formattedDonationUSD}
         </div>
         <div>
-          <a href={pinpointPopup.data.Link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-            <span style={{ color: '#000' }}>Link: </span>Example.com
+          <a
+            href={pinpointPopup.data.Link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="popup-link" 
+            style={{textDecoration:"none"}}
+          >
+          {pinpointPopup.data.linkDisplayText}
           </a>
         </div>
       </div>
