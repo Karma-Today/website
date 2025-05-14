@@ -571,7 +571,7 @@ function Home() {
           const date = new Date(Number(event.timestamp) * 1000);
           const formattedDate = date.toLocaleDateString();
           // Assign link based on event.seq
-          const linkKey = event.seq === 1 ? 'event1' : 'default';
+          const linkKey = event.seq === 0 ? 'link0' : 'default';
           return {
             ...event,
             formattedTimestamp: formattedDate,
