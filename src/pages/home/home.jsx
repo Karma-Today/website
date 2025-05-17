@@ -38,595 +38,606 @@ function Home() {
     setIsSubmenuOpen(false);
   };
 
-  useEffect(() => {
-    // Validate the input data
-    const validateData = (data) => {
-      if (typeof data !== 'number' || isNaN(data) || data < 0 || data > 100) {
-        console.log('Invalid data');
-        return false;
+useEffect(() => {
+  let boxDiv = null;
+  let pinpointDiv = null;
+  let textElement = null;
+  let cachedSortedPathData = null;
+  let cachedSvgSize = null;
+
+  // Validate the input data
+  const validateData = (data) => {
+    if (typeof data !== 'number' || isNaN(data) || data < 0 || data > 100) {
+      console.log('Invalid data');
+      return false;
+    }
+    return true;
+  };
+
+  // Get sorted path data based on xCenter
+  const getSortedPathData = (paths) => {
+    const pathData = Array.from(paths).map((path, index) => {
+      const bbox = path.getBBox();
+      return {
+        index,
+        bbox,
+        xCenter: bbox.x + bbox.width / 2,
+        originalPath: path, // Lưu originalPath để truy cập d nếu cần
+      };
+    });
+
+    let sortedPathData = [...pathData];
+    const firstX = pathData[0]?.xCenter || 0;
+    const lastX = pathData[pathData.length - 1]?.xCenter || 0;
+    if (lastX < firstX) {
+      sortedPathData.reverse();
+    } else {
+      sortedPathData.sort((a, b) => a.index - b.index);
+    }
+    return sortedPathData;
+  };
+
+  // Update the position and content of the overlay box
+  const updateBoxPosition = (text, textElement) => {
+    if (!textElement || !boxDiv) return;
+
+    const textBbox = textElement.getBBox();
+    const containerRect = document.getElementById('container')?.getBoundingClientRect();
+    const windowWidth = window.innerWidth;
+
+    if (!containerRect) {
+      console.error('Container not found');
+      return;
+    }
+
+    const point = svgRef.current.createSVGPoint();
+    point.x = textBbox.x;
+    point.y = textBbox.y;
+
+    const ctm = svgRef.current.getScreenCTM();
+    if (!ctm) {
+      console.error('Could not get SVG CTM');
+      return;
+    }
+    const screenPoint = point.matrixTransform(ctm);
+
+    let screenX = screenPoint.x - containerRect.left;
+    let screenY = screenPoint.y - containerRect.top;
+
+    if (windowWidth <= 641) {
+      if (screenX + textBbox.width + 16 > containerRect.width) {
+        screenX = containerRect.width - (textBbox.width + 16) - 10;
       }
-      return true;
-    };
-
-    // Set up the SVG animation based on the progress data
-    const setupSvgAnimation = (data) => {
-      const svg = svgRef.current;
-      if (!svg) {
-        console.error('SVG element not found');
-        return;
+    } else if (windowWidth <= 768) {
+      screenX -= 20;
+      if (screenX + textBbox.width + 16 > containerRect.width) {
+        screenX = containerRect.width - (textBbox.width + 16) - 10;
       }
-
-      const paths = svg.querySelectorAll('path');
-      const totalPaths = paths.length;
-
-      if (totalPaths === 0) {
-        console.error('No paths found in SVG');
-        return;
+      if (screenX < 0) {
+        screenX = 10;
       }
+    } else {
+      screenX -= 10;
+      if (screenX + textBbox.width + 16 > containerRect.width) {
+        screenX = containerRect.width - (textBbox.width + 16) - 10;
+      }
+      if (screenX < 0) {
+        screenX = 10;
+      }
+    }
 
-      // Create a text element with textPath (transparent)
-      let textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      textElement.setAttribute('font-size', '22');
-      textElement.setAttribute('font-family', 'arial');
-      textElement.setAttribute('fill', 'white');
-      textElement.setAttribute('dominant-baseline', 'middle');
-      textElement.setAttribute('class', 'hover-text');
-      textElement.setAttribute('opacity', '0'); // Make textElement transparent
+    boxDiv.style.left = `${screenX}px`;
+    boxDiv.style.top = `${screenY}px`;
+    boxDiv.style.width = `${textBbox.width + 16}px`;
+    boxDiv.style.height = `${textBbox.height + 4}px`;
+    boxDiv.textContent = text;
+  };
 
-      // Create an HTML overlay box
-      let boxDiv = document.createElement('div');
-      boxDiv.className = 'text-box';
-      boxDiv.style.position = 'absolute';
-      boxDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-      boxDiv.style.color = 'white';
-      boxDiv.style.padding = '2px 8px';
-      boxDiv.style.borderRadius = '4px';
-      boxDiv.style.fontSize = '22px';
-      boxDiv.style.fontFamily = 'arial';
-      boxDiv.style.textAlign = 'center';
-      boxDiv.style.zIndex = '10000'; // Ensure it appears above SVG
-      document.getElementById('container').appendChild(boxDiv);
+  // Update the position of the pinpoint
+  const updatePinpointPosition = (pathBbox) => {
+    if (!pathBbox || !pinpointDiv) return;
 
-      // Create pinpoint div
-      let pinpointDiv = document.createElement('div');
-      pinpointDiv.className = 'pin-point';
-      pinpointDiv.style.position = 'absolute';
-      pinpointDiv.style.width = '12px';
-      pinpointDiv.style.height = '12px';
-      pinpointDiv.style.borderRadius = '50%';
-      pinpointDiv.style.backgroundColor = 'white';
-      pinpointDiv.style.border = '2px solid white';
-      pinpointDiv.style.boxShadow = '0 0 5px rgba(255, 255, 255, 0.7)';
-      pinpointDiv.style.transform = 'translate(-50%, -50%)';
-      pinpointDiv.style.cursor = 'pointer';
-      pinpointDiv.style.zIndex = '10001'; // Above SVG and text-box
-      document.getElementById('container').appendChild(pinpointDiv);
+    const containerRect = document.getElementById('container')?.getBoundingClientRect();
+    const windowWidth = window.innerWidth;
 
-      // Update the position and content of the overlay box
-      const updateBoxPosition = (text, textElement) => {
-        const textBbox = textElement.getBBox();
-        const containerRect = document.getElementById('container').getBoundingClientRect();
-        const windowWidth = window.innerWidth;
+    if (!containerRect) {
+      console.error('Container not found');
+      return;
+    }
 
-        // Use the bounding box's top-left corner as the reference point
-        const point = svg.createSVGPoint();
-        point.x = textBbox.x;
-        point.y = textBbox.y;
+    const point = svgRef.current.createSVGPoint();
+    point.x = pathBbox.x; // Left edge of the first path
+    point.y = pathBbox.y + pathBbox.height / 2; // Vertical center
 
-        // Convert SVG coordinates to screen coordinates using CTM
-        const ctm = svg.getScreenCTM();
-        if (!ctm) {
-          console.error('Could not get SVG CTM');
+    const ctm = svgRef.current.getScreenCTM();
+    if (!ctm) {
+      console.error('Could not get SVG CTM for pinpoint');
+      return;
+    }
+    const screenPoint = point.matrixTransform(ctm);
+
+    let screenX = screenPoint.x - containerRect.left;
+    let screenY = screenPoint.y - containerRect.top;
+
+    if (windowWidth <= 641) {
+      screenX += 5;
+    }
+
+    pinpointDiv.style.left = `${screenX}px`;
+    pinpointDiv.style.top = `${screenY}px`;
+  };
+
+  // Add hover event listeners for the pinpoint
+  const updateBoxEvents = () => {
+    if (!boxDiv || !pinpointDiv) return;
+
+    const newBoxDiv = boxDiv.cloneNode(true);
+    boxDiv.parentNode?.replaceChild(newBoxDiv, boxDiv);
+    boxDiv = newBoxDiv;
+
+    const newPinpointDiv = pinpointDiv.cloneNode(true);
+    pinpointDiv.parentNode?.replaceChild(newPinpointDiv, pinpointDiv);
+    pinpointDiv = newPinpointDiv;
+
+    let pinpointHideTimeout = null;
+    let isPinpointHovering = false;
+
+    const showPinpointPopup = () => {
+      if (isPinpointHovering) return;
+      isPinpointHovering = true;
+
+      const pinpointRect = pinpointDiv.getBoundingClientRect();
+      const containerRect = document.getElementById('container')?.getBoundingClientRect();
+      const windowWidth = window.innerWidth;
+
+      if (!containerRect) return;
+
+      setPinpointPopup({
+        show: true,
+        data: mintEvents[0] || null,
+        x: -9999,
+        y: -9999,
+      });
+
+      setTimeout(() => {
+        const popupElement = document.querySelector('.pinpoint-popup');
+        if (!popupElement) {
+          isPinpointHovering = false;
           return;
         }
-        const screenPoint = point.matrixTransform(ctm);
+        const popupRect = popupElement.getBoundingClientRect();
 
-        // Adjust for container offset
-        let screenX = screenPoint.x - containerRect.left;
-        let screenY = screenPoint.y - containerRect.top;
-
-        // Adjust positioning based on screen width
-        if (windowWidth <= 641) {
-          // Ensure the textbox stays within the container
-          if (screenX + textBbox.width + 16 > containerRect.width) {
-            screenX = containerRect.width - (textBbox.width + 16) - 10;
-          }
-        } else if (windowWidth <= 768) {
-          // Shift left by 20px for screens <= 768px
-          screenX -= 20;
-          // Ensure the box stays within the container
-          if (screenX + textBbox.width + 16 > containerRect.width) {
-            screenX = containerRect.width - (textBbox.width + 16) - 10;
-          }
-          if (screenX < 0) {
-            screenX = 10;
-          }
+        let popupX, popupY;
+        if (windowWidth <= 768) {
+          popupX = pinpointRect.right - containerRect.left + (pinpointRect.width * 0.9);
+          popupY = pinpointRect.top - containerRect.top - popupRect.height + 5;
         } else {
-          // Shift left slightly for larger screens
-          screenX -= 10;
-          // Ensure the box stays within the container
-          if (screenX + textBbox.width + 16 > containerRect.width) {
-            screenX = containerRect.width - (textBbox.width + 16) - 10;
-          }
-          if (screenX < 0) {
-            screenX = 10;
-          }
+          popupX = pinpointRect.left - containerRect.left - (popupRect.width / 2) + (pinpointRect.width / 2);
+          popupY = pinpointRect.top - containerRect.top - popupRect.height + 5;
         }
 
-        boxDiv.style.left = `${screenX}px`;
-        boxDiv.style.top = `${screenY}px`;
-        boxDiv.style.width = `${textBbox.width + 16}px`;
-        boxDiv.style.height = `${textBbox.height + 4}px`;
-        boxDiv.textContent = text;
-      };
-
-      // Update the position of the pinpoint
-      const updatePinpointPosition = (pathBbox) => {
-        const containerRect = document.getElementById('container').getBoundingClientRect();
-        const windowWidth = window.innerWidth;
-        const point = svg.createSVGPoint();
-        point.x = pathBbox.x; // Left edge of the first path
-        point.y = pathBbox.y + pathBbox.height / 2; // Vertical center
-
-        const ctm = svg.getScreenCTM();
-        if (!ctm) {
-          console.error('Could not get SVG CTM for pinpoint');
-          return;
+        const containerWidth = containerRect.width;
+        if (popupX + popupRect.width > containerWidth) {
+          popupX = containerWidth - popupRect.width - 10;
         }
-        const screenPoint = point.matrixTransform(ctm);
-
-        let screenX = screenPoint.x - containerRect.left;
-        let screenY = screenPoint.y - containerRect.top;
-
-        // Shift pinpoint 5px to the right for screens <= 641px
-        if (windowWidth <= 641) {
-          screenX += 5;
+        if (popupX < 0) {
+          popupX = 10;
         }
 
-        pinpointDiv.style.left = `${screenX}px`;
-        pinpointDiv.style.top = `${screenY}px`;
-      };
-
-      // Add hover event listeners for the pinpoint
-      const updateBoxEvents = () => {
-        // Remove existing listeners to prevent duplicates
-        const newBoxDiv = boxDiv.cloneNode(true);
-        boxDiv.parentNode.replaceChild(newBoxDiv, boxDiv);
-        boxDiv = newBoxDiv;
-
-        // Pinpoint hover events
-        const newPinpointDiv = pinpointDiv.cloneNode(true);
-        pinpointDiv.parentNode.replaceChild(newPinpointDiv, pinpointDiv);
-        pinpointDiv = newPinpointDiv;
-
-        let pinpointHideTimeout = null;
-        let isPinpointHovering = false;
-
-        const showPinpointPopup = () => {
-          if (isPinpointHovering) return;
-          isPinpointHovering = true;
-
-          const pinpointRect = pinpointDiv.getBoundingClientRect();
-          const containerRect = document.getElementById('container').getBoundingClientRect();
-          const windowWidth = window.innerWidth;
-
-          // Render popup offscreen to measure size
-          setPinpointPopup({
-            show: true,
-            data: mintEvents[0] || null,
-            x: -9999,
-            y: -9999,
-          });
-
-          setTimeout(() => {
-            const popupElement = document.querySelector('.pinpoint-popup');
-            if (!popupElement) {
-              isPinpointHovering = false;
-              return;
-            }
-            const popupRect = popupElement.getBoundingClientRect();
-
-            // Position popup based on screen width
-            let popupX, popupY;
-            if (windowWidth <= 768) {
-              // For screens <= 768px, position to the right with left at 90% of pinpoint
-              popupX = pinpointRect.right - containerRect.left + (pinpointRect.width * 0.9);
-              popupY = pinpointRect.top - containerRect.top - popupRect.height + 5;
-            } else {
-              // For screens > 768px, position above, centered on pinpoint
-              popupX = pinpointRect.left - containerRect.left - (popupRect.width / 2) + (pinpointRect.width / 2);
-              popupY = pinpointRect.top - containerRect.top - popupRect.height + 5;
-            }
-
-            // Ensure popup stays within container
-            const containerWidth = containerRect.width;
-            if (popupX + popupRect.width > containerWidth) {
-              popupX = containerWidth - popupRect.width - 10;
-            }
-            if (popupX < 0) {
-              popupX = 10;
-            }
-
-            setPinpointPopup({
-              show: true,
-              data: mintEvents[0] || null,
-              x: popupX,
-              y: popupY,
-            });
-
-            popupElement.addEventListener('mouseenter', () => {
-              clearTimeout(pinpointHideTimeout);
-              setPinpointPopup((prev) => ({ ...prev, show: true }));
-            });
-
-            popupElement.addEventListener('mouseleave', (e) => {
-              const relatedTarget = e.relatedTarget;
-              if (relatedTarget !== pinpointDiv && !pinpointDiv.contains(relatedTarget)) {
-                pinpointHideTimeout = setTimeout(() => {
-                  setPinpointPopup((prev) => ({ ...prev, show: false }));
-                  isPinpointHovering = false;
-                }, 100);
-              }
-            });
-          }, 0);
-        };
-
-        pinpointDiv.addEventListener('mouseenter', () => {
-          clearTimeout(pinpointHideTimeout);
-          showPinpointPopup();
+        setPinpointPopup({
+          show: true,
+          data: mintEvents[0] || null,
+          x: popupX,
+          y: popupY,
         });
 
-        pinpointDiv.addEventListener('mouseleave', (e) => {
+        popupElement.addEventListener('mouseenter', () => {
+          clearTimeout(pinpointHideTimeout);
+          setPinpointPopup((prev) => ({ ...prev, show: true }));
+        });
+
+        popupElement.addEventListener('mouseleave', (e) => {
           const relatedTarget = e.relatedTarget;
-          const popupElement = document.querySelector('.pinpoint-popup');
-          if (relatedTarget !== popupElement && !popupElement?.contains(relatedTarget)) {
+          if (relatedTarget !== pinpointDiv && !pinpointDiv.contains(relatedTarget)) {
             pinpointHideTimeout = setTimeout(() => {
               setPinpointPopup((prev) => ({ ...prev, show: false }));
               isPinpointHovering = false;
             }, 100);
           }
         });
+      }, 0);
+    };
 
-        // Text box hover to hide pinpoint popup
-        boxDiv.addEventListener('mouseenter', () => {
+    pinpointDiv.addEventListener('mouseenter', () => {
+      clearTimeout(pinpointHideTimeout);
+      showPinpointPopup();
+    });
+
+    pinpointDiv.addEventListener('mouseleave', (e) => {
+      const relatedTarget = e.relatedTarget;
+      const popupElement = document.querySelector('.pinpoint-popup');
+      if (relatedTarget !== popupElement && !popupElement?.contains(relatedTarget)) {
+        pinpointHideTimeout = setTimeout(() => {
           setPinpointPopup((prev) => ({ ...prev, show: false }));
-        });
+          isPinpointHovering = false;
+        }, 100);
+      }
+    });
+
+    boxDiv.addEventListener('mouseenter', () => {
+      setPinpointPopup((prev) => ({ ...prev, show: false }));
+    });
+  };
+
+  // Set up the SVG animation based on the progress data
+  const setupSvgAnimation = (data) => {
+    const svg = svgRef.current;
+    if (!svg) {
+      console.error('SVG element not found');
+      return;
+    }
+
+    const paths = svg.querySelectorAll('path');
+    const totalPaths = paths.length;
+
+    if (totalPaths === 0) {
+      console.error('No paths found in SVG');
+      return;
+    }
+
+    textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    textElement.setAttribute('font-size', '22');
+    textElement.setAttribute('font-family', 'arial');
+    textElement.setAttribute('fill', 'white');
+    textElement.setAttribute('dominant-baseline', 'middle');
+    textElement.setAttribute('class', 'hover-text');
+    textElement.setAttribute('opacity', '0');
+
+    boxDiv = document.createElement('div');
+    boxDiv.className = 'text-box';
+    boxDiv.style.position = 'absolute';
+    boxDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    boxDiv.style.color = 'white';
+    boxDiv.style.padding = '2px 8px';
+    boxDiv.style.borderRadius = '4px';
+    boxDiv.style.fontSize = '22px';
+    boxDiv.style.fontFamily = 'arial';
+    boxDiv.style.textAlign = 'center';
+    boxDiv.style.zIndex = '10000';
+    document.getElementById('container')?.appendChild(boxDiv);
+
+    pinpointDiv = document.createElement('div');
+    pinpointDiv.className = 'pin-point';
+    pinpointDiv.style.position = 'absolute';
+    pinpointDiv.style.width = '12px';
+    pinpointDiv.style.height = '12px';
+    pinpointDiv.style.borderRadius = '50%';
+    pinpointDiv.style.backgroundColor = 'white';
+    pinpointDiv.style.border = '2px solid white';
+    pinpointDiv.style.boxShadow = '0 0 5px rgba(255, 255, 255, 0.7)';
+    pinpointDiv.style.transform = 'translate(-50%, -50%)';
+    pinpointDiv.style.cursor = 'pointer';
+    pinpointDiv.style.zIndex = '10001';
+    document.getElementById('container')?.appendChild(pinpointDiv);
+
+    svg.appendChild(textElement);
+
+    // Create pathData with all necessary properties
+    const pathData = Array.from(paths).map((path, index) => {
+      const bbox = path.getBBox();
+      const length = path.getTotalLength();
+      if (isNaN(length) || length <= 0) {
+        console.warn(`Path ${index} length not found: ${length}`);
+      }
+      const d = path.getAttribute('d');
+      return {
+        index,
+        d,
+        length,
+        bbox,
+        xCenter: bbox.x + bbox.width / 2,
+        originalPath: path,
       };
+    });
 
-      svg.appendChild(textElement);
+    // Cache sorted path data for pinpoint and textbox
+    cachedSortedPathData = getSortedPathData(paths);
+    cachedSvgSize = svg.getBoundingClientRect();
+    const firstPathBbox = cachedSortedPathData[0].bbox;
 
-      // Handle invalid data case and set pinpoint
-      if (!validateData(data)) {
-        const pathData = Array.from(paths).map((path, index) => {
-          const bbox = path.getBBox();
-          return {
-            index,
-            bbox,
-            xCenter: bbox.x + bbox.width / 2,
-          };
-        });
+    if (!validateData(data)) {
+      const midX = firstPathBbox.x + firstPathBbox.width / 2 - 15;
+      const midY = firstPathBbox.y - 20;
+      textElement.setAttribute('x', midX);
+      textElement.setAttribute('y', midY);
+      textElement.textContent = '0%';
 
-        let sortedPathData = [...pathData];
-        const firstX = pathData[0].xCenter;
-        const lastX = pathData[totalPaths - 1].xCenter;
-        if (lastX < firstX) {
-          sortedPathData.reverse();
-        } else {
-          sortedPathData.sort((a, b) => a.index - b.index);
+      updateBoxPosition('0%', textElement);
+      updatePinpointPosition(firstPathBbox);
+
+      if (mintEvents.length > 0) {
+        updateBoxEvents();
+      }
+
+      return;
+    }
+
+    const totalLength = pathData.reduce((sum, data) => sum + data.length, 0);
+    const targetLength = totalLength * (data / 100);
+
+    updatePinpointPosition(firstPathBbox);
+
+    // Sort pathData to match cachedSortedPathData order
+    const sortedPathData = pathData.slice().sort((a, b) => {
+      const aIndex = cachedSortedPathData.findIndex(p => p.index === a.index);
+      const bIndex = cachedSortedPathData.findIndex(p => p.index === b.index);
+      return aIndex - bIndex;
+    });
+
+    const newPaths = [];
+    sortedPathData.forEach((data) => {
+      if (!data.d) {
+        console.error('Path data missing d attribute:', data);
+        return;
+      }
+      const newPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      newPath.setAttribute('d', data.d);
+      newPath.setAttribute('fill', 'none');
+      newPath.setAttribute('stroke', 'none');
+      svg.appendChild(newPath);
+      newPaths.push(newPath);
+      if (data.originalPath) {
+        data.originalPath.setAttribute('fill', '#747264');
+        data.originalPath.setAttribute('stroke', '#747264');
+      }
+    });
+
+    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    svg.appendChild(defs);
+
+    let currentIndex = 0;
+    let currentLength = 0;
+    let clipPathId = null;
+    let clipPathIdOriginal = null;
+    const startIndex = Math.floor(totalPaths * 0.47);
+    const midIndex = Math.floor(totalPaths * 0.874);
+    const endIndex = totalPaths - 1;
+
+    intervalRef.current = setInterval(() => {
+      if (currentLength < targetLength && currentIndex < totalPaths) {
+        const path = newPaths[currentIndex];
+        const originalPath = sortedPathData[currentIndex].originalPath;
+        const pathLength = sortedPathData[currentIndex].length;
+
+        if (clipPathId) {
+          const oldClipPath = document.getElementById(clipPathId);
+          if (oldClipPath) oldClipPath.remove();
+          path.removeAttribute('clip-path');
+          clipPathId = null;
+        }
+        if (clipPathIdOriginal) {
+          const oldClipPath = document.getElementById(clipPathIdOriginal);
+          if (oldClipPath) oldClipPath.remove();
+          originalPath.removeAttribute('clip-path');
+          clipPathIdOriginal = null;
         }
 
-        const firstPathBbox = sortedPathData[0].bbox;
-        const midX = firstPathBbox.x + firstPathBbox.width / 2 - 15;
-        const midY = firstPathBbox.y - 20;
+        if (currentLength + pathLength <= targetLength) {
+          path.setAttribute('fill', 'white');
+          originalPath.setAttribute('opacity', '0');
+          currentLength += pathLength;
+          currentIndex++;
+        } else {
+          const remainingLength = targetLength - currentLength;
+          const ratio = remainingLength / pathLength;
+          const bbox = sortedPathData[currentIndex].bbox;
+          const clipWidth = bbox.width * ratio;
+
+          let isReverse = false;
+          if (currentIndex >= startIndex && currentIndex < midIndex) {
+            isReverse = true;
+          } else if (currentIndex >= midIndex && currentIndex <= endIndex) {
+            isReverse = false;
+          }
+
+          clipPathId = `clip-new-${currentIndex}`;
+          const clipPath = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
+          clipPath.setAttribute('id', clipPathId);
+          const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          rect.setAttribute('x', isReverse ? bbox.x + bbox.width - clipWidth : bbox.x);
+          rect.setAttribute('y', bbox.y);
+          rect.setAttribute('width', clipWidth);
+          rect.setAttribute('height', bbox.height);
+          clipPath.appendChild(rect);
+          defs.appendChild(clipPath);
+          path.setAttribute('fill', 'white');
+          path.setAttribute('clip-path', `url(#${clipPathId})`);
+
+          clipPathIdOriginal = `clip-original-${currentIndex}`;
+          const clipPathOriginal = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
+          clipPathOriginal.setAttribute('id', clipPathIdOriginal);
+          const rectOriginal = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          rectOriginal.setAttribute('x', isReverse ? bbox.x : bbox.x + clipWidth);
+          rectOriginal.setAttribute('y', bbox.y);
+          rectOriginal.setAttribute('width', bbox.width - clipWidth);
+          rectOriginal.setAttribute('height', bbox.height);
+          clipPathOriginal.appendChild(rectOriginal);
+          defs.appendChild(clipPathOriginal);
+          originalPath.setAttribute('fill', '#747264');
+          originalPath.setAttribute('opacity', '1');
+          originalPath.setAttribute('clip-path', `url(#${clipPathIdOriginal})`);
+
+          currentLength = targetLength;
+          currentIndex++;
+        }
+
+        const lastColoredIndex = currentIndex > 0 ? currentIndex - 1 : 0;
+        const lastColoredBbox = sortedPathData[lastColoredIndex].bbox;
+        const nextBbox = currentIndex < totalPaths ? sortedPathData[currentIndex].bbox : lastColoredBbox;
+        const midXBase = (lastColoredBbox.x + lastColoredBbox.width / 2 + nextBbox.x + nextBbox.width / 2) / 2;
+        const midYBase = (lastColoredBbox.y + lastColoredBbox.height / 2 + nextBbox.y + nextBbox.height / 2) / 2;
+        const dx = (nextBbox.x + nextBbox.width / 2) - (lastColoredBbox.x + lastColoredBbox.width / 2);
+        const dy = (nextBbox.y + nextBbox.height / 2) - (lastColoredBbox.y + lastColoredBbox.height / 2);
+        const currentPercent = Math.min((currentLength / totalLength * 100), data).toFixed(1);
+
+        let midX, midY;
+        if (currentLength === 0 && currentIndex === 0) {
+          midX = midXBase - 15;
+          midY = lastColoredBbox.y - 20;
+        } else if (currentLength / totalLength >= 0.9) {
+          midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 20;
+          midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
+        } else {
+          midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 15;
+          midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
+        }
         textElement.setAttribute('x', midX);
         textElement.setAttribute('y', midY);
-        textElement.textContent = '0%';
+        textElement.textContent = `${currentPercent}%`;
 
-        updateBoxPosition('0%', textElement);
-        updatePinpointPosition(firstPathBbox); // Set pinpoint position
+        updateBoxPosition(`${currentPercent}%`, textElement);
 
         if (mintEvents.length > 0) {
           updateBoxEvents();
         }
+      } else {
+        const lastColoredIndex = currentIndex > 0 ? currentIndex - 1 : 0;
+        const lastColoredBbox = sortedPathData[lastColoredIndex].bbox;
+        const nextBbox = currentIndex < totalPaths ? sortedPathData[currentIndex].bbox : lastColoredBbox;
+        const midXBase = (lastColoredBbox.x + lastColoredBbox.width / 2 + nextBbox.x + nextBbox.width / 2) / 2;
+        const midYBase = (lastColoredBbox.y + lastColoredBbox.height / 2 + nextBbox.y + nextBbox.height / 2) / 2;
+        const dx = (nextBbox.x + nextBbox.width / 2) - (lastColoredBbox.x + lastColoredBbox.width / 2);
+        const dy = (nextBbox.y + nextBbox.height / 2) - (lastColoredBbox.y + lastColoredBbox.height / 2);
 
-        return;
+        let midX, midY;
+        if (currentLength === 0 && currentIndex === 0) {
+          midX = midXBase - 15;
+          midY = lastColoredBbox.y - 20;
+        } else if (currentLength / totalLength >= 0.9) {
+          midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 20;
+          midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
+        } else {
+          midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 15;
+          midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
+        }
+        textElement.setAttribute('x', midX);
+        textElement.setAttribute('y', midY);
+        textElement.textContent = `${data}%`;
+
+        updateBoxPosition(`${data}%`, textElement);
+
+        if (mintEvents.length > 0) {
+          updateBoxEvents();
+        }
+        clearInterval(intervalRef.current);
+      }
+    }, 50);
+  };
+
+  // Handle window resize events
+  const handleResize = () => {
+    const newIsMobile = window.innerWidth < 641;
+    if (newIsMobile !== isMobile) {
+      setIsMobile(newIsMobile);
+    }
+
+    const svg = svgRef.current;
+    if (svg && textElement && boxDiv && pinpointDiv) {
+      const currentSvgSize = svg.getBoundingClientRect();
+      let sortedPathData = cachedSortedPathData;
+
+      // Recalculate sortedPathData only if SVG size changes significantly
+      if (
+        !cachedSvgSize ||
+        Math.abs(currentSvgSize.width - cachedSvgSize.width) > 1 ||
+        Math.abs(currentSvgSize.height - cachedSvgSize.height) > 1
+      ) {
+        const paths = svg.querySelectorAll('path:not([fill="none"])');
+        if (paths.length > 0) {
+          sortedPathData = getSortedPathData(paths);
+          cachedSortedPathData = sortedPathData;
+          cachedSvgSize = currentSvgSize;
+        }
       }
 
-      // Process path data for animation
-      const pathData = Array.from(paths).map((path, index) => {
-        const bbox = path.getBBox();
-        const length = path.getTotalLength();
-        if (isNaN(length) || length <= 0) {
-          console.warn(`Path ${index} length not found: ${length}`);
-        }
-        const d = path.getAttribute('d');
+      if (sortedPathData && sortedPathData[0]) {
+        updatePinpointPosition(sortedPathData[0].bbox);
+        updateBoxPosition(textElement.textContent || `${processData || 0}%`, textElement);
+      }
+    }
+  };
+
+  let resizeTimeout;
+  const debouncedHandleResize = () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(handleResize, 50); // Optimized 50ms debounce
+  };
+
+  window.addEventListener('resize', debouncedHandleResize);
+
+  // Fetch contract data
+  const fetchContractData = async () => {
+    try {
+      const process = await getCurrentProcess();
+      console.log('Current Process:', process);
+
+      const events = await queryMintEvents();
+      console.log('Mint Events:', events);
+
+      const formattedEvents = events.map((event) => {
+        const date = new Date(Number(event.timestamp) * 1000);
+        const formattedDate = date.toLocaleDateString();
+        const linkKey = event.seq === 1 ? 'event1' : 'default';
         return {
-          index,
-          d,
-          length,
-          bbox,
-          xCenter: bbox.x + bbox.width / 2,
-          originalPath: path,
+          ...event,
+          formattedTimestamp: formattedDate,
+          formattedMintAmount: `${Number(event.mintedAmount || event.mintAmount)}`,
+          formattedDonationUSD: `${event.donationUSD}`,
+          Link: LINKS[linkKey].url,
+          linkDisplayText: LINKS[linkKey].displayText,
         };
       });
 
-      const totalLength = pathData.reduce((sum, data) => sum + data.length, 0);
-      const targetLength = totalLength * (data / 100);
+      const processNumber = Number(process);
+      setProcessData(processNumber);
+      setMintEvents(formattedEvents);
+    } catch (error) {
+      console.error('Error fetching contract data:', error);
+      setProcessData(0);
 
-      let sortedPathData = [...pathData];
-      const firstX = pathData[0].xCenter;
-      const lastX = pathData[totalPaths - 1].xCenter;
-      if (lastX < firstX) {
-        sortedPathData.reverse();
-      } else {
-        sortedPathData.sort((a, b) => a.index - b.index);
-      }
-
-      // Set pinpoint position at first path
-      updatePinpointPosition(sortedPathData[0].bbox);
-
-      // Create new paths for animation
-      const newPaths = [];
-      sortedPathData.forEach((data) => {
-        const newPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        newPath.setAttribute('d', data.d);
-        newPath.setAttribute('fill', 'none');
-        newPath.setAttribute('stroke', 'none');
-        svg.appendChild(newPath);
-        newPaths.push(newPath);
-        data.originalPath.setAttribute('fill', '#747264');
-        data.originalPath.setAttribute('stroke', '#747264');
+      const sampleEvents = Array.from({ length: 10 }, (_, i) => {
+        const seq = i + 1;
+        const linkKey = seq === 1 ? 'event1' : 'default';
+        return {
+          timestamp: Date.now() - i * 86400000,
+          formattedTimestamp: new Date(Date.now() - i * 86400000).toLocaleDateString(),
+          seq,
+          mintedAmount: (Math.random() * 100).toFixed(2),
+          donationUSD: (Math.random() * 1000).toFixed(2),
+          formattedMintAmount: (Math.random() * 100).toFixed(2),
+          formattedDonationUSD: `${(Math.random() * 1000).toFixed(2)}USD`,
+          Link: LINKS[linkKey].url,
+          linkDisplayText: LINKS[linkKey].displayText,
+        };
       });
-
-      // Create SVG defs for clip paths
-      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-      svg.appendChild(defs);
-
-      let currentIndex = 0;
-      let currentLength = 0;
-      let clipPathId = null;
-      let clipPathIdOriginal = null;
-      const startIndex = Math.floor(totalPaths * 0.47);
-      const midIndex = Math.floor(totalPaths * 0.874);
-      const endIndex = totalPaths - 1;
-
-      // Animate the paths
-      intervalRef.current = setInterval(() => {
-        if (currentLength < targetLength && currentIndex < totalPaths) {
-          const path = newPaths[currentIndex];
-          const originalPath = sortedPathData[currentIndex].originalPath;
-          const pathLength = sortedPathData[currentIndex].length;
-
-          // Clean up previous clip paths
-          if (clipPathId) {
-            const oldClipPath = document.getElementById(clipPathId);
-            if (oldClipPath) oldClipPath.remove();
-            path.removeAttribute('clip-path');
-            clipPathId = null;
-          }
-          if (clipPathIdOriginal) {
-            const oldClipPath = document.getElementById(clipPathIdOriginal);
-            if (oldClipPath) oldClipPath.remove();
-            originalPath.removeAttribute('clip-path');
-            clipPathIdOriginal = null;
-          }
-
-          // Apply full fill if within target length
-          if (currentLength + pathLength <= targetLength) {
-            path.setAttribute('fill', 'white');
-            originalPath.setAttribute('opacity', '0');
-            currentLength += pathLength;
-            currentIndex++;
-          } else {
-            // Apply partial fill using clip path
-            const remainingLength = targetLength - currentLength;
-            const ratio = remainingLength / pathLength;
-            const bbox = sortedPathData[currentIndex].bbox;
-            const clipWidth = bbox.width * ratio;
-
-            let isReverse = false;
-            if (currentIndex >= startIndex && currentIndex < midIndex) {
-              isReverse = true;
-            } else if (currentIndex >= midIndex && currentIndex <= endIndex) {
-              isReverse = false;
-            }
-
-            // Create clip path for new path
-            clipPathId = `clip-new-${currentIndex}`;
-            const clipPath = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
-            clipPath.setAttribute('id', clipPathId);
-            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            if (isReverse) {
-              rect.setAttribute('x', bbox.x + bbox.width - clipWidth);
-              rect.setAttribute('y', bbox.y);
-              rect.setAttribute('width', clipWidth);
-              rect.setAttribute('height', bbox.height);
-            } else {
-              rect.setAttribute('x', bbox.x);
-              rect.setAttribute('y', bbox.y);
-              rect.setAttribute('width', clipWidth);
-              rect.setAttribute('height', bbox.height);
-            }
-            clipPath.appendChild(rect);
-            defs.appendChild(clipPath);
-            path.setAttribute('fill', 'white');
-            path.setAttribute('clip-path', `url(#${clipPathId})`);
-
-            // Create clip path for original path
-            clipPathIdOriginal = `clip-original-${currentIndex}`;
-            const clipPathOriginal = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
-            clipPathOriginal.setAttribute('id', clipPathIdOriginal);
-            const rectOriginal = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            if (isReverse) {
-              rectOriginal.setAttribute('x', bbox.x);
-              rectOriginal.setAttribute('y', bbox.y);
-              rectOriginal.setAttribute('width', bbox.width - clipWidth);
-              rectOriginal.setAttribute('height', bbox.height);
-            } else {
-              rectOriginal.setAttribute('x', bbox.x + clipWidth);
-              rectOriginal.setAttribute('y', bbox.y);
-              rectOriginal.setAttribute('width', bbox.width - clipWidth);
-              rectOriginal.setAttribute('height', bbox.height);
-            }
-            clipPathOriginal.appendChild(rectOriginal);
-            defs.appendChild(clipPathOriginal);
-            originalPath.setAttribute('fill', '#747264');
-            originalPath.setAttribute('opacity', '1');
-            originalPath.setAttribute('clip-path', `url(#${clipPathIdOriginal})`);
-
-            currentLength = targetLength;
-            currentIndex++;
-          }
-
-          // Calculate position for text element
-          const lastColoredIndex = currentIndex > 0 ? currentIndex - 1 : 0;
-          const lastColoredBbox = sortedPathData[lastColoredIndex].bbox;
-          const nextBbox = currentIndex < totalPaths ? sortedPathData[currentIndex].bbox : lastColoredBbox;
-          const midXBase = (lastColoredBbox.x + lastColoredBbox.width / 2 + nextBbox.x + nextBbox.width / 2) / 2;
-          const midYBase = (lastColoredBbox.y + lastColoredBbox.height / 2 + nextBbox.y + nextBbox.height / 2) / 2;
-          const dx = (nextBbox.x + nextBbox.width / 2) - (lastColoredBbox.x + lastColoredBbox.width / 2);
-          const dy = (nextBbox.y + nextBbox.height / 2) - (lastColoredBbox.y + lastColoredBbox.height / 2);
-          const currentPercent = Math.min((currentLength / totalLength * 100), data).toFixed(1);
-
-          let midX, midY;
-          if (currentLength === 0 && currentIndex === 0) {
-            midX = midXBase - 15;
-            midY = lastColoredBbox.y - 20;
-          } else if (currentLength / totalLength >= 0.9) {
-            midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 20;
-            midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
-          } else {
-            midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 15;
-            midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
-          }
-          textElement.setAttribute('x', midX);
-          textElement.setAttribute('y', midY);
-          textElement.textContent = `${currentPercent}%`;
-
-          // Update box position and content
-          updateBoxPosition(`${currentPercent}%`, textElement);
-
-          // Update event listeners
-          if (mintEvents.length > 0) {
-            updateBoxEvents();
-          }
-        } else {
-          // Finalize text position when animation completes
-          const lastColoredIndex = currentIndex > 0 ? currentIndex - 1 : 0;
-          const lastColoredBbox = sortedPathData[lastColoredIndex].bbox;
-          const nextBbox = currentIndex < totalPaths ? sortedPathData[currentIndex].bbox : lastColoredBbox;
-          const midXBase = (lastColoredBbox.x + lastColoredBbox.width / 2 + nextBbox.x + nextBbox.width / 2) / 2;
-          const midYBase = (lastColoredBbox.y + lastColoredBbox.height / 2 + nextBbox.y + nextBbox.height / 2) / 2;
-          const dx = (nextBbox.x + nextBbox.width / 2) - (lastColoredBbox.x + lastColoredBbox.width / 2);
-          const dy = (nextBbox.y + nextBbox.height / 2) - (lastColoredBbox.y + lastColoredBbox.height / 2);
-
-          let midX, midY;
-          if (currentLength === 0 && currentIndex === 0) {
-            midX = midXBase - 15;
-            midY = lastColoredBbox.y - 20;
-          } else if (currentLength / totalLength >= 0.9) {
-            midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 20;
-            midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
-          } else {
-            midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 15;
-            midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
-          }
-          textElement.setAttribute('x', midX);
-          textElement.setAttribute('y', midY);
-          textElement.textContent = `${data}%`;
-
-          // Update box position and content
-          updateBoxPosition(`${data}%`, textElement);
-
-          // Update event listeners
-          if (mintEvents.length > 0) {
-            updateBoxEvents();
-          }
-          clearInterval(intervalRef.current);
-        }
-      }, 50);
-    };
-
-    // Handle window resize events
-    const handleResize = () => {
-      const newIsMobile = window.innerWidth < 641;
-      if (newIsMobile !== isMobile) {
-        setIsMobile(newIsMobile);
-        window.location.reload();
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    // Fetch contract data
-    const fetchContractData = async () => {
-      try {
-        const process = await getCurrentProcess();
-        console.log('Current Process:', process);
-
-        const events = await queryMintEvents();
-        console.log('Mint Events:', events);
-
-        const formattedEvents = events.map((event) => {
-          const date = new Date(Number(event.timestamp) * 1000);
-          const formattedDate = date.toLocaleDateString();
-          // Assign link based on event.seq
-          const linkKey = event.seq === 1 ? 'event1' : 'default';
-          return {
-            ...event,
-            formattedTimestamp: formattedDate,
-            formattedMintAmount: `${Number(event.mintedAmount || event.mintAmount)}`,
-            formattedDonationUSD: `${event.donationUSD}`,
-            Link: LINKS[linkKey].url,
-            linkDisplayText: LINKS[linkKey].displayText,
-          };
-        });
-
-        const processNumber = Number(process);
-        setProcessData(processNumber);
-        setMintEvents(formattedEvents);
-      } catch (error) {
-        console.error('Error fetching contract data:', error);
-        setProcessData(0);
-
-        const sampleEvents = Array.from({ length: 10 }, (_, i) => {
-          const seq = i + 1;
-          const linkKey = seq === 1 ? 'event1' : 'default';
-          return {
-            timestamp: Date.now() - i * 86400000,
-            formattedTimestamp: new Date(Date.now() - i * 86400000).toLocaleDateString(),
-            seq,
-            mintedAmount: (Math.random() * 100).toFixed(2),
-            donationUSD: (Math.random() * 1000).toFixed(2),
-            formattedMintAmount: (Math.random() * 100).toFixed(2),
-            formattedDonationUSD: `${(Math.random() * 1000).toFixed(2)}USD`,
-            Link: LINKS[linkKey].url,
-            linkDisplayText: LINKS[linkKey].displayText,
-          };
-        });
-        setMintEvents(sampleEvents);
-      }
-    };
-
-    fetchContractData();
-
-    // Initialize SVG animation if processData is available
-    if (processData !== null) {
-      timerRef.current = setTimeout(() => setupSvgAnimation(processData), 500);
+      setMintEvents(sampleEvents);
     }
+  };
 
-    // Clean up on component unmount
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      window.removeEventListener('resize', handleResize);
-      // Remove the overlay box and pinpoint
-      const boxDiv = document.querySelector('.text-box');
-      if (boxDiv) boxDiv.remove();
-      const pinpointDiv = document.querySelector('.pin-point');
-      if (pinpointDiv) pinpointDiv.remove();
-    };
-  }, [processData, isMobile, mintEvents.length]);
+  fetchContractData();
+
+  if (processData !== null) {
+    timerRef.current = setTimeout(() => setupSvgAnimation(processData), 500);
+  }
+
+  return () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    window.removeEventListener('resize', debouncedHandleResize);
+    if (boxDiv) boxDiv.remove();
+    if (pinpointDiv) pinpointDiv.remove();
+  };
+}, [processData, isMobile, mintEvents.length]);
 
   // Render the pinpoint popup
   const renderPinpointPopup = () => {
