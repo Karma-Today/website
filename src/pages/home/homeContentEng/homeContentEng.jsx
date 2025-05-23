@@ -1,4 +1,5 @@
-import diagram from '../../../../public/images/0.png'
+import diagram from '/images/0.png'
+
 function homeContentEng({className, id}) {
   return (
     <section className={className} id={id} >

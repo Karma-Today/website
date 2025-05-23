@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import logo from '../../../public/images/logo.png';
-import Sun from '../../../public/images/Sun.png';
-import SunMb from '../../../public/images/mb/Sun.png';
-import mountain from '../../../public/images/mountain.png';
-import mountainMb from '../../../public/images/mb/mountain.png';
-import bg from '../../../public/images/background.png';
+const logo = '/images/logo.png';
+const Sun = '/images/Sun.png';
+const SunMb = '/images/mb/Sun.png';
+const mountain = '/images/mountain.png';
+const mountainMb = '/images/mb/mountain.png';
+const bg = '/images/background.png';
 import './home.css';
 import { Link } from 'react-router-dom';
 import { getCurrentProcess, queryMintEvents } from '../../contract/karma-token';
@@ -587,7 +587,7 @@ useEffect(() => {
       const formattedEvents = events.map((event) => {
         const date = new Date(Number(event.timestamp) * 1000);
         const formattedDate = date.toLocaleDateString();
-        const linkKey = event.seq === 1 ? 'event1' : 'default';
+        const linkKey = "link" + event.seq;
         return {
           ...event,
           formattedTimestamp: formattedDate,

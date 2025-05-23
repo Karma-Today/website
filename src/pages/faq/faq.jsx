@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
-import logo from '../../../public/images/logo.png';
+import logo from '/images/logo.png';
 import './faq.css';
 import faqData from '../../data/faqData'
 function FAQ() {
@@ -16,9 +16,9 @@ function FAQ() {
   const activeSectionRef = useRef(1);
   //img url
   const diagramImages = {
-    'diag1.png': new URL('../../../public/images/faq/diag1.png', import.meta.url).href,
-    'diag2.png': new URL('../../../public/images/faq/diag2.png', import.meta.url).href,
-    'diag3.png': new URL('../../../public/images/faq/diag3.png', import.meta.url).href,
+    'diag1.png': new URL('/images/faq/diag1.png', import.meta.url).href,
+    'diag2.png': new URL('/images/faq/diag2.png', import.meta.url).href,
+    'diag3.png': new URL('/images/faq/diag3.png', import.meta.url).href,
   };
   // Handle click outside to close language menu
   useEffect(() => {
