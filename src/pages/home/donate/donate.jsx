@@ -124,6 +124,7 @@ export default function Donate({ lang }) {
                             onClick={() => {
                                 if (!loading) {
                                     setErrors(null);
+                                    setValidate(false);
                                     setPopup(false);
                                 }
                             }}
