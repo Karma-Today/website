@@ -17,7 +17,7 @@ export async function getCurrentProcess() {
     return process;
 }
 
-export async function queryMintEvents(fromBlock = 29656224, toBlock = 'latest') {
+export async function queryMintEvents(fromBlock = 8612910, toBlock = 'latest') {
     try {
         // Use the same provider 
         const eventProvider = provider; 
@@ -42,10 +42,11 @@ export async function queryMintEvents(fromBlock = 29656224, toBlock = 'latest') 
             // Map events to more readable format
             return {
                 seq: Number(event.args[0]),
-                process: Number(event.args[1]), 
-                proofHash: event.args[2].toString(),
-                mintedAmount: ethers.formatEther(event.args[3]),
-                donationUSD: Number(event.args[4]),
+                from: event.args[1],
+                to: event.args[2],
+                donationUSD: Number(event.args[3]),
+                mintedAmount: ethers.formatEther(event.args[4]),
+                process: Number(event.args[5]),
                 timestamp, // UNIX timestamp (in seconds)
                 formattedTime: new Date(timestamp * 1000).toLocaleDateString()
             };

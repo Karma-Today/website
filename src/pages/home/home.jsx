@@ -7,8 +7,7 @@ const mountainMb = '/images/mb/mountain.png';
 const bg = '/images/background.png';
 import './home.css';
 import { Link } from 'react-router-dom';
-import { getCurrentProcess, queryMintEvents } from '../../contract/karma-token';
-import { LINKS } from '../../data/links';
+import { getCurrentProcess } from '../../contract/karma-token';
 
 import HomeContentEng from './homeContentEng/homeContentEng';
 import HomeContentCn from './homeContentCn/homeContentCn';
@@ -22,13 +21,6 @@ function Home() {
   const intervalRef = useRef(null);
   const timerRef = useRef(null);
   const [processData, setProcessData] = useState(null);
-  const [mintEvents, setMintEvents] = useState([]);
-  const [pinpointPopup, setPinpointPopup] = useState({
-    show: false,
-    data: null,
-    x: 0,
-    y: 0,
-  });
 
   const handleLangToggle = () => {
     setIsSubmenuOpen(!isSubmenuOpen);
@@ -134,9 +126,9 @@ useEffect(() => {
     boxDiv.textContent = text;
   };
 
-  // Update the position of the pinpoint
-  const updatePinpointPosition = (pathBbox) => {
-    if (!pathBbox || !pinpointDiv) return;
+  // Update the position of the pinpoint to follow the progress head
+  const updatePinpointPosition = (svgX, svgY) => {
+    if (!pinpointDiv || !svgRef.current) return;
 
     const containerRect = document.getElementById('container')?.getBoundingClientRect();
     const windowWidth = window.innerWidth;
@@ -147,8 +139,8 @@ useEffect(() => {
     }
 
     const point = svgRef.current.createSVGPoint();
-    point.x = pathBbox.x; // Left edge of the first path
-    point.y = pathBbox.y + pathBbox.height / 2; // Vertical center
+    point.x = svgX;
+    point.y = svgY;
 
     const ctm = svgRef.current.getScreenCTM();
     if (!ctm) {
@@ -168,107 +160,7 @@ useEffect(() => {
     pinpointDiv.style.top = `${screenY}px`;
   };
 
-  // Add hover event listeners for the pinpoint
-  const updateBoxEvents = () => {
-    if (!boxDiv || !pinpointDiv) return;
 
-    const newBoxDiv = boxDiv.cloneNode(true);
-    boxDiv.parentNode?.replaceChild(newBoxDiv, boxDiv);
-    boxDiv = newBoxDiv;
-
-    const newPinpointDiv = pinpointDiv.cloneNode(true);
-    pinpointDiv.parentNode?.replaceChild(newPinpointDiv, pinpointDiv);
-    pinpointDiv = newPinpointDiv;
-
-    let pinpointHideTimeout = null;
-    let isPinpointHovering = false;
-
-    const showPinpointPopup = () => {
-      if (isPinpointHovering) return;
-      isPinpointHovering = true;
-
-      const pinpointRect = pinpointDiv.getBoundingClientRect();
-      const containerRect = document.getElementById('container')?.getBoundingClientRect();
-      const windowWidth = window.innerWidth;
-
-      if (!containerRect) return;
-
-      setPinpointPopup({
-        show: true,
-        data: mintEvents[0] || null,
-        x: -9999,
-        y: -9999,
-      });
-
-      setTimeout(() => {
-        const popupElement = document.querySelector('.pinpoint-popup');
-        if (!popupElement) {
-          isPinpointHovering = false;
-          return;
-        }
-        const popupRect = popupElement.getBoundingClientRect();
-
-        let popupX, popupY;
-        if (windowWidth <= 768) {
-          popupX = pinpointRect.right - containerRect.left + (pinpointRect.width * 0.9);
-          popupY = pinpointRect.top - containerRect.top - popupRect.height + 5;
-        } else {
-          popupX = pinpointRect.left - containerRect.left - (popupRect.width / 2) + (pinpointRect.width / 2);
-          popupY = pinpointRect.top - containerRect.top - popupRect.height + 5;
-        }
-
-        const containerWidth = containerRect.width;
-        if (popupX + popupRect.width > containerWidth) {
-          popupX = containerWidth - popupRect.width - 10;
-        }
-        if (popupX < 0) {
-          popupX = 10;
-        }
-
-        setPinpointPopup({
-          show: true,
-          data: mintEvents[0] || null,
-          x: popupX,
-          y: popupY,
-        });
-
-        popupElement.addEventListener('mouseenter', () => {
-          clearTimeout(pinpointHideTimeout);
-          setPinpointPopup((prev) => ({ ...prev, show: true }));
-        });
-
-        popupElement.addEventListener('mouseleave', (e) => {
-          const relatedTarget = e.relatedTarget;
-          if (relatedTarget !== pinpointDiv && !pinpointDiv.contains(relatedTarget)) {
-            pinpointHideTimeout = setTimeout(() => {
-              setPinpointPopup((prev) => ({ ...prev, show: false }));
-              isPinpointHovering = false;
-            }, 100);
-          }
-        });
-      }, 0);
-    };
-
-    pinpointDiv.addEventListener('mouseenter', () => {
-      clearTimeout(pinpointHideTimeout);
-      showPinpointPopup();
-    });
-
-    pinpointDiv.addEventListener('mouseleave', (e) => {
-      const relatedTarget = e.relatedTarget;
-      const popupElement = document.querySelector('.pinpoint-popup');
-      if (relatedTarget !== popupElement && !popupElement?.contains(relatedTarget)) {
-        pinpointHideTimeout = setTimeout(() => {
-          setPinpointPopup((prev) => ({ ...prev, show: false }));
-          isPinpointHovering = false;
-        }, 100);
-      }
-    });
-
-    boxDiv.addEventListener('mouseenter', () => {
-      setPinpointPopup((prev) => ({ ...prev, show: false }));
-    });
-  };
 
   // Set up the SVG animation based on the progress data
   const setupSvgAnimation = (data) => {
@@ -319,6 +211,7 @@ useEffect(() => {
     pinpointDiv.style.transform = 'translate(-50%, -50%)';
     pinpointDiv.style.cursor = 'pointer';
     pinpointDiv.style.zIndex = '101';
+    pinpointDiv.style.display = 'none'; // Hide the pinpoint
     document.getElementById('container')?.appendChild(pinpointDiv);
 
     svg.appendChild(textElement);
@@ -354,17 +247,13 @@ useEffect(() => {
       textElement.textContent = '0%';
 
       updateBoxPosition('0%', textElement);
-      updatePinpointPosition(firstPathBbox);
-
-      if (mintEvents.length > 0) {
-        updateBoxEvents();
-      }
+      updatePinpointPosition(firstPathBbox.x, firstPathBbox.y + firstPathBbox.height / 2);
 
       return;
     }
 
     const totalLength = pathData.reduce((sum, data) => sum + data.length, 0);
-    const targetLength = totalLength * (data / 100);
+    const targetLength = totalLength * ((data / 100) < 0.01 ? 0.01 : (data / 100));
 
     updatePinpointPosition(firstPathBbox);
 
@@ -481,10 +370,41 @@ useEffect(() => {
         const dy = (nextBbox.y + nextBbox.height / 2) - (lastColoredBbox.y + lastColoredBbox.height / 2);
         const currentPercent = Math.min((currentLength / totalLength * 100), data).toFixed(1);
 
+        // Calculate the actual head position of the progress line
+        let progressHeadX, progressHeadY;
+        if (currentIndex < totalPaths && currentLength < targetLength) {
+          // We're in the middle of a path, calculate the partial position
+          const currentPathBbox = sortedPathData[currentIndex].bbox;
+          const remainingLength = targetLength - currentLength;
+          const ratio = remainingLength / sortedPathData[currentIndex].length;
+          
+          let isReverse = false;
+          const startIndex = Math.floor(totalPaths * 0.47);
+          const midIndex = Math.floor(totalPaths * 0.874);
+          const endIndex = totalPaths - 1;
+          
+          if (currentIndex >= startIndex && currentIndex < midIndex) {
+            isReverse = true;
+          }
+          
+          if (isReverse) {
+            progressHeadX = currentPathBbox.x + currentPathBbox.width - (currentPathBbox.width * ratio);
+          } else {
+            progressHeadX = currentPathBbox.x + (currentPathBbox.width * ratio);
+          }
+          progressHeadY = currentPathBbox.y + currentPathBbox.height / 2;
+        } else {
+          // We've completed the current path, use the end of the last colored path
+          progressHeadX = lastColoredBbox.x + lastColoredBbox.width;
+          progressHeadY = lastColoredBbox.y + lastColoredBbox.height / 2;
+        }
+
         let midX, midY;
         if (currentLength === 0 && currentIndex === 0) {
           midX = midXBase - 15;
           midY = lastColoredBbox.y - 20;
+          progressHeadX = lastColoredBbox.x;
+          progressHeadY = lastColoredBbox.y + lastColoredBbox.height / 2;
         } else if (currentLength / totalLength >= 0.9) {
           midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 20;
           midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
@@ -497,10 +417,7 @@ useEffect(() => {
         textElement.textContent = `${currentPercent}%`;
 
         updateBoxPosition(`${currentPercent}%`, textElement);
-
-        if (mintEvents.length > 0) {
-          updateBoxEvents();
-        }
+        updatePinpointPosition(progressHeadX, progressHeadY);
       } else {
         const lastColoredIndex = currentIndex > 0 ? currentIndex - 1 : 0;
         const lastColoredBbox = sortedPathData[lastColoredIndex].bbox;
@@ -509,6 +426,57 @@ useEffect(() => {
         const midYBase = (lastColoredBbox.y + lastColoredBbox.height / 2 + nextBbox.y + nextBbox.height / 2) / 2;
         const dx = (nextBbox.x + nextBbox.width / 2) - (lastColoredBbox.x + lastColoredBbox.width / 2);
         const dy = (nextBbox.y + nextBbox.height / 2) - (lastColoredBbox.y + lastColoredBbox.height / 2);
+
+        // Calculate final progress head position
+        let finalProgressHeadX, finalProgressHeadY;
+        if (data >= 100) {
+          // At 100%, position at the very end
+          const finalPathBbox = sortedPathData[totalPaths - 1].bbox;
+          finalProgressHeadX = finalPathBbox.x + finalPathBbox.width;
+          finalProgressHeadY = finalPathBbox.y + finalPathBbox.height / 2;
+        } else {
+          // Calculate based on final percentage
+          const finalTargetLength = totalLength * (data / 100);
+          let finalCurrentLength = 0;
+          let finalCurrentIndex = 0;
+          
+          // Find the final position
+          for (let i = 0; i < totalPaths; i++) {
+            const pathLength = sortedPathData[i].length;
+            if (finalCurrentLength + pathLength <= finalTargetLength) {
+              finalCurrentLength += pathLength;
+              finalCurrentIndex = i + 1;
+            } else {
+              // We're in the middle of this path
+              const remainingLength = finalTargetLength - finalCurrentLength;
+              const ratio = remainingLength / pathLength;
+              const pathBbox = sortedPathData[i].bbox;
+              
+              let isReverse = false;
+              const startIndex = Math.floor(totalPaths * 0.47);
+              const midIndex = Math.floor(totalPaths * 0.874);
+              
+              if (i >= startIndex && i < midIndex) {
+                isReverse = true;
+              }
+              
+              if (isReverse) {
+                finalProgressHeadX = pathBbox.x + pathBbox.width - (pathBbox.width * ratio);
+              } else {
+                finalProgressHeadX = pathBbox.x + (pathBbox.width * ratio);
+              }
+              finalProgressHeadY = pathBbox.y + pathBbox.height / 2;
+              break;
+            }
+          }
+          
+          // If we completed all calculations but didn't break, use the last completed path
+          if (finalCurrentIndex > 0 && (finalProgressHeadX === undefined || finalProgressHeadY === undefined)) {
+            const lastCompletedBbox = sortedPathData[finalCurrentIndex - 1].bbox;
+            finalProgressHeadX = lastCompletedBbox.x + lastCompletedBbox.width;
+            finalProgressHeadY = lastCompletedBbox.y + lastCompletedBbox.height / 2;
+          }
+        }
 
         let midX, midY;
         if (currentLength === 0 && currentIndex === 0) {
@@ -526,10 +494,8 @@ useEffect(() => {
         textElement.textContent = `${data}%`;
 
         updateBoxPosition(`${data}%`, textElement);
+        updatePinpointPosition(finalProgressHeadX, finalProgressHeadY);
 
-        if (mintEvents.length > 0) {
-          updateBoxEvents();
-        }
         clearInterval(intervalRef.current);
       }
     }, 50);
@@ -561,10 +527,53 @@ useEffect(() => {
         }
       }
 
-      if (sortedPathData && sortedPathData[0]) {
-        updatePinpointPosition(sortedPathData[0].bbox);
-        updateBoxPosition(textElement.textContent || `${processData || 0}%`, textElement);
-      }
+      // if (sortedPathData && sortedPathData[0]) {
+      //   const textContent = textElement.textContent || `${processData || 0}%`;
+      //   updateBoxPosition(textContent, textElement);
+        
+      //   // Recalculate progress head position for pinpoint
+      //   if (processData !== null) {
+      //     const totalLength = sortedPathData.reduce((sum, data) => sum + data.length, 0);
+      //     console.log('totalLength', totalLength, processData);
+      //     const targetLength = totalLength * (processData / 100);
+      //     let currentLength = 0;
+      //     let progressHeadX, progressHeadY;
+          
+      //     if (processData === 0) {
+      //       progressHeadX = sortedPathData[0].bbox.x;
+      //       progressHeadY = sortedPathData[0].bbox.y + sortedPathData[0].bbox.height / 2;
+      //     } else {
+      //       for (let i = 0; i < sortedPathData.length; i++) {
+      //         const pathLength = sortedPathData[i].length;
+      //         if (currentLength + pathLength <= targetLength) {
+      //           currentLength += pathLength;
+      //         } else {
+      //           const remainingLength = targetLength - currentLength;
+      //           const ratio = remainingLength / pathLength;
+      //           const pathBbox = sortedPathData[i].bbox;
+                
+      //           let isReverse = false;
+      //           const startIndex = Math.floor(sortedPathData.length * 0.47);
+      //           const midIndex = Math.floor(sortedPathData.length * 0.874);
+                
+      //           if (i >= startIndex && i < midIndex) {
+      //             isReverse = true;
+      //           }
+                
+      //           if (isReverse) {
+      //             progressHeadX = pathBbox.x + pathBbox.width - (pathBbox.width * ratio);
+      //           } else {
+      //             progressHeadX = pathBbox.x + (pathBbox.width * ratio);
+      //           }
+      //           progressHeadY = pathBbox.y + pathBbox.height / 2;
+      //           break;
+      //         }
+      //       }
+      //     }
+          
+      //     updatePinpointPosition(progressHeadX, progressHeadY);
+      //   }
+      // }
     }
   };
 
@@ -582,46 +591,11 @@ useEffect(() => {
       const process = await getCurrentProcess();
       console.log('Current Process:', process);
 
-      const events = await queryMintEvents();
-      console.log('Mint Events:', events);
-
-      const formattedEvents = events.map((event) => {
-        const date = new Date(Number(event.timestamp) * 1000);
-        const formattedDate = date.toLocaleDateString();
-        const linkKey = "link" + event.seq;
-        return {
-          ...event,
-          formattedTimestamp: formattedDate,
-          formattedMintAmount: `${Number(event.mintedAmount || event.mintAmount)}`,
-          formattedDonationUSD: `${event.donationUSD}`,
-          Link: LINKS[linkKey].url,
-          linkDisplayText: LINKS[linkKey].displayText,
-        };
-      });
-
-      const processNumber = Number(process);
+      const processNumber = Number(process) / 100;
       setProcessData(processNumber);
-      setMintEvents(formattedEvents);
     } catch (error) {
       console.error('Error fetching contract data:', error);
       setProcessData(0);
-
-      const sampleEvents = Array.from({ length: 10 }, (_, i) => {
-        const seq = i + 1;
-        const linkKey = seq === 1 ? 'event1' : 'default';
-        return {
-          timestamp: Date.now() - i * 86400000,
-          formattedTimestamp: new Date(Date.now() - i * 86400000).toLocaleDateString(),
-          seq,
-          mintedAmount: (Math.random() * 100).toFixed(2),
-          donationUSD: (Math.random() * 1000).toFixed(2),
-          formattedMintAmount: (Math.random() * 100).toFixed(2),
-          formattedDonationUSD: `${(Math.random() * 1000).toFixed(2)}USD`,
-          Link: LINKS[linkKey].url,
-          linkDisplayText: LINKS[linkKey].displayText,
-        };
-      });
-      setMintEvents(sampleEvents);
     }
   };
 
@@ -638,60 +612,9 @@ useEffect(() => {
     if (boxDiv) boxDiv.remove();
     if (pinpointDiv) pinpointDiv.remove();
   };
-}, [processData, isMobile, mintEvents.length]);
+}, [processData, isMobile]);
 
-  // Render the pinpoint popup
-  const renderPinpointPopup = () => {
-    if (!pinpointPopup.show || !pinpointPopup.data) return null;
-    return (
-      <div
-        className="pinpoint-popup"
-        style={{
-          left: `${pinpointPopup.x}px`,
-          top: `${pinpointPopup.y}px`,
-          position: 'absolute',
-          backgroundColor: '#fff',
-          color: '#000',
-          padding: '6px',
-          borderRadius: '6px',
-          boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
-          fontSize: '14px',
-          lineHeight: '1.5',
-          zIndex: 999,
-          maxWidth: '300px',
-          minWidth: '180px',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          backdropFilter: 'blur(5px)',
-          transition: 'opacity 0.2s ease',
-          pointerEvents: 'auto',
-        }}
-      >
-        <div>
-          <strong>TimeStamp:</strong> {pinpointPopup.data.formattedTimestamp}
-        </div>
-        <div>
-          <strong>Seq:</strong> {pinpointPopup.data.seq}
-        </div>
-        <div>
-          <strong>MintedAmount:</strong> {pinpointPopup.data.formattedMintAmount}
-        </div>
-        <div>
-          <strong>DonationUSD:</strong> {pinpointPopup.data.formattedDonationUSD}
-        </div>
-        <div>
-          <a
-            href={pinpointPopup.data.Link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="popup-link" 
-            style={{textDecoration:"none"}}
-          >
-          {pinpointPopup.data.linkDisplayText}
-          </a>
-        </div>
-      </div>
-    );
-  };
+
   return (
     <>
       <section className="mountain-container">
@@ -730,7 +653,6 @@ useEffect(() => {
           </div>
         </div>
         <div id="container">
-            {renderPinpointPopup()}
             <div className="title">
                 <span>KARMA</span>
                 <span>TODAY</span>

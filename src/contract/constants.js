@@ -17,7 +17,7 @@ export const CONFIGS = {
             "function getCurrentProcess() view returns (uint256)",
             "function getPublicShareAmount() view returns (uint256)",
             "function mint(uint256 usdtAmount, address to)",
-            "event Mint(uint256 indexed seq, uint256 process, uint256 proofHash, uint256 mintedAmount, uint256 donationUSD)"
+            "event Mint(uint256 indexed seq, address indexed from, address indexed to, uint256 donationUSD, uint256 mintedAmount, uint256 process)"
         ]
     }
 }
