@@ -1,0 +1,141 @@
+.dt-button {
+    outline: none;
+    border: none;
+    appearance: none;
+    min-width: 80px;
+    height: 40px;
+    border-radius: 20px;
+    font-weight: 500;
+    transition: all ease .3s;
+    background: linear-gradient(to right, #947FFF, #E881A8);
+    color: white;
+    padding: 0 20px;
+    &:hover {
+        background: linear-gradient(to right, #7761e3, #f56fa3);;
+    }
+}
+
+.dt-button-main {
+    position: absolute;
+    top: 88%;
+    box-shadow: 0 0 10px rgba(192, 129, 232, 0.8);
+    min-width: 180px;
+}
+
+.dt-button-cancel {
+    background: #FFF;
+    color: black;
+    border: 1px solid #212529;
+    &:hover {
+        background: black;
+        color: white;
+    }
+}
+
+.dt-button-connect {
+    outline: none;
+    border: none;
+    appearance: none;
+    background: black;
+    color: white;
+    border-radius: 5px;
+    padding: 6px 8px;
+    font-size: 14px;
+    &:hover {
+        background: #333;
+    }
+}
+
+.dt-mask {
+    inset: 0;
+    z-index: 1001;
+    background: rgba(0,0,0,.6);
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: all .2s ease-in-out;
+    visibility: visible;
+    &.dt-hidden {
+        opacity: 0;
+        visibility: hidden;
+        top: -10%;
+    }
+}
+
+.dt-dialog {
+    width: 90%;
+    max-width: 560px;
+    background-color: #FFF;
+    border-radius: 10px;
+    padding: 28px;
+    .dt-header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #212529;
+        padding-bottom: 15px;
+        .title {
+            font-weight: 600;
+            font-size: 20px;
+        }
+        .account {
+            font-size: 14px;
+            background: rgba(0,0,0,.1);
+            padding: 3px 8px;
+            border-radius: 15px;
+        }
+    }
+    .dt-balance {
+        text-align: center;
+        font-weight: 600;
+        padding: 20px;
+    }
+    .errors {
+        text-align: center;
+        color: #FF0000;
+        padding-top: 15px;
+    }
+}
+
+.dt-input {
+    padding-bottom: 18px;
+    span {
+        font-weight: 500;
+        display: block;
+        margin-bottom: 2px;
+    }
+    input {
+        width: 100%;
+        outline: none;
+        appearance: none;
+        padding: 6px 10px;
+        border: 1px solid #212529;
+        border-radius: 5px;
+        min-width: 80px;
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        &.invalid {
+            border-color: #FF0000;
+        }
+    }
+}
+
+.dt-action {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-top: 10px;
+    button {
+        flex: 1;
+    }
+}
+
+@media(max-width: 480px) {
+    .dt-dialog {
+        padding: 18px;
+    }
+}

@@ -5,7 +5,7 @@ import SEO from './components/SEO/SEO.jsx';
 function App() {
   return (
     <Router>
-        <SEO
+      <SEO
         title="Karma"
         description="Karma white paper - donation"
         keywords="react, seo, helmet"
@@ -13,10 +13,10 @@ function App() {
         url="https://example.com"
         type="website"
       />
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/faq" element={<Faq />} />
-        </Routes>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/faq" element={<Faq />} />
+      </Routes>
     </Router>
   );
 }

@@ -47,7 +47,7 @@ body{
   text-align: center;
   cursor: pointer;
   transition: opacity 0.2s ease;
-  z-index: 10000; /* Ensure it appears above SVG */
+  z-index: 100; /* Ensure it appears above SVG */
 }
 
 /* Styles for transaction-popup */
@@ -60,7 +60,7 @@ body{
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   font-size: 14px !important;
   line-height: 1.5;
-  z-index: 9999;
+  z-index: 999;
   max-width: 300px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(5px);
@@ -109,8 +109,7 @@ body{
     justify-content: center;
     gap: 0;
     padding: 0 100px 60px 100px;
-    position: absolute;
-    top: 85%;
+    position: relative;
 }
 .karma-content h1{
     font-size: 40px;
@@ -185,7 +184,7 @@ tr:nth-child(even) {
     margin-top: 52px;
     padding: 0 72px;
     position: relative;
-    z-index: 10000;
+    z-index: 100;
     overflow: visible;
 }
 #header .logo{
@@ -253,7 +252,6 @@ tr:nth-child(even) {
     height: fit-content;
     width: 100%;
     top: 150%;
-    z-index: 1000;
     position: absolute;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     z-index: 100;
@@ -551,9 +549,6 @@ tr:nth-child(even) {
     .mountain-container {
         padding: 0 0 30px;
     }
-    .karma-content{
-        top: 80%;
-    }
     #container .title{
         width: 55%;
     }
@@ -574,11 +569,6 @@ tr:nth-child(even) {
         font-size: 18px !important;
     }
 }
-@media (max-width: 868px){
-    .karma-content{
-        top: 72%;
-    }
-}
 @media (max-width: 768px) {
     .mountain-container #header .nav .nav-faq,
     .mountain-container #header .nav .nav-language #lang-toggle {
@@ -592,7 +582,6 @@ tr:nth-child(even) {
     }
     .karma-content{
         padding: 0 30px 60px ;
-        top: 85%;
     }
     #container .title{
         width: 70%;
@@ -707,9 +696,6 @@ tr:nth-child(even) {
     .karma-content_img{
         width: 100%;
     }
-    .karma-content {
-        top: 90%;
-    }
     #container .title span{
         font-size: 24px;
     }
@@ -741,9 +727,6 @@ tr:nth-child(even) {
     }
     .nav-language #lang-submenu .lang{
         font-size: 14px !important;
-    } 
-    .karma-content {
-        top: 88%;
     }
     #main {
         padding-top: 20px;

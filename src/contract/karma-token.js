@@ -1,21 +1,16 @@
 // src/services/contractService.js
 import { ethers } from 'ethers';
+import { CONFIGS } from './constants';
 
-const provider = new ethers.JsonRpcProvider(`https://base-mainnet.infura.io/v3/9528e81fcbc54f12acd36b08204e4f2d`);
+//const provider = new ethers.JsonRpcProvider(`https://base-mainnet.infura.io/v3/9528e81fcbc54f12acd36b08204e4f2d`);
+const provider = new ethers.JsonRpcProvider(CONFIGS.provider);
 
 // Contract address
-export const KARMA_TOKEN = '0x3971deB79AC2F42CBDA9c8b34C094040EDa8382B';
-
-// abis
-const KARMA_TOKEN_ABI = [
-    "function totalSupply() view returns (uint256)",
-    "function balanceOf(address account) view returns (uint256)",
-    "function getCurrentProcess() view returns (uint256)",
-    "event Mint(uint256 indexed seq, uint256 process, uint256 proofHash, uint256 mintedAmount, uint256 donationUSD)"
-];
+//export const KARMA_TOKEN = '0x3971deB79AC2F42CBDA9c8b34C094040EDa8382B';
 
 // Create karma token instance
-export const karmaToken = new ethers.Contract(KARMA_TOKEN, KARMA_TOKEN_ABI, provider);
+const { address, abi } = CONFIGS.karma;
+export const karmaToken = new ethers.Contract(address, abi, provider);
 
 export async function getCurrentProcess() {
     const process = await karmaToken.getCurrentProcess();
@@ -59,4 +54,9 @@ export async function queryMintEvents(fromBlock = 29656224, toBlock = 'latest') 
         console.error('Error querying mint events:', error);
         throw error;
     }
+}
+
+export async function getPublicShareAmount() {
+    const amount = await karmaToken.getPublicShareAmount();
+    return amount;
 }

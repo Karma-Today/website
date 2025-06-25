@@ -12,6 +12,7 @@ import { LINKS } from '../../data/links';
 
 import HomeContentEng from './homeContentEng/homeContentEng';
 import HomeContentCn from './homeContentCn/homeContentCn';
+import Donate from './donate/donate';
 
 function Home() {
   const [selectedLang, setSelectedLang] = useState('en');
@@ -303,7 +304,7 @@ useEffect(() => {
     boxDiv.style.fontSize = '22px';
     boxDiv.style.fontFamily = 'arial';
     boxDiv.style.textAlign = 'center';
-    boxDiv.style.zIndex = '10000';
+    boxDiv.style.zIndex = '100';
     document.getElementById('container')?.appendChild(boxDiv);
 
     pinpointDiv = document.createElement('div');
@@ -317,7 +318,7 @@ useEffect(() => {
     pinpointDiv.style.boxShadow = '0 0 5px rgba(255, 255, 255, 0.7)';
     pinpointDiv.style.transform = 'translate(-50%, -50%)';
     pinpointDiv.style.cursor = 'pointer';
-    pinpointDiv.style.zIndex = '10001';
+    pinpointDiv.style.zIndex = '101';
     document.getElementById('container')?.appendChild(pinpointDiv);
 
     svg.appendChild(textElement);
@@ -656,7 +657,7 @@ useEffect(() => {
           boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
           fontSize: '14px',
           lineHeight: '1.5',
-          zIndex: 99999,
+          zIndex: 999,
           maxWidth: '300px',
           minWidth: '180px',
           border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -1185,6 +1186,7 @@ useEffect(() => {
             </div>
           </div>
         </div>
+        <Donate lang={selectedLang} />
       </section>
       <HomeContentEng
         className={`karma-content ${selectedLang === 'en' ? '' : 'hidden'}`}
