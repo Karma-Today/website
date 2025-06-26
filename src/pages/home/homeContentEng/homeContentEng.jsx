@@ -129,31 +129,21 @@ function homeContentEng({className, id}) {
             <span> Karma Minting Process</span>
             <p>
                 To ensure that Karma is used solely to record genuine
-                philanthropic donations, the team follows a transparent and
-                impartial donation verification process:
+                philanthropic donations while preventing data manipulation, the team follows a transparent and
+                impartial on-chain donation process:
             </p>
             <p className="pd-text">
-                <strong>1. Authorization</strong>: The Karma team contacts the
-                fundraising organizer or individual to obtain consent from the
-                donor, recipient, and organizer, authorizing Karma to
-                participate in the donation record.
+                <strong>1. On-Chain Donations:</strong> Karma currently accepts USDT donations on the Ethereum blockchain. Donors send USDT to recipients through the Karma smart contract. To prevent donors from gaming the donation data, the Karma platform retains 10% (adjustable) of the donation amount into a public fund pool. The public fund pool will be donated by the Karma platform once it accumulates a certain amount.
             </p>
             <p className="pd-text">
-                <strong>2. Donation Witnessing:</strong> When the donation
-                occurs, the Karma team <strong>does not interfere</strong> with
-                the original process. It simply acts as a witness, recording the
-                donation amount based on the current strong value.
-            </p>
-            <p className="pd-text">
-                <strong>3. Karma Minting:</strong> According to the roadmap and
-                the donation amount, the Karma team mints the corresponding
+                <strong>2. Karma Minting:</strong> According to the roadmap and
+                the donation amount, the Karma smart contract mints the corresponding
                 number of Karma Tokens and distributes them to the relevant
                 parties (details provided in later sections).
             </p>
             <p className="pd-text">
-                <strong>4. Philanthropy Promotion:</strong> After the
-                fundraising organizer officially announces the donation, the
-                Karma team shares the related information through
+                <strong>3. Philanthropy Promotion:</strong>
+                The Karma team shares the related donation information through public
                 channels to enhance awareness and amplify the impact of the
                 charitable action.
             </p>
@@ -356,12 +346,11 @@ function homeContentEng({className, id}) {
                 or pre-mining strategies.
             </p>
             <p>
-                <strong><span>• 45% Donation-Related Parties:</span> </strong>
+                <strong><span>• 20% Donation-Related Parties:</span> </strong>
             </p>
             <p className="pd-text">
-                <span>◦ </span><strong>30% Donors (Fundraisers):</strong> The
-                primary initiators of philanthropic actions receive the largest
-                share of Karma, in recognition of their contributions.
+                <span>◦ </span><strong>10% Donors (Fundraisers):</strong> The
+                primary initiators of philanthropic actions receive Karma, in recognition of their contributions.
             </p>
             <p className="pd-text">
                 <span>◦ </span
@@ -371,35 +360,25 @@ function homeContentEng({className, id}) {
                 Recipients are granted transparent and fair records of the
                 donations, enhancing the credibility of philanthropic efforts.
             </p>
-            <p className="pd-text">
-                <span>◦ </span
-                ><strong
-                    >5% Organizers (Charity Foundations or Fundraising
-                    Platforms):</strong
-                >
-                These entities facilitate and manage the fundraising process. If
-                no organizer is involved, this share is equally divided between
-                the donor and the beneficiary.
-            </p>
             <p>
                 <strong
-                    ><span>• </span>45% Platform Support and Ecosystem
+                    ><span>• </span>70% Ecosystem
                     Development:</strong
                 >
             </p>
             <p className="pd-text">
-                <span>◦ </span><strong>25% Team: </strong> Allocated for
+                <span>◦ </span><strong>30% Team: </strong> Allocated for
                 operations, technical development, marketing, and other
                 essential expenditures.
             </p>
             <p className="pd-text">
-                <span>◦ </span><strong>5% Ecosystem Development: </strong> Used
+                <span>◦ </span><strong>15% Ecosystem Development: </strong> Used
                 to incentivize developers, technical contributors, and community
                 members, fostering ongoing innovation within the Karma
                 ecosystem.
             </p>
             <p className="pd-text">
-                <span>◦ </span><strong>15% Charity Fund: </strong> Dedicated to
+                <span>◦ </span><strong>25% Charity Fund: </strong> Dedicated to
                 supporting philanthropic projects. The use of funds is fully
                 transparent and governed by the community, with project
                 approvals determined through voting by holders of Charity

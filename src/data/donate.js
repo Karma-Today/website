@@ -14,7 +14,7 @@ export const DonateText = {
     cn: {
         donate: '捐赠',
         connectWallet: '连接钱包',
-        pool: '资金池',
+        pool: '公共资金池',
         amount: '捐赠金额',
         address: '受赠方钱包地址',
         donateTo: '捐赠给',
