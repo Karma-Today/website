@@ -545,53 +545,52 @@ function Home() {
           }
         }
 
-        // if (sortedPathData && sortedPathData[0]) {
-        //   const textContent = textElement.textContent || `${processData || 0}%`;
-        //   updateBoxPosition(textContent, textElement);
+        if (sortedPathData && sortedPathData[0]) {
+          const textContent = textElement.textContent || `${processData || 0}%`;
+          updateBoxPosition(textContent, textElement);
           
-        //   // Recalculate progress head position for pinpoint
-        //   if (processData !== null) {
-        //     const totalLength = sortedPathData.reduce((sum, data) => sum + data.length, 0);
-        //     console.log('totalLength', totalLength, processData);
-        //     const targetLength = totalLength * (processData / 100);
-        //     let currentLength = 0;
-        //     let progressHeadX, progressHeadY;
+          // Recalculate progress head position for pinpoint
+          if (processData !== null) {
+            const totalLength = sortedPathData.reduce((sum, data) => sum + data.length, 0);
+            const targetLength = totalLength * (processData / 100);
+            let currentLength = 0;
+            let progressHeadX, progressHeadY;
               
-        //     if (processData === 0) {
-        //       progressHeadX = sortedPathData[0].bbox.x;
-        //       progressHeadY = sortedPathData[0].bbox.y + sortedPathData[0].bbox.height / 2;
-        //     } else {
-        //       for (let i = 0; i < sortedPathData.length; i++) {
-        //         const pathLength = sortedPathData[i].length;
-        //         if (currentLength + pathLength <= targetLength) {
-        //           currentLength += pathLength;
-        //         } else {
-        //           const remainingLength = targetLength - currentLength;
-        //           const ratio = remainingLength / pathLength;
-        //           const pathBbox = sortedPathData[i].bbox;
+            if (processData === 0) {
+              progressHeadX = sortedPathData[0].bbox.x;
+              progressHeadY = sortedPathData[0].bbox.y + sortedPathData[0].bbox.height / 2;
+            } else {
+              for (let i = 0; i < sortedPathData.length; i++) {
+                const pathLength = sortedPathData[i].length;
+                if (currentLength + pathLength <= targetLength) {
+                  currentLength += pathLength;
+                } else {
+                  const remainingLength = targetLength - currentLength;
+                  const ratio = remainingLength / pathLength;
+                  const pathBbox = sortedPathData[i].bbox;
                 
-        //           let isReverse = false;
-        //           const startIndex = Math.floor(sortedPathData.length * 0.47);
-        //           const midIndex = Math.floor(sortedPathData.length * 0.874);
+                  let isReverse = false;
+                  const startIndex = Math.floor(sortedPathData.length * 0.47);
+                  const midIndex = Math.floor(sortedPathData.length * 0.874);
                 
-        //           if (i >= startIndex && i < midIndex) {
-        //             isReverse = true;
-        //           }
+                  if (i >= startIndex && i < midIndex) {
+                    isReverse = true;
+                  }
                 
-        //           if (isReverse) {
-        //             progressHeadX = pathBbox.x + pathBbox.width - (pathBbox.width * ratio);
-        //           } else {
-        //             progressHeadX = pathBbox.x + (pathBbox.width * ratio);
-        //           }
-        //           progressHeadY = pathBbox.y + pathBbox.height / 2;
-        //           break;
-        //         }
-        //       }
-        //     }
+                  if (isReverse) {
+                    progressHeadX = pathBbox.x + pathBbox.width - (pathBbox.width * ratio);
+                  } else {
+                    progressHeadX = pathBbox.x + (pathBbox.width * ratio);
+                  }
+                  progressHeadY = pathBbox.y + pathBbox.height / 2;
+                  break;
+                }
+              }
+            }
               
-        //     updatePinpointPosition(progressHeadX, progressHeadY);
-        //   }
-        // }
+            updatePinpointPosition(progressHeadX, progressHeadY);
+          }
+        }
       }
     };
 
