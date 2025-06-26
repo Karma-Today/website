@@ -17,7 +17,7 @@ export async function getCurrentProcess() {
     return process;
 }
 
-export async function queryMintEvents(fromBlock = 8612910, toBlock = 'latest') {
+export async function queryMintEvents(fromBlock = 0, toBlock = 'latest') {
     try {
         // Use the same provider 
         const eventProvider = provider; 
@@ -60,4 +60,14 @@ export async function queryMintEvents(fromBlock = 8612910, toBlock = 'latest') {
 export async function getPublicShareAmount() {
     const amount = await karmaToken.getPublicShareAmount();
     return amount;
+}
+
+export async function getTotalDonated() {
+    const totalDonated = await karmaToken.totalDonated();
+    return totalDonated;
+}
+
+export async function getDonationSequence() {
+    const seq = await karmaToken.seq();
+    return seq;
 }

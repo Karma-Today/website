@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { DonateText } from '../../../data/donate';
-import { getPublicShareAmount } from '../../../contract/karma-token';
+import { getPublicShareAmount, getTotalDonated, getDonationSequence } from '../../../contract/karma-token';
 import { useWallet } from '../../../contract/wallet';
 import { shortAccount } from '../../../utils'
 import { formatUnits, parseUnits } from 'ethers';
@@ -14,6 +14,8 @@ export default function Donate({ lang }) {
     const [amount, setAmount] = useState('');
     const [address, setAddress] = useState('');
     const [poolAmount, setPoolAmount] = useState(0);
+    const [totalDonated, setTotalDonated] = useState(0);
+    const [donationsCount, setDonationsCount] = useState(0);
     const [validate, setValidate] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState(null);
@@ -46,7 +48,7 @@ export default function Donate({ lang }) {
             }
 
             const karmaContract = await getContract(karma.address, karma.abi);
-            const tx = await karmaContract.mint(amt, address, { gasLimit: 300_000 });
+            const tx = await karmaContract.donate(amt, address, { gasLimit: 300_000 });
             await tx.wait();
 
             window.location.reload();
@@ -64,12 +66,23 @@ export default function Donate({ lang }) {
     const invalidAddress = useMemo(() => address.length !== 42, [address]);
 
     useEffect(() => {
-        const fetchAmount = async() => {
-            const amount = await getPublicShareAmount();
-            setPoolAmount(formatUnits(amount, CONFIGS.usdt.decimals));
+        const fetchData = async() => {
+            try {
+                const [poolAmount, totalDonatedAmount, donationSeq] = await Promise.all([
+                    getPublicShareAmount(),
+                    getTotalDonated(),
+                    getDonationSequence()
+                ]);
+                
+                setPoolAmount(formatUnits(poolAmount, CONFIGS.usdt.decimals));
+                setTotalDonated(formatUnits(totalDonatedAmount, CONFIGS.usdt.decimals));
+                setDonationsCount(Number(donationSeq) - 1); // seq starts from 1, so subtract 1 to get count
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         }
 
-        fetchAmount();
+        fetchData();
     }, []);
 
     return (
@@ -93,8 +106,16 @@ export default function Donate({ lang }) {
                             </button>
                         }
                     </div>
-                    <div className='dt-balance'>
-                        {`${i18n.pool}: ${poolAmount} USDT`}
+                    <div className='dt-stats'>
+                        <div className='dt-balance'>
+                            {`${i18n.donations}: ${donationsCount}`}
+                        </div>
+                        <div className='dt-balance'>
+                            {`${i18n.totalDonated}: ${Math.floor(Number(totalDonated))} USDT`}
+                        </div>
+                        <div className='dt-balance'>
+                            {`${i18n.pool}: ${Math.floor(Number(poolAmount))} USDT`}
+                        </div>
                     </div>
                     <div className='dt-input'>
                         <span>USDT</span>

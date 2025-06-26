@@ -93,6 +93,20 @@
         font-weight: 600;
         padding: 20px;
     }
+    .dt-stats {
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 20px;
+        .dt-balance {
+            text-align: center;
+            font-weight: 600;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+    }
     .errors {
         text-align: center;
         color: #FF0000;

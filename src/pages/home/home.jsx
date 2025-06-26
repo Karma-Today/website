@@ -31,588 +31,590 @@ function Home() {
     setIsSubmenuOpen(false);
   };
 
-useEffect(() => {
-  let boxDiv = null;
-  let pinpointDiv = null;
-  let textElement = null;
-  let cachedSortedPathData = null;
-  let cachedSvgSize = null;
+  // Fetch contract data once on component mount
+  useEffect(() => {
+    const fetchContractData = async () => {
+      try {
+        const process = await getCurrentProcess();
+        console.log('Current Process:', process);
 
-  // Validate the input data
-  const validateData = (data) => {
-    if (typeof data !== 'number' || isNaN(data) || data < 0 || data > 100) {
-      console.log('Invalid data');
-      return false;
-    }
-    return true;
-  };
-
-  // Get sorted path data based on xCenter
-  const getSortedPathData = (paths) => {
-    const pathData = Array.from(paths).map((path, index) => {
-      const bbox = path.getBBox();
-      return {
-        index,
-        bbox,
-        xCenter: bbox.x + bbox.width / 2,
-        originalPath: path, // Lưu originalPath để truy cập d nếu cần
-      };
-    });
-
-    let sortedPathData = [...pathData];
-    const firstX = pathData[0]?.xCenter || 0;
-    const lastX = pathData[pathData.length - 1]?.xCenter || 0;
-    if (lastX < firstX) {
-      sortedPathData.reverse();
-    } else {
-      sortedPathData.sort((a, b) => a.index - b.index);
-    }
-    return sortedPathData;
-  };
-
-  // Update the position and content of the overlay box
-  const updateBoxPosition = (text, textElement) => {
-    if (!textElement || !boxDiv) return;
-
-    const textBbox = textElement.getBBox();
-    const containerRect = document.getElementById('container')?.getBoundingClientRect();
-    const windowWidth = window.innerWidth;
-
-    if (!containerRect) {
-      console.error('Container not found');
-      return;
-    }
-
-    const point = svgRef.current.createSVGPoint();
-    point.x = textBbox.x;
-    point.y = textBbox.y;
-
-    const ctm = svgRef.current.getScreenCTM();
-    if (!ctm) {
-      console.error('Could not get SVG CTM');
-      return;
-    }
-    const screenPoint = point.matrixTransform(ctm);
-
-    let screenX = screenPoint.x - containerRect.left;
-    let screenY = screenPoint.y - containerRect.top;
-
-    if (windowWidth <= 641) {
-      if (screenX + textBbox.width + 16 > containerRect.width) {
-        screenX = containerRect.width - (textBbox.width + 16) - 10;
+        const processNumber = Number(process) / 100;
+        setProcessData(processNumber);
+      } catch (error) {
+        console.error('Error fetching contract data:', error);
+        setProcessData(0);
       }
-    } else if (windowWidth <= 768) {
-      screenX -= 20;
-      if (screenX + textBbox.width + 16 > containerRect.width) {
-        screenX = containerRect.width - (textBbox.width + 16) - 10;
+    };
+
+    fetchContractData();
+  }, []); // Empty dependency array - only run once on mount
+
+  useEffect(() => {
+    let boxDiv = null;
+    let pinpointDiv = null;
+    let textElement = null;
+    let cachedSortedPathData = null;
+    let cachedSvgSize = null;
+
+    // Validate the input data
+    const validateData = (data) => {
+      if (typeof data !== 'number' || isNaN(data) || data < 0 || data > 100) {
+        console.log('Invalid data');
+        return false;
       }
-      if (screenX < 0) {
-        screenX = 10;
+      return true;
+    };
+
+    // Get sorted path data based on xCenter
+    const getSortedPathData = (paths) => {
+      const pathData = Array.from(paths).map((path, index) => {
+        const bbox = path.getBBox();
+        return {
+          index,
+          bbox,
+          xCenter: bbox.x + bbox.width / 2,
+          originalPath: path, // Lưu originalPath để truy cập d nếu cần
+        };
+      });
+
+      let sortedPathData = [...pathData];
+      const firstX = pathData[0]?.xCenter || 0;
+      const lastX = pathData[pathData.length - 1]?.xCenter || 0;
+      if (lastX < firstX) {
+        sortedPathData.reverse();
+      } else {
+        sortedPathData.sort((a, b) => a.index - b.index);
       }
-    } else {
-      screenX -= 10;
-      if (screenX + textBbox.width + 16 > containerRect.width) {
-        screenX = containerRect.width - (textBbox.width + 16) - 10;
-      }
-      if (screenX < 0) {
-        screenX = 10;
-      }
-    }
+      return sortedPathData;
+    };
 
-    boxDiv.style.left = `${screenX}px`;
-    boxDiv.style.top = `${screenY}px`;
-    boxDiv.style.width = `${textBbox.width + 16}px`;
-    boxDiv.style.height = `${textBbox.height + 4}px`;
-    boxDiv.textContent = text;
-  };
+    // Update the position and content of the overlay box
+    const updateBoxPosition = (text, textElement) => {
+      if (!textElement || !boxDiv) return;
 
-  // Update the position of the pinpoint to follow the progress head
-  const updatePinpointPosition = (svgX, svgY) => {
-    if (!pinpointDiv || !svgRef.current) return;
+      const textBbox = textElement.getBBox();
+      const containerRect = document.getElementById('container')?.getBoundingClientRect();
+      const windowWidth = window.innerWidth;
 
-    const containerRect = document.getElementById('container')?.getBoundingClientRect();
-    const windowWidth = window.innerWidth;
-
-    if (!containerRect) {
-      console.error('Container not found');
-      return;
-    }
-
-    const point = svgRef.current.createSVGPoint();
-    point.x = svgX;
-    point.y = svgY;
-
-    const ctm = svgRef.current.getScreenCTM();
-    if (!ctm) {
-      console.error('Could not get SVG CTM for pinpoint');
-      return;
-    }
-    const screenPoint = point.matrixTransform(ctm);
-
-    let screenX = screenPoint.x - containerRect.left;
-    let screenY = screenPoint.y - containerRect.top;
-
-    if (windowWidth <= 641) {
-      screenX += 5;
-    }
-
-    pinpointDiv.style.left = `${screenX}px`;
-    pinpointDiv.style.top = `${screenY}px`;
-  };
-
-
-
-  // Set up the SVG animation based on the progress data
-  const setupSvgAnimation = (data) => {
-    const svg = svgRef.current;
-    if (!svg) {
-      console.error('SVG element not found');
-      return;
-    }
-
-    const paths = svg.querySelectorAll('path');
-    const totalPaths = paths.length;
-
-    if (totalPaths === 0) {
-      console.error('No paths found in SVG');
-      return;
-    }
-
-    textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    textElement.setAttribute('font-size', '22');
-    textElement.setAttribute('font-family', 'arial');
-    textElement.setAttribute('fill', 'white');
-    textElement.setAttribute('dominant-baseline', 'middle');
-    textElement.setAttribute('class', 'hover-text');
-    textElement.setAttribute('opacity', '0');
-
-    boxDiv = document.createElement('div');
-    boxDiv.className = 'text-box';
-    boxDiv.style.position = 'absolute';
-    boxDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-    boxDiv.style.color = 'white';
-    boxDiv.style.padding = '2px 8px';
-    boxDiv.style.borderRadius = '4px';
-    boxDiv.style.fontSize = '22px';
-    boxDiv.style.fontFamily = 'arial';
-    boxDiv.style.textAlign = 'center';
-    boxDiv.style.zIndex = '100';
-    document.getElementById('container')?.appendChild(boxDiv);
-
-    pinpointDiv = document.createElement('div');
-    pinpointDiv.className = 'pin-point';
-    pinpointDiv.style.position = 'absolute';
-    pinpointDiv.style.width = '12px';
-    pinpointDiv.style.height = '12px';
-    pinpointDiv.style.borderRadius = '50%';
-    pinpointDiv.style.backgroundColor = 'white';
-    pinpointDiv.style.border = '2px solid white';
-    pinpointDiv.style.boxShadow = '0 0 5px rgba(255, 255, 255, 0.7)';
-    pinpointDiv.style.transform = 'translate(-50%, -50%)';
-    pinpointDiv.style.cursor = 'pointer';
-    pinpointDiv.style.zIndex = '101';
-    pinpointDiv.style.display = 'none'; // Hide the pinpoint
-    document.getElementById('container')?.appendChild(pinpointDiv);
-
-    svg.appendChild(textElement);
-
-    // Create pathData with all necessary properties
-    const pathData = Array.from(paths).map((path, index) => {
-      const bbox = path.getBBox();
-      const length = path.getTotalLength();
-      if (isNaN(length) || length <= 0) {
-        console.warn(`Path ${index} length not found: ${length}`);
-      }
-      const d = path.getAttribute('d');
-      return {
-        index,
-        d,
-        length,
-        bbox,
-        xCenter: bbox.x + bbox.width / 2,
-        originalPath: path,
-      };
-    });
-
-    // Cache sorted path data for pinpoint and textbox
-    cachedSortedPathData = getSortedPathData(paths);
-    cachedSvgSize = svg.getBoundingClientRect();
-    const firstPathBbox = cachedSortedPathData[0].bbox;
-
-    if (!validateData(data)) {
-      const midX = firstPathBbox.x + firstPathBbox.width / 2 - 15;
-      const midY = firstPathBbox.y - 20;
-      textElement.setAttribute('x', midX);
-      textElement.setAttribute('y', midY);
-      textElement.textContent = '0%';
-
-      updateBoxPosition('0%', textElement);
-      updatePinpointPosition(firstPathBbox.x, firstPathBbox.y + firstPathBbox.height / 2);
-
-      return;
-    }
-
-    const totalLength = pathData.reduce((sum, data) => sum + data.length, 0);
-    const targetLength = totalLength * ((data / 100) < 0.01 ? 0.01 : (data / 100));
-
-    updatePinpointPosition(firstPathBbox);
-
-    // Sort pathData to match cachedSortedPathData order
-    const sortedPathData = pathData.slice().sort((a, b) => {
-      const aIndex = cachedSortedPathData.findIndex(p => p.index === a.index);
-      const bIndex = cachedSortedPathData.findIndex(p => p.index === b.index);
-      return aIndex - bIndex;
-    });
-
-    const newPaths = [];
-    sortedPathData.forEach((data) => {
-      if (!data.d) {
-        console.error('Path data missing d attribute:', data);
+      if (!containerRect) {
+        console.error('Container not found');
         return;
       }
-      const newPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      newPath.setAttribute('d', data.d);
-      newPath.setAttribute('fill', 'none');
-      newPath.setAttribute('stroke', 'none');
-      svg.appendChild(newPath);
-      newPaths.push(newPath);
-      if (data.originalPath) {
-        data.originalPath.setAttribute('fill', '#747264');
-        data.originalPath.setAttribute('stroke', '#747264');
+
+      const point = svgRef.current.createSVGPoint();
+      point.x = textBbox.x;
+      point.y = textBbox.y;
+
+      const ctm = svgRef.current.getScreenCTM();
+      if (!ctm) {
+        console.error('Could not get SVG CTM');
+        return;
       }
-    });
+      const screenPoint = point.matrixTransform(ctm);
 
-    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-    svg.appendChild(defs);
+      let screenX = screenPoint.x - containerRect.left;
+      let screenY = screenPoint.y - containerRect.top;
 
-    let currentIndex = 0;
-    let currentLength = 0;
-    let clipPathId = null;
-    let clipPathIdOriginal = null;
-    const startIndex = Math.floor(totalPaths * 0.47);
-    const midIndex = Math.floor(totalPaths * 0.874);
-    const endIndex = totalPaths - 1;
-
-    intervalRef.current = setInterval(() => {
-      if (currentLength < targetLength && currentIndex < totalPaths) {
-        const path = newPaths[currentIndex];
-        const originalPath = sortedPathData[currentIndex].originalPath;
-        const pathLength = sortedPathData[currentIndex].length;
-
-        if (clipPathId) {
-          const oldClipPath = document.getElementById(clipPathId);
-          if (oldClipPath) oldClipPath.remove();
-          path.removeAttribute('clip-path');
-          clipPathId = null;
+      if (windowWidth <= 641) {
+        if (screenX + textBbox.width + 16 > containerRect.width) {
+          screenX = containerRect.width - (textBbox.width + 16) - 10;
         }
-        if (clipPathIdOriginal) {
-          const oldClipPath = document.getElementById(clipPathIdOriginal);
-          if (oldClipPath) oldClipPath.remove();
-          originalPath.removeAttribute('clip-path');
-          clipPathIdOriginal = null;
+      } else if (windowWidth <= 768) {
+        screenX -= 20;
+        if (screenX + textBbox.width + 16 > containerRect.width) {
+          screenX = containerRect.width - (textBbox.width + 16) - 10;
         }
-
-        if (currentLength + pathLength <= targetLength) {
-          path.setAttribute('fill', 'white');
-          originalPath.setAttribute('opacity', '0');
-          currentLength += pathLength;
-          currentIndex++;
-        } else {
-          const remainingLength = targetLength - currentLength;
-          const ratio = remainingLength / pathLength;
-          const bbox = sortedPathData[currentIndex].bbox;
-          const clipWidth = bbox.width * ratio;
-
-          let isReverse = false;
-          if (currentIndex >= startIndex && currentIndex < midIndex) {
-            isReverse = true;
-          } else if (currentIndex >= midIndex && currentIndex <= endIndex) {
-            isReverse = false;
-          }
-
-          clipPathId = `clip-new-${currentIndex}`;
-          const clipPath = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
-          clipPath.setAttribute('id', clipPathId);
-          const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-          rect.setAttribute('x', isReverse ? bbox.x + bbox.width - clipWidth : bbox.x);
-          rect.setAttribute('y', bbox.y);
-          rect.setAttribute('width', clipWidth);
-          rect.setAttribute('height', bbox.height);
-          clipPath.appendChild(rect);
-          defs.appendChild(clipPath);
-          path.setAttribute('fill', 'white');
-          path.setAttribute('clip-path', `url(#${clipPathId})`);
-
-          clipPathIdOriginal = `clip-original-${currentIndex}`;
-          const clipPathOriginal = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
-          clipPathOriginal.setAttribute('id', clipPathIdOriginal);
-          const rectOriginal = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-          rectOriginal.setAttribute('x', isReverse ? bbox.x : bbox.x + clipWidth);
-          rectOriginal.setAttribute('y', bbox.y);
-          rectOriginal.setAttribute('width', bbox.width - clipWidth);
-          rectOriginal.setAttribute('height', bbox.height);
-          clipPathOriginal.appendChild(rectOriginal);
-          defs.appendChild(clipPathOriginal);
-          originalPath.setAttribute('fill', '#747264');
-          originalPath.setAttribute('opacity', '1');
-          originalPath.setAttribute('clip-path', `url(#${clipPathIdOriginal})`);
-
-          currentLength = targetLength;
-          currentIndex++;
+        if (screenX < 0) {
+          screenX = 10;
         }
-
-        const lastColoredIndex = currentIndex > 0 ? currentIndex - 1 : 0;
-        const lastColoredBbox = sortedPathData[lastColoredIndex].bbox;
-        const nextBbox = currentIndex < totalPaths ? sortedPathData[currentIndex].bbox : lastColoredBbox;
-        const midXBase = (lastColoredBbox.x + lastColoredBbox.width / 2 + nextBbox.x + nextBbox.width / 2) / 2;
-        const midYBase = (lastColoredBbox.y + lastColoredBbox.height / 2 + nextBbox.y + nextBbox.height / 2) / 2;
-        const dx = (nextBbox.x + nextBbox.width / 2) - (lastColoredBbox.x + lastColoredBbox.width / 2);
-        const dy = (nextBbox.y + nextBbox.height / 2) - (lastColoredBbox.y + lastColoredBbox.height / 2);
-        const currentPercent = Math.min((currentLength / totalLength * 100), data).toFixed(1);
-
-        // Calculate the actual head position of the progress line
-        let progressHeadX, progressHeadY;
-        if (currentIndex < totalPaths && currentLength < targetLength) {
-          // We're in the middle of a path, calculate the partial position
-          const currentPathBbox = sortedPathData[currentIndex].bbox;
-          const remainingLength = targetLength - currentLength;
-          const ratio = remainingLength / sortedPathData[currentIndex].length;
-          
-          let isReverse = false;
-          const startIndex = Math.floor(totalPaths * 0.47);
-          const midIndex = Math.floor(totalPaths * 0.874);
-          const endIndex = totalPaths - 1;
-          
-          if (currentIndex >= startIndex && currentIndex < midIndex) {
-            isReverse = true;
-          }
-          
-          if (isReverse) {
-            progressHeadX = currentPathBbox.x + currentPathBbox.width - (currentPathBbox.width * ratio);
-          } else {
-            progressHeadX = currentPathBbox.x + (currentPathBbox.width * ratio);
-          }
-          progressHeadY = currentPathBbox.y + currentPathBbox.height / 2;
-        } else {
-          // We've completed the current path, use the end of the last colored path
-          progressHeadX = lastColoredBbox.x + lastColoredBbox.width;
-          progressHeadY = lastColoredBbox.y + lastColoredBbox.height / 2;
+      } else {
+        screenX -= 10;
+        if (screenX + textBbox.width + 16 > containerRect.width) {
+          screenX = containerRect.width - (textBbox.width + 16) - 10;
         }
-
-        let midX, midY;
-        if (currentLength === 0 && currentIndex === 0) {
-          midX = midXBase - 15;
-          midY = lastColoredBbox.y - 20;
-          progressHeadX = lastColoredBbox.x;
-          progressHeadY = lastColoredBbox.y + lastColoredBbox.height / 2;
-        } else if (currentLength / totalLength >= 0.9) {
-          midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 20;
-          midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
-        } else {
-          midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 15;
-          midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
+        if (screenX < 0) {
+          screenX = 10;
         }
+      }
+
+      boxDiv.style.left = `${screenX}px`;
+      boxDiv.style.top = `${screenY}px`;
+      boxDiv.style.width = `${textBbox.width + 16}px`;
+      boxDiv.style.height = `${textBbox.height + 4}px`;
+      boxDiv.textContent = text;
+    };
+
+    // Update the position of the pinpoint to follow the progress head
+    const updatePinpointPosition = (svgX, svgY) => {
+      if (!pinpointDiv || !svgRef.current) return;
+
+      const containerRect = document.getElementById('container')?.getBoundingClientRect();
+      const windowWidth = window.innerWidth;
+
+      if (!containerRect) {
+        console.error('Container not found');
+        return;
+      }
+
+      const point = svgRef.current.createSVGPoint();
+      point.x = svgX;
+      point.y = svgY;
+
+      const ctm = svgRef.current.getScreenCTM();
+      if (!ctm) {
+        console.error('Could not get SVG CTM for pinpoint');
+        return;
+      }
+      const screenPoint = point.matrixTransform(ctm);
+
+      let screenX = screenPoint.x - containerRect.left;
+      let screenY = screenPoint.y - containerRect.top;
+
+      if (windowWidth <= 641) {
+        screenX += 5;
+      }
+
+      pinpointDiv.style.left = `${screenX}px`;
+      pinpointDiv.style.top = `${screenY}px`;
+    };
+
+
+
+    // Set up the SVG animation based on the progress data
+    const setupSvgAnimation = (data) => {
+      const svg = svgRef.current;
+      if (!svg) {
+        console.error('SVG element not found');
+        return;
+      }
+
+      const paths = svg.querySelectorAll('path');
+      const totalPaths = paths.length;
+
+      if (totalPaths === 0) {
+        console.error('No paths found in SVG');
+        return;
+      }
+
+      textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      textElement.setAttribute('font-size', '22');
+      textElement.setAttribute('font-family', 'arial');
+      textElement.setAttribute('fill', 'white');
+      textElement.setAttribute('dominant-baseline', 'middle');
+      textElement.setAttribute('class', 'hover-text');
+      textElement.setAttribute('opacity', '0');
+
+      boxDiv = document.createElement('div');
+      boxDiv.className = 'text-box';
+      boxDiv.style.position = 'absolute';
+      boxDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+      boxDiv.style.color = 'white';
+      boxDiv.style.padding = '2px 8px';
+      boxDiv.style.borderRadius = '4px';
+      boxDiv.style.fontSize = '22px';
+      boxDiv.style.fontFamily = 'arial';
+      boxDiv.style.textAlign = 'center';
+      boxDiv.style.zIndex = '100';
+      document.getElementById('container')?.appendChild(boxDiv);
+
+      pinpointDiv = document.createElement('div');
+      pinpointDiv.className = 'pin-point';
+      pinpointDiv.style.position = 'absolute';
+      pinpointDiv.style.width = '12px';
+      pinpointDiv.style.height = '12px';
+      pinpointDiv.style.borderRadius = '50%';
+      pinpointDiv.style.backgroundColor = 'white';
+      pinpointDiv.style.border = '2px solid white';
+      pinpointDiv.style.boxShadow = '0 0 5px rgba(255, 255, 255, 0.7)';
+      pinpointDiv.style.transform = 'translate(-50%, -50%)';
+      pinpointDiv.style.cursor = 'pointer';
+      pinpointDiv.style.zIndex = '101';
+      pinpointDiv.style.display = 'none'; // Hide the pinpoint
+      document.getElementById('container')?.appendChild(pinpointDiv);
+
+      svg.appendChild(textElement);
+
+      // Create pathData with all necessary properties
+      const pathData = Array.from(paths).map((path, index) => {
+        const bbox = path.getBBox();
+        const length = path.getTotalLength();
+        if (isNaN(length) || length <= 0) {
+          console.warn(`Path ${index} length not found: ${length}`);
+        }
+        const d = path.getAttribute('d');
+        return {
+          index,
+          d,
+          length,
+          bbox,
+          xCenter: bbox.x + bbox.width / 2,
+          originalPath: path,
+        };
+      });
+
+      // Cache sorted path data for pinpoint and textbox
+      cachedSortedPathData = getSortedPathData(paths);
+      cachedSvgSize = svg.getBoundingClientRect();
+      const firstPathBbox = cachedSortedPathData[0].bbox;
+
+      if (!validateData(data)) {
+        const midX = firstPathBbox.x + firstPathBbox.width / 2 - 15;
+        const midY = firstPathBbox.y - 20;
         textElement.setAttribute('x', midX);
         textElement.setAttribute('y', midY);
-        textElement.textContent = `${currentPercent}%`;
+        textElement.textContent = '0%';
 
-        updateBoxPosition(`${currentPercent}%`, textElement);
-        updatePinpointPosition(progressHeadX, progressHeadY);
-      } else {
-        const lastColoredIndex = currentIndex > 0 ? currentIndex - 1 : 0;
-        const lastColoredBbox = sortedPathData[lastColoredIndex].bbox;
-        const nextBbox = currentIndex < totalPaths ? sortedPathData[currentIndex].bbox : lastColoredBbox;
-        const midXBase = (lastColoredBbox.x + lastColoredBbox.width / 2 + nextBbox.x + nextBbox.width / 2) / 2;
-        const midYBase = (lastColoredBbox.y + lastColoredBbox.height / 2 + nextBbox.y + nextBbox.height / 2) / 2;
-        const dx = (nextBbox.x + nextBbox.width / 2) - (lastColoredBbox.x + lastColoredBbox.width / 2);
-        const dy = (nextBbox.y + nextBbox.height / 2) - (lastColoredBbox.y + lastColoredBbox.height / 2);
+        updateBoxPosition('0%', textElement);
+        updatePinpointPosition(firstPathBbox.x, firstPathBbox.y + firstPathBbox.height / 2);
 
-        // Calculate final progress head position
-        let finalProgressHeadX, finalProgressHeadY;
-        if (data >= 100) {
-          // At 100%, position at the very end
-          const finalPathBbox = sortedPathData[totalPaths - 1].bbox;
-          finalProgressHeadX = finalPathBbox.x + finalPathBbox.width;
-          finalProgressHeadY = finalPathBbox.y + finalPathBbox.height / 2;
-        } else {
-          // Calculate based on final percentage
-          const finalTargetLength = totalLength * (data / 100);
-          let finalCurrentLength = 0;
-          let finalCurrentIndex = 0;
-          
-          // Find the final position
-          for (let i = 0; i < totalPaths; i++) {
-            const pathLength = sortedPathData[i].length;
-            if (finalCurrentLength + pathLength <= finalTargetLength) {
-              finalCurrentLength += pathLength;
-              finalCurrentIndex = i + 1;
+        return;
+      }
+
+      const totalLength = pathData.reduce((sum, data) => sum + data.length, 0);
+      const targetLength = totalLength * ((data / 100) < 0.01 ? 0.01 : (data / 100));
+
+      updatePinpointPosition(firstPathBbox);
+
+      // Sort pathData to match cachedSortedPathData order
+      const sortedPathData = pathData.slice().sort((a, b) => {
+        const aIndex = cachedSortedPathData.findIndex(p => p.index === a.index);
+        const bIndex = cachedSortedPathData.findIndex(p => p.index === b.index);
+        return aIndex - bIndex;
+      });
+
+      const newPaths = [];
+      sortedPathData.forEach((data) => {
+        if (!data.d) {
+          console.error('Path data missing d attribute:', data);
+          return;
+        }
+        const newPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        newPath.setAttribute('d', data.d);
+        newPath.setAttribute('fill', 'none');
+        newPath.setAttribute('stroke', 'none');
+        svg.appendChild(newPath);
+        newPaths.push(newPath);
+        if (data.originalPath) {
+          data.originalPath.setAttribute('fill', '#747264');
+          data.originalPath.setAttribute('stroke', '#747264');
+        }
+      });
+
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      svg.appendChild(defs);
+
+      let currentIndex = 0;
+      let currentLength = 0;
+      let clipPathId = null;
+      let clipPathIdOriginal = null;
+      const startIndex = Math.floor(totalPaths * 0.47);
+      const midIndex = Math.floor(totalPaths * 0.874);
+      const endIndex = totalPaths - 1;
+
+      intervalRef.current = setInterval(() => {
+        if (currentLength < targetLength && currentIndex < totalPaths) {
+          const path = newPaths[currentIndex];
+          const originalPath = sortedPathData[currentIndex].originalPath;
+          const pathLength = sortedPathData[currentIndex].length;
+
+          if (clipPathId) {
+            const oldClipPath = document.getElementById(clipPathId);
+            if (oldClipPath) oldClipPath.remove();
+            path.removeAttribute('clip-path');
+            clipPathId = null;
+          }
+          if (clipPathIdOriginal) {
+            const oldClipPath = document.getElementById(clipPathIdOriginal);
+            if (oldClipPath) oldClipPath.remove();
+            originalPath.removeAttribute('clip-path');
+            clipPathIdOriginal = null;
+          }
+
+          if (currentLength + pathLength <= targetLength) {
+            path.setAttribute('fill', 'white');
+            originalPath.setAttribute('opacity', '0');
+            currentLength += pathLength;
+            currentIndex++;
+          } else {
+            const remainingLength = targetLength - currentLength;
+            const ratio = remainingLength / pathLength;
+            const bbox = sortedPathData[currentIndex].bbox;
+            const clipWidth = bbox.width * ratio;
+
+            let isReverse = false;
+            if (currentIndex >= startIndex && currentIndex < midIndex) {
+              isReverse = true;
+            } else if (currentIndex >= midIndex && currentIndex <= endIndex) {
+              isReverse = false;
+            }
+
+            clipPathId = `clip-new-${currentIndex}`;
+            const clipPath = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
+            clipPath.setAttribute('id', clipPathId);
+            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('x', isReverse ? bbox.x + bbox.width - clipWidth : bbox.x);
+            rect.setAttribute('y', bbox.y);
+            rect.setAttribute('width', clipWidth);
+            rect.setAttribute('height', bbox.height);
+            clipPath.appendChild(rect);
+            defs.appendChild(clipPath);
+            path.setAttribute('fill', 'white');
+            path.setAttribute('clip-path', `url(#${clipPathId})`);
+
+            clipPathIdOriginal = `clip-original-${currentIndex}`;
+            const clipPathOriginal = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
+            clipPathOriginal.setAttribute('id', clipPathIdOriginal);
+            const rectOriginal = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rectOriginal.setAttribute('x', isReverse ? bbox.x : bbox.x + clipWidth);
+            rectOriginal.setAttribute('y', bbox.y);
+            rectOriginal.setAttribute('width', bbox.width - clipWidth);
+            rectOriginal.setAttribute('height', bbox.height);
+            clipPathOriginal.appendChild(rectOriginal);
+            defs.appendChild(clipPathOriginal);
+            originalPath.setAttribute('fill', '#747264');
+            originalPath.setAttribute('opacity', '1');
+            originalPath.setAttribute('clip-path', `url(#${clipPathIdOriginal})`);
+
+            currentLength = targetLength;
+            currentIndex++;
+          }
+
+          const lastColoredIndex = currentIndex > 0 ? currentIndex - 1 : 0;
+          const lastColoredBbox = sortedPathData[lastColoredIndex].bbox;
+          const nextBbox = currentIndex < totalPaths ? sortedPathData[currentIndex].bbox : lastColoredBbox;
+          const midXBase = (lastColoredBbox.x + lastColoredBbox.width / 2 + nextBbox.x + nextBbox.width / 2) / 2;
+          const midYBase = (lastColoredBbox.y + lastColoredBbox.height / 2 + nextBbox.y + nextBbox.height / 2) / 2;
+          const dx = (nextBbox.x + nextBbox.width / 2) - (lastColoredBbox.x + lastColoredBbox.width / 2);
+          const dy = (nextBbox.y + nextBbox.height / 2) - (lastColoredBbox.y + lastColoredBbox.height / 2);
+          const currentPercent = Math.min((currentLength / totalLength * 100), data).toFixed(1);
+
+          // Calculate the actual head position of the progress line
+          let progressHeadX, progressHeadY;
+          if (currentIndex < totalPaths && currentLength < targetLength) {
+            // We're in the middle of a path, calculate the partial position
+            const currentPathBbox = sortedPathData[currentIndex].bbox;
+            const remainingLength = targetLength - currentLength;
+            const ratio = remainingLength / sortedPathData[currentIndex].length;
+            
+            let isReverse = false;
+            const startIndex = Math.floor(totalPaths * 0.47);
+            const midIndex = Math.floor(totalPaths * 0.874);
+            const endIndex = totalPaths - 1;
+            
+            if (currentIndex >= startIndex && currentIndex < midIndex) {
+              isReverse = true;
+            }
+            
+            if (isReverse) {
+              progressHeadX = currentPathBbox.x + currentPathBbox.width - (currentPathBbox.width * ratio);
             } else {
-              // We're in the middle of this path
-              const remainingLength = finalTargetLength - finalCurrentLength;
-              const ratio = remainingLength / pathLength;
-              const pathBbox = sortedPathData[i].bbox;
-              
-              let isReverse = false;
-              const startIndex = Math.floor(totalPaths * 0.47);
-              const midIndex = Math.floor(totalPaths * 0.874);
-              
-              if (i >= startIndex && i < midIndex) {
-                isReverse = true;
-              }
-              
-              if (isReverse) {
-                finalProgressHeadX = pathBbox.x + pathBbox.width - (pathBbox.width * ratio);
+              progressHeadX = currentPathBbox.x + (currentPathBbox.width * ratio);
+            }
+            progressHeadY = currentPathBbox.y + currentPathBbox.height / 2;
+          } else {
+            // We've completed the current path, use the end of the last colored path
+            progressHeadX = lastColoredBbox.x + lastColoredBbox.width;
+            progressHeadY = lastColoredBbox.y + lastColoredBbox.height / 2;
+          }
+
+          let midX, midY;
+          if (currentLength === 0 && currentIndex === 0) {
+            midX = midXBase - 15;
+            midY = lastColoredBbox.y - 20;
+            progressHeadX = lastColoredBbox.x;
+            progressHeadY = lastColoredBbox.y + lastColoredBbox.height / 2;
+          } else if (currentLength / totalLength >= 0.9) {
+            midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 20;
+            midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
+          } else {
+            midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 15;
+            midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
+          }
+          textElement.setAttribute('x', midX);
+          textElement.setAttribute('y', midY);
+          textElement.textContent = `${currentPercent}%`;
+
+          updateBoxPosition(`${currentPercent}%`, textElement);
+          updatePinpointPosition(progressHeadX, progressHeadY);
+        } else {
+          const lastColoredIndex = currentIndex > 0 ? currentIndex - 1 : 0;
+          const lastColoredBbox = sortedPathData[lastColoredIndex].bbox;
+          const nextBbox = currentIndex < totalPaths ? sortedPathData[currentIndex].bbox : lastColoredBbox;
+          const midXBase = (lastColoredBbox.x + lastColoredBbox.width / 2 + nextBbox.x + nextBbox.width / 2) / 2;
+          const midYBase = (lastColoredBbox.y + lastColoredBbox.height / 2 + nextBbox.y + nextBbox.height / 2) / 2;
+          const dx = (nextBbox.x + nextBbox.width / 2) - (lastColoredBbox.x + lastColoredBbox.width / 2);
+          const dy = (nextBbox.y + nextBbox.height / 2) - (lastColoredBbox.y + lastColoredBbox.height / 2);
+
+          // Calculate final progress head position
+          let finalProgressHeadX, finalProgressHeadY;
+          if (data >= 100) {
+            // At 100%, position at the very end
+            const finalPathBbox = sortedPathData[totalPaths - 1].bbox;
+            finalProgressHeadX = finalPathBbox.x + finalPathBbox.width;
+            finalProgressHeadY = finalPathBbox.y + finalPathBbox.height / 2;
+          } else {
+            // Calculate based on final percentage
+            const finalTargetLength = totalLength * (data / 100);
+            let finalCurrentLength = 0;
+            let finalCurrentIndex = 0;
+            
+            // Find the final position
+            for (let i = 0; i < totalPaths; i++) {
+              const pathLength = sortedPathData[i].length;
+              if (finalCurrentLength + pathLength <= finalTargetLength) {
+                finalCurrentLength += pathLength;
+                finalCurrentIndex = i + 1;
               } else {
-                finalProgressHeadX = pathBbox.x + (pathBbox.width * ratio);
+                // We're in the middle of this path
+                const remainingLength = finalTargetLength - finalCurrentLength;
+                const ratio = remainingLength / pathLength;
+                const pathBbox = sortedPathData[i].bbox;
+                
+                let isReverse = false;
+                const startIndex = Math.floor(totalPaths * 0.47);
+                const midIndex = Math.floor(totalPaths * 0.874);
+                
+                if (i >= startIndex && i < midIndex) {
+                  isReverse = true;
+                }
+                
+                if (isReverse) {
+                  finalProgressHeadX = pathBbox.x + pathBbox.width - (pathBbox.width * ratio);
+                } else {
+                  finalProgressHeadX = pathBbox.x + (pathBbox.width * ratio);
+                }
+                finalProgressHeadY = pathBbox.y + pathBbox.height / 2;
+                break;
               }
-              finalProgressHeadY = pathBbox.y + pathBbox.height / 2;
-              break;
+            }
+            
+            // If we completed all calculations but didn't break, use the last completed path
+            if (finalCurrentIndex > 0 && (finalProgressHeadX === undefined || finalProgressHeadY === undefined)) {
+              const lastCompletedBbox = sortedPathData[finalCurrentIndex - 1].bbox;
+              finalProgressHeadX = lastCompletedBbox.x + lastCompletedBbox.width;
+              finalProgressHeadY = lastCompletedBbox.y + lastCompletedBbox.height / 2;
             }
           }
-          
-          // If we completed all calculations but didn't break, use the last completed path
-          if (finalCurrentIndex > 0 && (finalProgressHeadX === undefined || finalProgressHeadY === undefined)) {
-            const lastCompletedBbox = sortedPathData[finalCurrentIndex - 1].bbox;
-            finalProgressHeadX = lastCompletedBbox.x + lastCompletedBbox.width;
-            finalProgressHeadY = lastCompletedBbox.y + lastCompletedBbox.height / 2;
+
+          let midX, midY;
+          if (currentLength === 0 && currentIndex === 0) {
+            midX = midXBase - 15;
+            midY = lastColoredBbox.y - 20;
+          } else if (currentLength / totalLength >= 0.9) {
+            midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 20;
+            midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
+          } else {
+            midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 15;
+            midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
+          }
+          textElement.setAttribute('x', midX);
+          textElement.setAttribute('y', midY);
+          textElement.textContent = `${data}%`;
+
+          updateBoxPosition(`${data}%`, textElement);
+          updatePinpointPosition(finalProgressHeadX, finalProgressHeadY);
+
+          clearInterval(intervalRef.current);
+        }
+      }, 50);
+    };
+
+    // Handle window resize events
+    const handleResize = () => {
+      const newIsMobile = window.innerWidth < 641;
+      if (newIsMobile !== isMobile) {
+        setIsMobile(newIsMobile);
+      }
+
+      const svg = svgRef.current;
+      if (svg && textElement && boxDiv && pinpointDiv) {
+        const currentSvgSize = svg.getBoundingClientRect();
+        let sortedPathData = cachedSortedPathData;
+
+        // Recalculate sortedPathData only if SVG size changes significantly
+        if (
+          !cachedSvgSize ||
+          Math.abs(currentSvgSize.width - cachedSvgSize.width) > 1 ||
+          Math.abs(currentSvgSize.height - cachedSvgSize.height) > 1
+        ) {
+          const paths = svg.querySelectorAll('path:not([fill="none"])');
+          if (paths.length > 0) {
+            sortedPathData = getSortedPathData(paths);
+            cachedSortedPathData = sortedPathData;
+            cachedSvgSize = currentSvgSize;
           }
         }
 
-        let midX, midY;
-        if (currentLength === 0 && currentIndex === 0) {
-          midX = midXBase - 15;
-          midY = lastColoredBbox.y - 20;
-        } else if (currentLength / totalLength >= 0.9) {
-          midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 20;
-          midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
-        } else {
-          midX = Math.abs(dx) > Math.abs(dy) ? midXBase - 10 : midXBase - 15;
-          midY = Math.abs(dx) > Math.abs(dy) ? midYBase - 20 : midYBase - 5;
-        }
-        textElement.setAttribute('x', midX);
-        textElement.setAttribute('y', midY);
-        textElement.textContent = `${data}%`;
-
-        updateBoxPosition(`${data}%`, textElement);
-        updatePinpointPosition(finalProgressHeadX, finalProgressHeadY);
-
-        clearInterval(intervalRef.current);
-      }
-    }, 50);
-  };
-
-  // Handle window resize events
-  const handleResize = () => {
-    const newIsMobile = window.innerWidth < 641;
-    if (newIsMobile !== isMobile) {
-      setIsMobile(newIsMobile);
-    }
-
-    const svg = svgRef.current;
-    if (svg && textElement && boxDiv && pinpointDiv) {
-      const currentSvgSize = svg.getBoundingClientRect();
-      let sortedPathData = cachedSortedPathData;
-
-      // Recalculate sortedPathData only if SVG size changes significantly
-      if (
-        !cachedSvgSize ||
-        Math.abs(currentSvgSize.width - cachedSvgSize.width) > 1 ||
-        Math.abs(currentSvgSize.height - cachedSvgSize.height) > 1
-      ) {
-        const paths = svg.querySelectorAll('path:not([fill="none"])');
-        if (paths.length > 0) {
-          sortedPathData = getSortedPathData(paths);
-          cachedSortedPathData = sortedPathData;
-          cachedSvgSize = currentSvgSize;
-        }
-      }
-
-      // if (sortedPathData && sortedPathData[0]) {
-      //   const textContent = textElement.textContent || `${processData || 0}%`;
-      //   updateBoxPosition(textContent, textElement);
-        
-      //   // Recalculate progress head position for pinpoint
-      //   if (processData !== null) {
-      //     const totalLength = sortedPathData.reduce((sum, data) => sum + data.length, 0);
-      //     console.log('totalLength', totalLength, processData);
-      //     const targetLength = totalLength * (processData / 100);
-      //     let currentLength = 0;
-      //     let progressHeadX, progressHeadY;
+        // if (sortedPathData && sortedPathData[0]) {
+        //   const textContent = textElement.textContent || `${processData || 0}%`;
+        //   updateBoxPosition(textContent, textElement);
           
-      //     if (processData === 0) {
-      //       progressHeadX = sortedPathData[0].bbox.x;
-      //       progressHeadY = sortedPathData[0].bbox.y + sortedPathData[0].bbox.height / 2;
-      //     } else {
-      //       for (let i = 0; i < sortedPathData.length; i++) {
-      //         const pathLength = sortedPathData[i].length;
-      //         if (currentLength + pathLength <= targetLength) {
-      //           currentLength += pathLength;
-      //         } else {
-      //           const remainingLength = targetLength - currentLength;
-      //           const ratio = remainingLength / pathLength;
-      //           const pathBbox = sortedPathData[i].bbox;
+        //   // Recalculate progress head position for pinpoint
+        //   if (processData !== null) {
+        //     const totalLength = sortedPathData.reduce((sum, data) => sum + data.length, 0);
+        //     console.log('totalLength', totalLength, processData);
+        //     const targetLength = totalLength * (processData / 100);
+        //     let currentLength = 0;
+        //     let progressHeadX, progressHeadY;
+              
+        //     if (processData === 0) {
+        //       progressHeadX = sortedPathData[0].bbox.x;
+        //       progressHeadY = sortedPathData[0].bbox.y + sortedPathData[0].bbox.height / 2;
+        //     } else {
+        //       for (let i = 0; i < sortedPathData.length; i++) {
+        //         const pathLength = sortedPathData[i].length;
+        //         if (currentLength + pathLength <= targetLength) {
+        //           currentLength += pathLength;
+        //         } else {
+        //           const remainingLength = targetLength - currentLength;
+        //           const ratio = remainingLength / pathLength;
+        //           const pathBbox = sortedPathData[i].bbox;
                 
-      //           let isReverse = false;
-      //           const startIndex = Math.floor(sortedPathData.length * 0.47);
-      //           const midIndex = Math.floor(sortedPathData.length * 0.874);
+        //           let isReverse = false;
+        //           const startIndex = Math.floor(sortedPathData.length * 0.47);
+        //           const midIndex = Math.floor(sortedPathData.length * 0.874);
                 
-      //           if (i >= startIndex && i < midIndex) {
-      //             isReverse = true;
-      //           }
+        //           if (i >= startIndex && i < midIndex) {
+        //             isReverse = true;
+        //           }
                 
-      //           if (isReverse) {
-      //             progressHeadX = pathBbox.x + pathBbox.width - (pathBbox.width * ratio);
-      //           } else {
-      //             progressHeadX = pathBbox.x + (pathBbox.width * ratio);
-      //           }
-      //           progressHeadY = pathBbox.y + pathBbox.height / 2;
-      //           break;
-      //         }
-      //       }
-      //     }
-          
-      //     updatePinpointPosition(progressHeadX, progressHeadY);
-      //   }
-      // }
+        //           if (isReverse) {
+        //             progressHeadX = pathBbox.x + pathBbox.width - (pathBbox.width * ratio);
+        //           } else {
+        //             progressHeadX = pathBbox.x + (pathBbox.width * ratio);
+        //           }
+        //           progressHeadY = pathBbox.y + pathBbox.height / 2;
+        //           break;
+        //         }
+        //       }
+        //     }
+              
+        //     updatePinpointPosition(progressHeadX, progressHeadY);
+        //   }
+        // }
+      }
+    };
+
+    let resizeTimeout;
+    const debouncedHandleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(handleResize, 50); // Optimized 50ms debounce
+    };
+
+    window.addEventListener('resize', debouncedHandleResize);
+
+    if (processData !== null) {
+      timerRef.current = setTimeout(() => setupSvgAnimation(processData), 500);
     }
-  };
 
-  let resizeTimeout;
-  const debouncedHandleResize = () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(handleResize, 50); // Optimized 50ms debounce
-  };
-
-  window.addEventListener('resize', debouncedHandleResize);
-
-  // Fetch contract data
-  const fetchContractData = async () => {
-    try {
-      const process = await getCurrentProcess();
-      console.log('Current Process:', process);
-
-      const processNumber = Number(process) / 100;
-      setProcessData(processNumber);
-    } catch (error) {
-      console.error('Error fetching contract data:', error);
-      setProcessData(0);
-    }
-  };
-
-  fetchContractData();
-
-  if (processData !== null) {
-    timerRef.current = setTimeout(() => setupSvgAnimation(processData), 500);
-  }
-
-  return () => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    window.removeEventListener('resize', debouncedHandleResize);
-    if (boxDiv) boxDiv.remove();
-    if (pinpointDiv) pinpointDiv.remove();
-  };
-}, [processData, isMobile]);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      window.removeEventListener('resize', debouncedHandleResize);
+      if (boxDiv) boxDiv.remove();
+      if (pinpointDiv) pinpointDiv.remove();
+    };
+  }, [processData, isMobile]);
 
 
   return (

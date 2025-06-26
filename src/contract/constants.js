@@ -10,14 +10,16 @@ export const CONFIGS = {
         ]
     },
     karma: {
-        address: '0x34fB51435E3964798b1c9007127A1D4c7a5FBBD0',
+        address: '0x813052E32990165CabB7b3A56cdc9789C2357021',
         abi: [
             "function totalSupply() view returns (uint256)",
             "function balanceOf(address account) view returns (uint256)",
             "function getCurrentProcess() view returns (uint256)",
             "function getPublicShareAmount() view returns (uint256)",
-            "function mint(uint256 usdtAmount, address to)",
-            "event Mint(uint256 indexed seq, address indexed from, address indexed to, uint256 donationUSD, uint256 mintedAmount, uint256 process)"
+            "function totalDonated() view returns (uint256)",
+            "function seq() view returns (uint256)",
+            "function donate(uint256 usdtAmount, address to)",
+            "event Donate(uint256 indexed seq, address indexed from, address indexed to, uint256 donationUSD, uint256 mintedAmount, uint256 process)"
         ]
     }
 }
