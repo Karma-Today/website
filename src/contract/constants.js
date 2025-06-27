@@ -1,9 +1,9 @@
 export const CONFIGS = {
-    provider: 'https://sepolia.infura.io/v3/9528e81fcbc54f12acd36b08204e4f2d',
-    mainnet: false,
+    provider: 'https://eth-mainnet.g.alchemy.com/v2/veXE1VwBa3NqsH673T2NT0mm2nCT7NM4',
+    mainnet: true,
     walletConnectProjectId: '96e543b53dd2885d4ce06991df657b10',
     usdt: {
-        address: '0x430089ED6ed4CAf11f21A66dbdDB1247931Bd8e1',
+        address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
         decimals: 6,
         abi: [
             "function allowance(address owner, address spender) view returns (uint256)",
@@ -11,7 +11,7 @@ export const CONFIGS = {
         ]
     },
     karma: {
-        address: '0x813052E32990165CabB7b3A56cdc9789C2357021',
+        address: '0x0be36762573dF13AD18EB01ebC7b278f1338a171',
         abi: [
             "function totalSupply() view returns (uint256)",
             "function balanceOf(address account) view returns (uint256)",
