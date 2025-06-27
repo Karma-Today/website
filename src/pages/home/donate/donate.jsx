@@ -1,12 +1,18 @@
 import { useEffect, useMemo, useState } from 'react';
 import { DonateText } from '../../../data/donate';
 import { getPublicShareAmount, getTotalDonated, getDonationSequence } from '../../../contract/karma-token';
-import { useWallet } from '../../../contract/wallet';
-import { shortAccount } from '../../../utils'
 import { formatUnits, parseUnits } from 'ethers';
 import { CONFIGS } from '../../../contract/constants';
+import { ConnectKitButton } from 'connectkit'
+import { useAccount, useConfig } from 'wagmi';
+import { readContract, waitForTransactionReceipt, writeContract } from '@wagmi/core';
+import { parseAbi } from 'viem';
 import LoadingDots from '../../../components/Loading/Loading'
+
 import './donate.css';
+
+const USDT_ABI = parseAbi(CONFIGS.usdt.abi);
+const KARMA_ABI = parseAbi(CONFIGS.karma.abi);
 
 export default function Donate({ lang }) {
     const i18n = useMemo(() => DonateText[lang] ?? DonateText['en'], [lang]);
@@ -20,11 +26,11 @@ export default function Donate({ lang }) {
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState(null);
 
-    const { account, connectWallet, getContract } = useWallet();
+    const account = useAccount();
+    const config = useConfig();
 
     const donate = async () => {
-        if (!account) {
-            connectWallet();
+        if (!account || !account.address) {
             return;
         }
         
@@ -36,26 +42,46 @@ export default function Donate({ lang }) {
         setLoading(true);
         setErrors(null);
         const { usdt, karma } = CONFIGS;
+        const amt = parseUnits(amount, usdt.decimals);
 
         try {
-            const usdtContract = await getContract(usdt.address, usdt.abi);
-            const allowance = await usdtContract.allowance(account, karma.address);
-            console.log("allowance", allowance);
-            const amt = parseUnits(amount, usdt.decimals);
+            const allowance = await readContract(config, {
+                address: usdt.address,
+                abi: USDT_ABI,
+                functionName: 'allowance',
+                args: [account.address, karma.address]
+            });
+
             if (allowance < amt) {
-                const approvedTx = await usdtContract.approve(karma.address, amt);
-                await approvedTx.wait();
+                await writeContract(config, {
+                    address: usdt.address,
+                    abi: USDT_ABI,
+                    functionName: 'approve',
+                    args: [karma.address, amt]
+                });
             }
 
-            const karmaContract = await getContract(karma.address, karma.abi);
-            const tx = await karmaContract.donate(amt, address, { gasLimit: 300_000 });
-            await tx.wait();
+            const txDonate = await writeContract(config, {
+                address: karma.address,
+                abi: KARMA_ABI,
+                functionName: 'donate',
+                args: [amt, address],
+                gas: 300_000
+            });
+
+            await waitForTransactionReceipt(config, {
+                hash: txDonate
+            });
 
             window.location.reload();
-        } catch(error) {
-            if (!error.code || (error.code !== 'ACTION_REJECTED' && error.code !== 4001)) {
+        } catch (error) {
+            const msg = error?.message?.toLowerCase?.() 
+                || error?.cause?.message?.toLowerCase?.()
+                || '';
+            if (error?.code !== 4001 && !msg.includes('user denied') && !msg.includes('rejected')) {
                 setErrors(i18n.transitionFailed)
             }
+
             console.error(error);
         } finally {
             setLoading(false);
@@ -97,14 +123,15 @@ export default function Donate({ lang }) {
                 <div className="dt-dialog">
                     <div className='dt-header'>
                         <span className='title'>{i18n.donate}</span>
-                        {account
-                            ? <span className='account'>
-                                { shortAccount(account) }
-                            </span>
-                            : <button className='dt-button-connect' onClick={connectWallet}>
-                                {i18n.connectWallet}
-                            </button>
-                        }
+                        <ConnectKitButton.Custom>
+                            {({ isConnected, show, truncatedAddress, ensName }) => {
+                                return (
+                                    <button onClick={show} className='dt-button-connect'>
+                                        {isConnected ? ensName ?? truncatedAddress : i18n.connectWallet}
+                                    </button>
+                                );
+                            }}
+                        </ConnectKitButton.Custom>
                     </div>
                     <div className='dt-stats'>
                         <div className='dt-balance'>

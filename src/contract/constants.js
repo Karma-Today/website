@@ -1,6 +1,7 @@
 export const CONFIGS = {
     provider: 'https://sepolia.infura.io/v3/9528e81fcbc54f12acd36b08204e4f2d',
-    chainId: 11155111,
+    mainnet: false,
+    walletConnectProjectId: '96e543b53dd2885d4ce06991df657b10',
     usdt: {
         address: '0x430089ED6ed4CAf11f21A66dbdDB1247931Bd8e1',
         decimals: 6,
