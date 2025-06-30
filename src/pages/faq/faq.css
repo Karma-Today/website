@@ -375,10 +375,8 @@ body {
     align-items: start;
     justify-content: flex-start;
     padding: 10px;
-    height: fit-content !important;
     gap: 10px !important;
-    width: 100% !important;
-    left: -10px;
+    min-width: 100%;
     z-index: 1000;
     position: absolute;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -395,7 +393,6 @@ body {
     width: 100%;
     cursor: pointer;
     font-weight: 700;
-    height: 100%;
 }
 #header .nav .nav-language #lang-submenu .lang:hover,
 #header .nav .nav-language #lang-submenu .lang.active{
