@@ -30,13 +30,7 @@ function homeContentEng({className, id}) {
             </p>
             <span> Karma 币的Mint机制 </span>
             <p>
-                Karma 币是⼀种⽤于记录善⾏的⾮⾦融性数字资产，所有 Karma
-                币的铸造（Mint）都直接源
-                于公益⾏为，确保其与“善⾏”概念保持⼀致。<strong>Karma</strong>
-                没有预挖）<strong>Pre-mine</strong> ，也不⽀持任何
-                形式的付费铸造<strong>（Minting）</strong>。
-                唯⼀的⽅式是通过公益捐赠，从⽽形成⼀个去中⼼化的、透
-                明的善⾏记录系统。
+                Karma 币是⼀种⽤于记录善⾏的⾮⾦融性数字资产，除了Pre-mine的2亿，剩下的10亿Karma都是通过公益捐赠Mint产生的。这些捐赠会形成⼀个去中⼼化的、透明的善⾏记录系统。
             </p>
             <p>
                 为什么选择捐赠作为 Mint 机制？ 捐赠⾏为被选定为 Karma 的 Mint
@@ -99,7 +93,7 @@ function homeContentEng({className, id}) {
                 不是“购买”或“交易”的代币，⽽是⼀种⽤于记录和象征善⾏的数字标识，强化了其公益属性，并使其远离⾦融监管风险。
             </p>
             <span>Karma的发⾏总量</span>
-            <p>10亿</p>
+            <p>12亿 (2亿pre-mint, 10亿mint)</p>
             <span> Karma Mint 计算⽅法 </span>
             <p></p>
             <p>

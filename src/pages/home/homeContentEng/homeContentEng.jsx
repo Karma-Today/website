@@ -46,11 +46,10 @@ function homeContentEng({className, id}) {
             <span> The Minting Mechanism of Karma Token </span>
             <p>
                 Karma Token is a non-financial digital asset created to record
-                acts of kindness. All Karma Tokens are minted directly from
-                philanthropic actions, ensuring their alignment with the concept
-                of “good deeds.” There is <strong>no pre-mining,</strong> nor
-                does Karma support any form of paid minting. The only way to
-                mint Karma is through charitable donations, establishing a
+                acts of kindness. Except for the <strong>pre-mined 200 million</strong>, 
+                the remaining <strong>1 billion Karma</strong> are all generated through 
+                charitable donations, ensuring their alignment with the concept
+                of "good deeds." These donations establish a
                 decentralized and transparent system for recording acts of
                 goodwill.
             </p>
@@ -154,7 +153,7 @@ function homeContentEng({className, id}) {
                 Karma and helps it avoid financial regulatory risks.
             </p>
             <span>Maximum Supply of Karma</span>
-            <p>1,000,000,000 (One Billion)</p>
+            <p>1,200,000,000 (200 million pre-mint, 1 billion mint)</p>
             <span>Karma Minting Calculation Method</span>
             <p>
                 The minting of Karma is divided into 11 phases, with a total
