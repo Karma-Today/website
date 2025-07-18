@@ -140,9 +140,10 @@ export default function Donate({ lang }) {
                         <div className='dt-balance'>
                             {`${i18n.totalDonated}: ${Math.floor(Number(totalDonated))} USDT`}
                         </div>
-                        <div className='dt-balance'>
+                        {/* Hidden: Public Pool display */}
+                        {/* <div className='dt-balance'>
                             {`${i18n.pool}: ${Math.floor(Number(poolAmount))} USDT`}
-                        </div>
+                        </div> */}
                     </div>
                     <div className='dt-input'>
                         <span>USDT</span>
