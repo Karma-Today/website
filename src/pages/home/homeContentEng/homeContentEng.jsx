@@ -366,7 +366,7 @@ function homeContentEng({className, id}) {
                 >
             </p>
             <p className="pd-text">
-                <span>◦ </span><strong>30% Team: </strong> Allocated for
+                <span>◦ </span><strong>20% Team: </strong> Allocated for
                 operations, technical development, marketing, and other
                 essential expenditures.
             </p>
@@ -377,7 +377,7 @@ function homeContentEng({className, id}) {
                 ecosystem.
             </p>
             <p className="pd-text">
-                <span>◦ </span><strong>25% Charity Fund: </strong> Dedicated to
+                <span>◦ </span><strong>35% Charity Fund: </strong> Dedicated to
                 supporting philanthropic projects. The use of funds is fully
                 transparent and governed by the community, with project
                 approvals determined through voting by holders of Charity
