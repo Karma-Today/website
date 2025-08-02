@@ -278,18 +278,51 @@ tr:nth-child(even) {
 #header .nav .nav-language #lang-toggle{
     display: flex;
     align-items: center;
-    width: 100%;
+    justify-content: center;
+    gap: 6px;
+    width: auto;
+    min-width: 50px;
+    height: 32px;
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+#header .nav .nav-language #lang-toggle .lang-toggle-icon{
+    width: 28px;
+    height: 21px;
+    object-fit: cover;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+#header .nav .nav-language #lang-toggle .dropdown-arrow{
     color: #fff;
-    font-weight: 700;
-    height: 100%;
-    font-size: 24px;
+    font-size: 10px;
+    font-weight: bold;
+    opacity: 0.8;
+    transition: all 0.3s ease-in-out;
 }
 #header .nav .nav-language #lang-submenu .lang{
     color: #fff;
 }
+#header .nav .nav-language #lang-submenu .lang .lang-icon{
+    width: 24px;
+    height: 18px;
+    object-fit: cover;
+    border-radius: 2px;
+}
 #header .nav .nav-language #lang-toggle:hover{
-    color: #000;
-    transition: all .3s ease-in-out ;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+#header .nav .nav-language #lang-toggle:hover .dropdown-arrow{
+    opacity: 1;
+    transform: translateY(-1px);
 }
 #container{
     width: 100%;
@@ -437,9 +470,21 @@ tr:nth-child(even) {
     .mountain .road span{
         bottom: 10px;
     }
-    .mountain-container #header .nav .nav-faq,
-    .mountain-container #header .nav .nav-language #lang-toggle {
+    .mountain-container #header .nav .nav-faq {
         font-size: 22px !important;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle {
+        min-width: 48px;
+        height: 30px;
+        padding: 3px 7px;
+        gap: 5px;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle .lang-toggle-icon {
+        width: 26px;
+        height: 19px;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle .dropdown-arrow {
+        font-size: 9px;
     }
     .mountain-container #header .nav .nav-language #lang-submenu{
         font-size: 22px !important;
@@ -454,6 +499,10 @@ tr:nth-child(even) {
     }
     .nav-language #lang-submenu .lang{
         font-size: 20px !important;
+    }
+    .nav-language #lang-submenu .lang .lang-icon{
+        width: 22px;
+        height: 16px;
     } 
     .karma-content{
         padding: 0 60px 60px ;
@@ -483,9 +532,21 @@ tr:nth-child(even) {
     .mountain-container{
         padding: 0 0 32px;
     }
-    .mountain-container #header .nav .nav-faq,
-    .mountain-container #header .nav .nav-language #lang-toggle {
+    .mountain-container #header .nav .nav-faq {
         font-size: 20px !important;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle {
+        min-width: 46px;
+        height: 28px;
+        padding: 3px 6px;
+        gap: 4px;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle .lang-toggle-icon {
+        width: 24px;
+        height: 18px;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle .dropdown-arrow {
+        font-size: 8px;
     }
     .mountain-container #header .nav .nav-language #lang-submenu{
         font-size: 20px !important;
@@ -529,12 +590,15 @@ tr:nth-child(even) {
     .karma-content_img{
         width: 80%;
     }
-    .nav .nav-faq a,
-    .nav-language #lang-toggle{
+    .nav .nav-faq a{
         font-size: 20px !important;
     }
     .nav-language #lang-submenu .lang{
         font-size: 18px !important;
+    }
+    .nav-language #lang-submenu .lang .lang-icon{
+        width: 20px;
+        height: 15px;
     } 
     #header {
         padding: 0 40px;
@@ -561,18 +625,42 @@ tr:nth-child(even) {
     .mountain{
         max-height: 55vh;
     }
-    .mountain-container #header .nav .nav-faq,
-    .mountain-container #header .nav .nav-language #lang-toggle {
+    .mountain-container #header .nav .nav-faq {
         font-size: 18px !important;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle {
+        min-width: 44px;
+        height: 26px;
+        padding: 2px 6px;
+        gap: 4px;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle .lang-toggle-icon {
+        width: 22px;
+        height: 16px;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle .dropdown-arrow {
+        font-size: 8px;
     }
     .mountain-container #header .nav .nav-language #lang-submenu{
         font-size: 18px !important;
     }
 }
 @media (max-width: 768px) {
-    .mountain-container #header .nav .nav-faq,
-    .mountain-container #header .nav .nav-language #lang-toggle {
+    .mountain-container #header .nav .nav-faq {
         font-size: 16px !important;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle {
+        min-width: 42px;
+        height: 24px;
+        padding: 2px 5px;
+        gap: 3px;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle .lang-toggle-icon {
+        width: 20px;
+        height: 15px;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle .dropdown-arrow {
+        font-size: 7px;
     }
     .mountain-container #header .nav .nav-language #lang-submenu{
         font-size: 16px !important;
@@ -618,9 +706,21 @@ tr:nth-child(even) {
     .mountain-container{
         padding: 0 !important;
     }
-    .mountain-container #header .nav .nav-faq,
-    .mountain-container #header .nav .nav-language #lang-toggle {
+    .mountain-container #header .nav .nav-faq {
         font-size: 16px !important;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle {
+        min-width: 40px;
+        height: 22px;
+        padding: 2px 5px;
+        gap: 3px;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle .lang-toggle-icon {
+        width: 18px;
+        height: 14px;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle .dropdown-arrow {
+        font-size: 7px;
     }
     .mountain-container #header .nav .nav-language #lang-submenu{
         font-size: 16px !important;
@@ -629,12 +729,15 @@ tr:nth-child(even) {
         font-size: 21px;
         font-weight: bold;
     }
-    .nav .nav-faq a,
-    .nav-language #lang-toggle{
+    .nav .nav-faq a{
         font-size: 16px !important;
     }
     .nav-language #lang-submenu .lang{
         font-size: 16px !important;
+    }
+    .nav-language #lang-submenu .lang .lang-icon{
+        width: 18px;
+        height: 14px;
     } 
 
     #header .nav .nav-language #lang-submenu {
@@ -711,9 +814,21 @@ tr:nth-child(even) {
     }
 }
 @media (max-width: 450px) {
-    .mountain-container #header .nav .nav-faq,
-    .mountain-container #header .nav .nav-language #lang-toggle {
+    .mountain-container #header .nav .nav-faq {
         font-size: 14px !important;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle {
+        min-width: 38px;
+        height: 20px;
+        padding: 2px 4px;
+        gap: 2px;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle .lang-toggle-icon {
+        width: 16px;
+        height: 12px;
+    }
+    .mountain-container #header .nav .nav-language #lang-toggle .dropdown-arrow {
+        font-size: 6px;
     }
     .mountain-container #header .nav .nav-language #lang-submenu{
         font-size: 14px !important;
@@ -721,12 +836,15 @@ tr:nth-child(even) {
     #header .nav {
         gap: 10px !important;
     }
-    .nav .nav-faq a,
-    .nav-language #lang-toggle{
+    .nav .nav-faq a{
         font-size: 15px !important;
     }
     .nav-language #lang-submenu .lang{
         font-size: 14px !important;
+    }
+    .nav-language #lang-submenu .lang .lang-icon{
+        width: 16px;
+        height: 12px;
     }
     #main {
         padding-top: 20px;

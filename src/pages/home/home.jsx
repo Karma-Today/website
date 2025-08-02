@@ -5,6 +5,8 @@ const SunMb = '/images/mb/Sun.png';
 const mountain = '/images/mountain.png';
 const mountainMb = '/images/mb/mountain.png';
 const bg = '/images/background.png';
+const enFlag = '/images/lang/en.svg';
+const cnFlag = '/images/lang/cn.svg';
 import './home.css';
 import { Link } from 'react-router-dom';
 import { getCurrentProcess } from '../../contract/karma-token';
@@ -632,7 +634,8 @@ function Home() {
             </Link>
             <div className="nav-language">
                 <div id="lang-toggle" onClick={handleLangToggle}>
-                    Language
+                    <img src={selectedLang === 'en' ? enFlag : cnFlag} alt={selectedLang === 'en' ? 'English' : 'Chinese'} className="lang-toggle-icon" />
+                    <span className="dropdown-arrow">▼</span>
                 </div>
                 <div id="lang-submenu" className={isSubmenuOpen ? '' : 'hidden'}>
                 <div
@@ -640,14 +643,14 @@ function Home() {
                   className={`lang ${selectedLang === 'en' ? 'active' : ''}`}
                   onClick={() => handleLangSelect('en')}
                 >
-                    ENG
+                    <img src={enFlag} alt="English" className="lang-icon" />
                 </div>
                 <div
                   data-lang="cn"
                   className={`lang ${selectedLang === 'cn' ? 'active' : ''}`}
                   onClick={() => handleLangSelect('cn')}
                 >
-                  汉语
+                  <img src={cnFlag} alt="Chinese" className="lang-icon" />
                 </div>
               </div>
             </div>
