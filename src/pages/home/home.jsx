@@ -630,8 +630,8 @@ function Home() {
             </Link>
             <div className="nav">
                 <Link to="/faq" className="nav-faq">
-                Faq
-            </Link>
+                    {selectedLang === 'en' ? 'Faq' : '常见问题'}
+                </Link>
             <div className="nav-language">
                 <div id="lang-toggle" onClick={handleLangToggle}>
                     <img src={selectedLang === 'en' ? enFlag : cnFlag} alt={selectedLang === 'en' ? 'English' : 'Chinese'} className="lang-toggle-icon" />
