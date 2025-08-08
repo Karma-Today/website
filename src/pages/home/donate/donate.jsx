@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { DonateText } from '../../../data/donate';
-import { getPublicShareAmount, getTotalDonated, getDonationSequence } from '../../../contract/karma-token';
+import { getPublicShareAmount, getTotalDonated, getDonationSequence, getUsdtToKarma, getCurrentBatchIndex, getBatchDonationPerKarma } from '../../../contract/karma-token';
 import { formatUnits, parseUnits } from 'ethers';
 import { CONFIGS } from '../../../contract/constants';
-import { ConnectKitButton } from 'connectkit'
 import { useAccount, useConfig } from 'wagmi';
 import { readContract, waitForTransactionReceipt, writeContract } from '@wagmi/core';
 import { parseAbi } from 'viem';
@@ -25,12 +24,17 @@ export default function Donate({ lang }) {
     const [validate, setValidate] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState(null);
+    const [calculatedKarma, setCalculatedKarma] = useState(0);
+    const [currentBatchIndex, setCurrentBatchIndex] = useState(null);
+    const [currentBatchRate, setCurrentBatchRate] = useState(null);
+    const [calculating, setCalculating] = useState(false);
 
     const account = useAccount();
     const config = useConfig();
 
     const donate = async () => {
         if (!account || !account.address) {
+            setErrors(i18n.pleaseConnectWallet);
             return;
         }
         
@@ -91,18 +95,31 @@ export default function Donate({ lang }) {
     const invalidAmount = useMemo(() => isNaN(Number(amount)) || Number(amount) <= 0, [amount]);
     const invalidAddress = useMemo(() => address.length !== 42, [address]);
 
+    // Fetch initial data and current batch index
     useEffect(() => {
         const fetchData = async() => {
             try {
-                const [poolAmount, totalDonatedAmount, donationSeq] = await Promise.all([
+                const [poolAmount, totalDonatedAmount, donationSeq, batchIndex] = await Promise.all([
                     getPublicShareAmount(),
                     getTotalDonated(),
-                    getDonationSequence()
+                    getDonationSequence(),
+                    getCurrentBatchIndex()
                 ]);
                 
                 setPoolAmount(formatUnits(poolAmount, CONFIGS.usdt.decimals));
                 setTotalDonated(formatUnits(totalDonatedAmount, CONFIGS.usdt.decimals));
                 setDonationsCount(Number(donationSeq) - 1); // seq starts from 1, so subtract 1 to get count
+                setCurrentBatchIndex(Number(batchIndex));
+                
+                // Fetch the current batch rate
+                if (batchIndex !== null) {
+                    const batchRate = await getBatchDonationPerKarma(Number(batchIndex));
+                    // Convert the rate to human readable format (divide by 100 since rates are elevated by 100x)
+                    const rateInUsd = Number(batchRate) / 100;
+                    // Calculate the inverse: 1 USD = X Karma (1/rate)
+                    const karmaPerUsd = 1 / rateInUsd;
+                    setCurrentBatchRate(karmaPerUsd);
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -110,6 +127,39 @@ export default function Donate({ lang }) {
 
         fetchData();
     }, []);
+
+    // Calculate karma when amount or batch index changes
+    useEffect(() => {
+        const calculateKarmaAmount = async () => {
+            if (!amount || isNaN(Number(amount)) || Number(amount) <= 0 || currentBatchIndex === null || currentBatchIndex === undefined) {
+                setCalculatedKarma(0);
+                return;
+            }
+            
+            try {
+                setCalculating(true);
+                // Convert amount to the correct format for the contract
+                const usdtAmount = parseUnits(amount, CONFIGS.usdt.decimals);
+                
+                // Get karma amount for this donation using the current batch index
+                const karmaAmount = await getUsdtToKarma(usdtAmount, currentBatchIndex);
+                
+                // Convert karma amount to human readable format
+                const karmaInEther = Number(formatUnits(karmaAmount, 18));
+                
+                // Donor gets 10% of the minted amount
+                const donorKarma = karmaInEther * 0.1;
+                setCalculatedKarma(donorKarma);
+            } catch (error) {
+                console.error('Error calculating karma:', error);
+                setCalculatedKarma(0);
+            } finally {
+                setCalculating(false);
+            }
+        };
+
+        calculateKarmaAmount();
+    }, [amount, currentBatchIndex]);
 
     return (
         <>
@@ -122,24 +172,21 @@ export default function Donate({ lang }) {
             <div className={`dt-mask ${!popup ? 'dt-hidden' : ''}`}>
                 <div className="dt-dialog">
                     <div className='dt-header'>
-                        <span className='title'>{i18n.donate}</span>
-                        <ConnectKitButton.Custom>
-                            {({ isConnected, show, truncatedAddress, ensName }) => {
-                                return (
-                                    <button onClick={show} className='dt-button-connect'>
-                                        {isConnected ? ensName ?? truncatedAddress : i18n.connectWallet}
-                                    </button>
-                                );
-                            }}
-                        </ConnectKitButton.Custom>
+                        <span className='title'>
+                            {i18n.donate}
+                        </span>
                     </div>
                     <div className='dt-stats'>
-                        <div className='dt-balance'>
-                            {`${i18n.donations}: ${donationsCount}`}
+                        <div className='dt-balance dt-combined-stats'>
+                            <span>{`${i18n.donations}: ${donationsCount}`}</span>
+                            <span>{`${i18n.totalDonated}: ${Math.floor(Number(totalDonated))} USDT`}</span>
                         </div>
-                        <div className='dt-balance'>
-                            {`${i18n.totalDonated}: ${Math.floor(Number(totalDonated))} USDT`}
-                        </div>
+                        {/* Batch information */}
+                        {currentBatchIndex !== null && currentBatchRate !== null && (
+                            <div className='dt-balance'>
+                                {`${i18n.weAreInBatch} ${currentBatchIndex + 1}, ${i18n.currentRate} ${currentBatchRate.toFixed(1)} ${i18n.karma}`}
+                            </div>
+                        )}
                         {/* Hidden: Public Pool display */}
                         {/* <div className='dt-balance'>
                             {`${i18n.pool}: ${Math.floor(Number(poolAmount))} USDT`}
@@ -155,6 +202,18 @@ export default function Donate({ lang }) {
                             className={invalidAmount && validate ? 'invalid' : ''}
                             readOnly={loading}
                         />
+                        {/* Karma calculation display */}
+                        {amount && !invalidAmount && (
+                            <div className='dt-karma-calculation'>
+                                {calculating ? (
+                                    `${i18n.youWillGet} Calculating...`
+                                ) : (
+                                    <span>
+                                        {i18n.youWillGet} <strong>{amount}</strong> X <strong>{currentBatchRate?.toFixed(1) || '0'}</strong> X <strong>10%</strong> = <strong>{calculatedKarma.toFixed(2)}</strong> KARMA
+                                    </span>
+                                )}
+                            </div>
+                        )}
                     </div>
                     <div className='dt-input'>
                         <span>{i18n.donateTo}</span>

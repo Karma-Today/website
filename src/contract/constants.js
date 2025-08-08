@@ -19,6 +19,9 @@ export const CONFIGS = {
             "function getPublicShareAmount() view returns (uint256)",
             "function totalDonated() view returns (uint256)",
             "function seq() view returns (uint256)",
+            "function getCurrentBatchIndex() view returns (uint256)",
+            "function batchDonationPerKarma(uint256 index) view returns (uint256)",
+            "function usdtToKarma(uint256 usdtAmount, uint256 batchIndex) view returns (uint256)",
             "function donate(uint256 usdtAmount, address to)",
             "event Donate(uint256 indexed seq, address indexed from, address indexed to, uint256 donationUSD, uint256 mintedAmount, uint256 process)"
         ]

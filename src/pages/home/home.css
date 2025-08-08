@@ -213,6 +213,7 @@ tr:nth-child(even) {
     cursor: pointer;
     gap: 20px;
     flex-wrap: nowrap;
+    height: 100%;
 }
 #header .nav a{
     font-size: 24px;
@@ -238,6 +239,42 @@ tr:nth-child(even) {
     font-family: "Poppins", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
     white-space: nowrap;
 }
+#header .nav .nav-faq a{
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    transition: all ease .3s;
+}
+
+#header .nav .nav-wallet-connect {
+    outline: none;
+    border: none;
+    appearance: none;
+    background: black;
+    color: white;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0 15px;
+    transition: all ease .3s;
+    cursor: pointer;
+    white-space: nowrap;
+    min-width: 120px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+#header .nav .nav-wallet-connect:hover {
+    background: #333;
+    transform: translateY(-1px);
+}
+
 #header .nav .nav-language{
     position: relative;
 }
@@ -446,6 +483,13 @@ tr:nth-child(even) {
         font-size: 20px;
         white-space: nowrap;
     }
+    #header .nav .nav-wallet-connect {
+        font-size: 16px;
+        padding: 6px 10px;
+        margin: 0 10px;
+        min-width: 110px;
+        height: 30px;
+    }
     #header {
         padding: 0 53px 0 72px;
         position: relative;
@@ -497,6 +541,13 @@ tr:nth-child(even) {
 @media (max-width: 1200px) {
     #header .logo {
         width: 70px;
+    }
+    #header .nav .nav-wallet-connect {
+        font-size: 14px;
+        padding: 5px 8px;
+        margin: 0 8px;
+        min-width: 100px;
+        height: 28px;
     }
     #main{
         padding-top: 42px;
@@ -595,8 +646,15 @@ tr:nth-child(even) {
         width: 80%;
     }
     .nav .nav-faq a{
-        font-size: 20px !important;
+        font-size: 18px;
         white-space: nowrap;
+    }
+    #header .nav .nav-wallet-connect {
+        font-size: 13px;
+        padding: 4px 6px;
+        margin: 0 6px;
+        min-width: 90px;
+        height: 26px;
     }
     .nav-language #lang-submenu .lang{
         font-size: 18px !important;
@@ -653,6 +711,13 @@ tr:nth-child(even) {
 @media (max-width: 768px) {
     .mountain-container #header .nav .nav-faq {
         font-size: 16px !important;
+    }
+    .mountain-container #header .nav .nav-wallet-connect {
+        font-size: 12px;
+        padding: 3px 5px;
+        margin: 0 5px;
+        min-width: 80px;
+        height: 24px;
     }
     .mountain-container #header .nav .nav-language #lang-toggle {
         min-width: 42px;
@@ -712,7 +777,14 @@ tr:nth-child(even) {
         padding: 0 !important;
     }
     .mountain-container #header .nav .nav-faq {
-        font-size: 16px !important;
+        font-size: 14px !important;
+    }
+    .mountain-container #header .nav .nav-wallet-connect {
+        font-size: 11px;
+        padding: 2px 4px;
+        margin: 0 4px;
+        min-width: 70px;
+        height: 22px;
     }
     .mountain-container #header .nav .nav-language #lang-toggle {
         min-width: 40px;
@@ -821,7 +893,14 @@ tr:nth-child(even) {
 }
 @media (max-width: 450px) {
     .mountain-container #header .nav .nav-faq {
-        font-size: 14px !important;
+        font-size: 12px !important;
+    }
+    .mountain-container #header .nav .nav-wallet-connect {
+        font-size: 10px;
+        padding: 2px 3px;
+        margin: 0 3px;
+        min-width: 60px;
+        height: 20px;
     }
     .mountain-container #header .nav .nav-language #lang-toggle {
         min-width: 38px;

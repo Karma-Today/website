@@ -106,6 +106,13 @@
                 border-bottom: none;
             }
         }
+        .dt-combined-stats {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 20px;
+            gap: 16px;
+        }
     }
     .errors {
         text-align: center;
@@ -136,6 +143,33 @@
             border-color: #FF0000;
         }
     }
+}
+
+.dt-karma-calculation {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #495057;
+    text-align: center;
+    min-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.dt-karma-calculation strong {
+    font-weight: 700;
+    color: #212529;
+}
+
+.dt-karma-calculation:hover {
+    background-color: #e9ecef;
+    border-color: #dee2e6;
 }
 
 .dt-action {

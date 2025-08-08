@@ -9,7 +9,13 @@ export const DonateText = {
         cancel: 'Cancel',
         transitionFailed: 'Transaction failed',
         donations: 'Donations',
-        totalDonated: 'Total Donated'
+        totalDonated: 'Total Donated',
+        pleaseConnectWallet: 'Please connect your wallet first',
+        youWillGet: 'You will get:',
+        stage: 'Batch',
+        weAreInBatch: 'We are in batch',
+        currentRate: 'current rate is 1 USD =',
+        karma: 'Karma'
     },
     cn: {
         donate: '捐赠',
@@ -21,7 +27,13 @@ export const DonateText = {
         cancel: '取消',
         transitionFailed: '交易失败',
         donations: '捐赠次数',
-        totalDonated: '总捐赠额'
+        totalDonated: '总捐赠额',
+        pleaseConnectWallet: '请先连接您的钱包',
+        youWillGet: '您将获得:',
+        stage: '批次',
+        weAreInBatch: '我们目前在批次',
+        currentRate: '当前汇率是 1 USD =',
+        karma: 'Karma'
     },
     es: {
         donate: 'Donar',
@@ -33,7 +45,13 @@ export const DonateText = {
         cancel: 'Cancelar',
         transitionFailed: 'Transacción fallida',
         donations: 'Donaciones',
-        totalDonated: 'Total Donado'
+        totalDonated: 'Total Donado',
+        pleaseConnectWallet: 'Por favor conecte su billetera primero',
+        youWillGet: 'Recibirás:',
+        stage: 'Lote',
+        weAreInBatch: 'Estamos en lote',
+        currentRate: 'la tasa actual es 1 USD =',
+        karma: 'Karma'
     },
     fr: {
         donate: 'Faire un don',
@@ -45,7 +63,13 @@ export const DonateText = {
         cancel: 'Annuler',
         transitionFailed: 'Transaction échouée',
         donations: 'Dons',
-        totalDonated: 'Total des dons'
+        totalDonated: 'Total des dons',
+        pleaseConnectWallet: 'Veuillez d\'abord connecter votre portefeuille',
+        youWillGet: 'Vous recevrez:',
+        stage: 'Lot',
+        weAreInBatch: 'Nous sommes dans le lot',
+        currentRate: 'le taux actuel est 1 USD =',
+        karma: 'Karma'
     },
     de: {
         donate: 'Spenden',
@@ -57,7 +81,13 @@ export const DonateText = {
         cancel: 'Abbrechen',
         transitionFailed: 'Transaktion fehlgeschlagen',
         donations: 'Spenden',
-        totalDonated: 'Gesamt gespendet'
+        totalDonated: 'Gesamt gespendet',
+        pleaseConnectWallet: 'Bitte verbinden Sie zuerst Ihre Brieftasche',
+        youWillGet: 'Sie erhalten:',
+        stage: 'Charge',
+        weAreInBatch: 'Wir sind in Charge',
+        currentRate: 'der aktuelle Kurs ist 1 USD =',
+        karma: 'Karma'
     },
     ja: {
         donate: '寄付',
@@ -69,7 +99,13 @@ export const DonateText = {
         cancel: 'キャンセル',
         transitionFailed: 'トランザクション失敗',
         donations: '寄付回数',
-        totalDonated: '総寄付額'
+        totalDonated: '総寄付額',
+        pleaseConnectWallet: '最初にウォレットを接続してください',
+        youWillGet: '受け取るKARMA:',
+        stage: 'バッチ',
+        weAreInBatch: '現在バッチ',
+        currentRate: '現在のレートは 1 USD =',
+        karma: 'Karma'
     },
     ko: {
         donate: '기부',
@@ -81,6 +117,12 @@ export const DonateText = {
         cancel: '취소',
         transitionFailed: '거래 실패',
         donations: '기부 횟수',
-        totalDonated: '총 기부액'
+        totalDonated: '총 기부액',
+        pleaseConnectWallet: '먼저 지갑을 연결해 주세요',
+        youWillGet: '받게 될 KARMA:',
+        stage: '배치',
+        weAreInBatch: '현재 배치',
+        currentRate: '현재 환율은 1 USD =',
+        karma: 'Karma'
     }
 }

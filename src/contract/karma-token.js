@@ -17,6 +17,16 @@ export async function getCurrentProcess() {
     return process;
 }
 
+export async function getCurrentBatchIndex() {
+    const batchIndex = await karmaToken.getCurrentBatchIndex();
+    return batchIndex;
+}
+
+export async function getBatchDonationPerKarma(batchIndex) {
+    const rate = await karmaToken.batchDonationPerKarma(batchIndex);
+    return rate;
+}
+
 export async function queryMintEvents(fromBlock = 0, toBlock = 'latest') {
     try {
         // Use the same provider 
@@ -60,6 +70,11 @@ export async function queryMintEvents(fromBlock = 0, toBlock = 'latest') {
 export async function getPublicShareAmount() {
     const amount = await karmaToken.getPublicShareAmount();
     return amount;
+}
+
+export async function getUsdtToKarma(usdtAmount, batchIndex) {
+    const usdtToKarma = await karmaToken.usdtToKarma(usdtAmount, batchIndex);
+    return usdtToKarma;
 }
 
 export async function getTotalDonated() {

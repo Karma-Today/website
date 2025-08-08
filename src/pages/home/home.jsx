@@ -10,6 +10,8 @@ const cnFlag = '/images/lang/cn.svg';
 import './home.css';
 import { Link } from 'react-router-dom';
 import { getCurrentProcess } from '../../contract/karma-token';
+import { ConnectKitButton } from 'connectkit';
+import { useAccount } from 'wagmi';
 
 import HomeContentEng from './homeContentEng/homeContentEng';
 import HomeContentCn from './homeContentCn/homeContentCn';
@@ -629,32 +631,41 @@ function Home() {
                 <img src={logo} alt="karma-logo" loading="lazy" />
             </Link>
             <div className="nav">
-                <Link to="/faq" className="nav-faq">
+                <ConnectKitButton.Custom>
+                    {({ isConnected, show, truncatedAddress, ensName }) => {
+                        return (
+                            <button onClick={show} className='nav-wallet-connect'>
+                                {isConnected ? ensName ?? truncatedAddress : (selectedLang === 'en' ? 'Wallet Connect' : '连接钱包')}
+                            </button>
+                        );
+                    }}
+                </ConnectKitButton.Custom>
+                {/* <Link to="/faq" className="nav-faq">
                     {selectedLang === 'en' ? 'Faq' : '常见问题'}
-                </Link>
-            <div className="nav-language">
-                <div id="lang-toggle" onClick={handleLangToggle}>
-                    <img src={selectedLang === 'en' ? enFlag : cnFlag} alt={selectedLang === 'en' ? 'English' : 'Chinese'} className="lang-toggle-icon" />
-                    <span className="dropdown-arrow">▼</span>
+                </Link> */}
+                <div className="nav-language">
+                    <div id="lang-toggle" onClick={handleLangToggle}>
+                        <img src={selectedLang === 'en' ? enFlag : cnFlag} alt={selectedLang === 'en' ? 'English' : 'Chinese'} className="lang-toggle-icon" />
+                        <span className="dropdown-arrow">▼</span>
+                    </div>
+                    <div id="lang-submenu" className={isSubmenuOpen ? '' : 'hidden'}>
+                    <div
+                      data-lang="en"
+                      className={`lang ${selectedLang === 'en' ? 'active' : ''}`}
+                      onClick={() => handleLangSelect('en')}
+                    >
+                        <img src={enFlag} alt="English" className="lang-icon" />
+                    </div>
+                    <div
+                      data-lang="cn"
+                      className={`lang ${selectedLang === 'cn' ? 'active' : ''}`}
+                      onClick={() => handleLangSelect('cn')}
+                    >
+                      <img src={cnFlag} alt="Chinese" className="lang-icon" />
+                    </div>
+                  </div>
                 </div>
-                <div id="lang-submenu" className={isSubmenuOpen ? '' : 'hidden'}>
-                <div
-                  data-lang="en"
-                  className={`lang ${selectedLang === 'en' ? 'active' : ''}`}
-                  onClick={() => handleLangSelect('en')}
-                >
-                    <img src={enFlag} alt="English" className="lang-icon" />
-                </div>
-                <div
-                  data-lang="cn"
-                  className={`lang ${selectedLang === 'cn' ? 'active' : ''}`}
-                  onClick={() => handleLangSelect('cn')}
-                >
-                  <img src={cnFlag} alt="Chinese" className="lang-icon" />
-                </div>
-              </div>
             </div>
-          </div>
         </div>
         <div id="container">
             <div className="title">
